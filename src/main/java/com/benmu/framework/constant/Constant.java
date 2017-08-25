@@ -166,7 +166,9 @@ public class Constant {
 
     public static final String BMPAGE_CATEGORY = "com.benmu.weex.example.categoty.page";
 
-    public static final String BMWEBVIEW_CATEGORY="com.benmu.weex.example.category.web";
+    public static final String BMWEBVIEW_CATEGORY = "com.benmu.weex.example.category.web";
+
+    public static final String BMDEBUG_CATEGORY = "com.benmu.weex.example.category.debug";
 
 
     public static final class ACTIVITIES_ANIMATION {
