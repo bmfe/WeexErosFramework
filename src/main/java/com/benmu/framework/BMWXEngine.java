@@ -88,8 +88,9 @@ public class BMWXEngine {
         HashMap<String, String> insideEnv = new HashMap<>();
         insideEnv.put(Constant.CustomOptions.CUSTOM_APPNAME, BMWXEnvironment.mPlatformConfig
                 .getAppName());
-        insideEnv.put(Constant.CustomOptions.CUSTOM_LOCALURL, BMWXEnvironment.mPlatformConfig.getUrl()
-                .getLocal());
+        insideEnv.put(Constant.CustomOptions.CUSTOM_SERVERURL, BMWXEnvironment.mPlatformConfig
+                .getUrl()
+                .getJsServer());
         insideEnv.put(Constant.CustomOptions.CUSTOM_REQUESTURL, BMWXEnvironment.mPlatformConfig
                 .getUrl().getRequest());
         if (Env != null && !Env.isEmpty()) {

@@ -93,7 +93,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     protected void synRouterStack() {
         if (mRouterParam != null) {
-            if (!Constant.ACTIVITIES_ANIMATION.ANIMATION_PRESENT.equals(mRouterParam.animateType)) {
+            if (!Constant.ACTIVITIES_ANIMATION.ANIMATION_PRESENT.equals(mRouterParam.type)) {
                 onAttach(this);
             } else {
                 onAttach(this, getClass().getName());
@@ -289,7 +289,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (activity == this) {
             finish();
             if (mRouterParam != null) {
-                String type = mRouterParam.animateType;
+                String type = mRouterParam.type;
                 if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PUSH.equals(type)) {
                     overridePendingTransition(R.anim.view_stay, R.anim.right_out);
                 } else if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PRESENT.equals(type)) {

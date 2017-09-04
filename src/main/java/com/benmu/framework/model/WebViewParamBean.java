@@ -11,24 +11,14 @@ public class WebViewParamBean implements Serializable {
     private String url;
     private String title;
     private ShareInfo shareInfo;
-    private boolean authorize;
-    private boolean hideNavbar;
+    private boolean navShow;
 
-
-    public boolean isAuthorize() {
-        return authorize;
+    public boolean isNavShow() {
+        return navShow;
     }
 
-    public void setAuthorize(boolean authorize) {
-        this.authorize = authorize;
-    }
-
-    public boolean isHideNavbar() {
-        return hideNavbar;
-    }
-
-    public void setHideNavbar(boolean hideNavbar) {
-        this.hideNavbar = hideNavbar;
+    public void setNavShow(boolean navShow) {
+        this.navShow = navShow;
     }
 
     public String getUrl() {

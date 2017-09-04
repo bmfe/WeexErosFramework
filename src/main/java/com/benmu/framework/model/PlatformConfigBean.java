@@ -67,7 +67,7 @@ public class PlatformConfigBean implements Serializable {
 
     public class Url {
         private String request;
-        private String local;
+        private String jsServer;
         private String image;
         private String updateVersion;
 
@@ -79,12 +79,20 @@ public class PlatformConfigBean implements Serializable {
             this.request = request;
         }
 
-        public String getLocal() {
-            return local;
+        public String getJsServer() {
+            return jsServer;
         }
 
-        public void setLocal(String local) {
-            this.local = local;
+        public void setJsServer(String jsServer) {
+            this.jsServer = jsServer;
+        }
+
+        public String getUpdateVersion() {
+            return updateVersion;
+        }
+
+        public void setUpdateVersion(String updateVersion) {
+            this.updateVersion = updateVersion;
         }
 
         public String getImage() {

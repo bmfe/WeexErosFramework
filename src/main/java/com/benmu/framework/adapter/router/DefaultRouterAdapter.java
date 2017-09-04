@@ -48,7 +48,7 @@ public class DefaultRouterAdapter {
         Uri pathUri = Uri.parse(pathUrl);
         if (!TextUtils.equals("http", pathUri.getScheme()) && !TextUtils.equals("https", pathUri
                 .getScheme())) {
-            pathUri = Uri.parse(BMWXEnvironment.mPlatformConfig.getUrl().getLocal() +
+            pathUri = Uri.parse(BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
                     "/fe/dist/js" + pathUrl);
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -57,13 +57,13 @@ public class DefaultRouterAdapter {
         intent.addCategory(bmpageCategory);
         activity.startActivity(intent);
 
-        if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PUSH.equals(routerModel.animateType)) {
+        if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PUSH.equals(routerModel.type)) {
             activity.overridePendingTransition(R.anim.right_in, R.anim.view_stay);
         } else if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PRESENT.equals(routerModel
-                .animateType)) {
+                .type)) {
             activity.overridePendingTransition(R.anim.bottom_in, R.anim.view_stay);
         } else if (Constant.ACTIVITIES_ANIMATION.ANIMATION_TRANSLATION.equals(routerModel
-                .animateType)) {
+                .type)) {
             activity.overridePendingTransition(R.anim.left_in, R.anim.view_stay);
         } else {
             activity.overridePendingTransition(R.anim.right_in, R.anim.view_stay);
@@ -139,8 +139,7 @@ public class DefaultRouterAdapter {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Constant.BMWEBVIEW_CATEGORY);
         intent.putExtra(Constant.ROUTERPARAMS, new RouterModel(null, Constant
-                .ACTIVITIES_ANIMATION.ANIMATION_PUSH, null, 0,
-                new TitleModel(title, null, false, "#00b4cb", true)));
+                .ACTIVITIES_ANIMATION.ANIMATION_PUSH, null,title,true,null));
         intent.putExtra(Constant.WEBVIEW_PARAMS, webViewParamBean);
         context.startActivity(intent);
     }

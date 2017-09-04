@@ -10,32 +10,42 @@ import java.io.Serializable;
  */
 public class RouterModel implements Serializable {
     public String url;
-    public String animateType;
+    public String type;
     public Object params;
     public int length;
-    public TitleModel navigationInfo;
-    public boolean authorize;
-    public BackCallback backCallback;
-    public boolean forbidBack;
-    public boolean needBackCallback;
+    public boolean canBack;
+    public String title;
+    public boolean navShow;
+    public String statusBarStyle;
+    public boolean isRunBackCallback;
 
-    public RouterModel(String url, String animateType, Object params, int length, TitleModel
-            navigationInfo) {
-        this.url = url;
-        this.animateType = animateType;
-        this.params = params;
-        this.length = length;
-        this.navigationInfo = navigationInfo;
-    }
 
     public RouterModel() {
     }
 
-    public class BackCallback extends SimpleJSCallback implements Serializable {
 
-        public BackCallback(String instanceId, String callbackId) {
-            super(instanceId, callbackId);
-        }
+    public RouterModel(String url, String type, Object params, String title, boolean navShow,
+                       String statusBarStyle) {
+        this.url = url;
+        this.type = type;
+        this.params = params;
+        this.title = title;
+        this.navShow = navShow;
+        this.statusBarStyle = statusBarStyle;
     }
 
+
+    public RouterModel(String url, String type, Object params, int length, boolean canBack,
+                       String title, boolean navShow, String statusBarStyle, boolean
+                               isRunBackCallback) {
+        this.url = url;
+        this.type = type;
+        this.params = params;
+        this.length = length;
+        this.canBack = canBack;
+        this.title = title;
+        this.navShow = navShow;
+        this.statusBarStyle = statusBarStyle;
+        this.isRunBackCallback = isRunBackCallback;
+    }
 }

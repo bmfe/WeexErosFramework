@@ -127,7 +127,7 @@ public class Constant {
     public static class CustomOptions {
         public static final String CUSTOM_FONTSIZE = "bmFontSize";
         public static final String CUSTOM_REQUESTURL = "requestUrl";
-        public static final String CUSTOM_LOCALURL = "localUrl";
+        public static final String CUSTOM_SERVERURL = "ServerUrl";
         public static final String CUSTOM_FONTSCALE = "bmFontScale";
         public static final String CUSTOM_DEVICEID = "deviceId";
         public static final String CUSTOM_APPNAME = "appName";
