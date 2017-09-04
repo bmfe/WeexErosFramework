@@ -73,7 +73,10 @@ public class RouterTracker {
      */
     public static Activity peekActivity() {
         if (mTotal.isEmpty()) return null;
-        return mTotal.peek().getActivities().peek();
+        ActivityStackFrame peek = mTotal.peek();
+        if (null == peek.getActivities() || peek.getActivities().isEmpty()) return null;
+
+        return peek.getActivities().peek();
     }
 
 
@@ -182,6 +185,7 @@ public class RouterTracker {
      */
     private static Activity pop(ActivityStackFrame frame) {
         Stack<Activity> activities = frame.getActivities();
+        if (null == activities || activities.isEmpty()) return null;
         Activity activity = activities.pop();
         notifyActivityRemove(activity);
         if (activities.isEmpty()) {

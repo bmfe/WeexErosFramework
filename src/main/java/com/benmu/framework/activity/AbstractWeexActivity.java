@@ -5,15 +5,19 @@ import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
@@ -27,6 +31,7 @@ import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMLoding;
+import com.benmu.widget.view.BaseToolBar;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.taobao.weex.IWXRenderListener;
@@ -56,6 +61,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private String mPageName;
     private String mRouterType;
     protected BMLoding mLoding;
+    private BaseToolBar mNavgationBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +72,50 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initUrl(data);
         synRouterStack();
     }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        ViewGroup rootView = (ViewGroup) View.inflate(this, R.layout.layout_root, null);
+        RelativeLayout rl_root = (RelativeLayout) rootView.findViewById(R.id.rl_root);
+        mNavgationBar = (BaseToolBar) rootView.findViewById(R.id.base_navBar);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams
+                .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        View child = View.inflate(this, layoutResID, null);
+        rl_root.addView(child, params);
+        setNavigationBar();
+        setContentView(rootView);
+
+    }
+
+
+    public void setNavigationBar() {
+        if (mNavgationBar == null) return;
+        //setVisibility
+        if (null == mRouterParam) mNavgationBar.setNavigationVisible(true);
+        if (!mRouterParam.navShow) {
+            mNavgationBar.setNavigationVisible(false);
+            return;
+        }
+        mNavgationBar.setNavigationVisible(true);
+        //set color
+        String navBarColor = BMWXEnvironment.mPlatformConfig.getPage().getNavBarColor();
+        if (!TextUtils.isEmpty(navBarColor)) {
+            mNavgationBar.setBackgroundColor(Color.parseColor(navBarColor));
+        }
+        //set title
+        String title = mRouterParam.title;
+        mNavgationBar.setTitle(title);
+
+        //left icon
+        mNavgationBar.setOnLeftListenner(new BaseToolBar.OnLeftIconClick() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+    }
+
 
     protected void initRouterParams(Intent data) {
 
