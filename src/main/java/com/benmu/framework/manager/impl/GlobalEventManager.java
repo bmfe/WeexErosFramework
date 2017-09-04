@@ -41,17 +41,17 @@ public class GlobalEventManager extends Manager {
     }
 
 
-    public static void appWillResignActive(WXSDKInstance instance) {
+    public static void appDeactive(WXSDKInstance instance) {
         if (instance != null) {
-            instance.fireGlobalEventCallback("appWillResignActive", null);
+            instance.fireGlobalEventCallback("appDeactive", null);
         }
 
     }
 
 
-    public static void appDidBecomeActive(WXSDKInstance instance) {
+    public static void appActive(WXSDKInstance instance) {
         if (instance != null) {
-            instance.fireGlobalEventCallback("appDidBecomeActive", null);
+            instance.fireGlobalEventCallback("appActive", null);
         }
 
     }

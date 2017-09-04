@@ -35,6 +35,7 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.ui.component.WXComponentProp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,9 +73,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (serializableExtra instanceof RouterModel) {
             setRouterParam((RouterModel) serializableExtra);
         }
-
-
-
 
 
     }
@@ -160,6 +158,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     protected void postRender() {
 
+    }
+
+    public WXSDKInstance getWXSDkInstance() {
+        return mWXInstance;
     }
 
     protected void createWXInstance() {
