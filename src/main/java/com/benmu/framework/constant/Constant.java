@@ -126,9 +126,8 @@ public class Constant {
      **/
     public static class CustomOptions {
         public static final String CUSTOM_FONTSIZE = "bmFontSize";
-        public static final String CUSTOM_REQUESTURL = "requestUrl";
-        public static final String CUSTOM_SERVERURL = "ServerUrl";
-        public static final String CUSTOM_FONTSCALE = "bmFontScale";
+        public static final String CUSTOM_REQUESTURL = "request";
+        public static final String CUSTOM_SERVERURL = "jsServer";
         public static final String CUSTOM_DEVICEID = "deviceId";
         public static final String CUSTOM_APPNAME = "appName";
     }
@@ -181,4 +180,8 @@ public class Constant {
     public static final String PLATFORM_CONFIG_NAME = "config.json";
 
     public static final String BUNDLE_ZIP_NAME = "pages.zip";
+
+    public static final String INTERCEPTOR_ACTIVE = "active";
+    public static final String INTERCEPTOR_DEACTIVE = "deactivate";
+
 }

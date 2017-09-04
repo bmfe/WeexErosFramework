@@ -46,9 +46,14 @@ public class BMWXEngine {
     }
 
     private static void initInterceptor(Application context, BMInitConfig initConfig) {
-        if (initConfig != null) {
-            SharePreferenceUtil.setInterceptorActive(context, initConfig.ismActice());
+        String activeState = SharePreferenceUtil.getInterceptorActive(context);
+
+        if (!Constant.INTERCEPTOR_DEACTIVE.equals(activeState)) {
+            if (initConfig != null) {
+                SharePreferenceUtil.setInterceptorActive(context, initConfig.getmActice());
+            }
         }
+
     }
 
     private static void initHttpClient(Application context) {

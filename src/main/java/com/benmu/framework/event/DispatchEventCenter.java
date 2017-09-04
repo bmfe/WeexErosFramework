@@ -140,7 +140,6 @@ public class DispatchEventCenter {
 
             case WXConstant.WXEventCenter.EVENT_CAMERA:
                 JSCallback jscallback = weexEventBean.getJscallback();
-                if (jscallback == null) return;
                 new EventCamera().scan(jscallback, context);
                 break;
 

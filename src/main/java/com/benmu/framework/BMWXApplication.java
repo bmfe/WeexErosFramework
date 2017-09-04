@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
+import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
@@ -53,7 +54,8 @@ public class BMWXApplication extends Application {
 
 
     private void initWeex() {
-        BMWXEngine.initialize(this, new BMInitConfig.Builder().isActiceInterceptor(true).build());
+        BMWXEngine.initialize(this, new BMInitConfig.Builder().isActiceInterceptor(Constant
+                .INTERCEPTOR_ACTIVE).build());
     }
 
 

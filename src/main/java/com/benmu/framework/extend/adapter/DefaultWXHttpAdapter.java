@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.PersistentManager;
@@ -61,7 +62,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         execute(new Runnable() {
             @Override
             public void run() {
-                if (!SharePreferenceUtil.isInterceptorActive(mContext) || !isInterceptor(request
+                if (!(Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
+                        (mContext))) || !isInterceptor(request
                         .url)) {
                     fetchUrl(request, listener);
                 } else {
@@ -185,6 +187,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     private void fetchUrl(final WXRequest request, final OnHttpListener listener) {
         WXResponse response = new WXResponse();
+        Log.e("url", request.url);
         try {
             HttpURLConnection connection = openConnection(request, listener);
             Map<String, List<String>> headers = connection.getHeaderFields();

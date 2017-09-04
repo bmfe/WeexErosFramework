@@ -24,7 +24,7 @@ public class VersionManager extends Manager {
 
     public long prepareJsBundle(Context context) {
         long startTime = new Date().getTime();
-        if (SharePreferenceUtil.isInterceptorActive(context)) {
+        if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(context))) {
             if (TextUtils.isEmpty(SharePreferenceUtil.getVersion(context))) {
                 setVersion(context, AssetsUtil.getAssetsVersionInfo(context));
             }

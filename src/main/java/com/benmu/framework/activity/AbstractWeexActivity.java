@@ -4,6 +4,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.BuildConfig;
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
@@ -28,7 +30,9 @@ import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.WXCommonUtil;
+import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.BaseToolBar;
 import com.lzy.imagepicker.ImagePicker;
@@ -60,15 +64,62 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private String mRouterType;
     protected BMLoding mLoding;
     private BaseToolBar mNavigationBar;
+    private BMFloatingLayer mDebugger;
+    protected Activity mAct;
+    public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAct = this;
         mRouterType = GlobalEventManager.TYPE_OPEN;
         Intent data = getIntent();
         initRouterParams(data);
         initUrl(data);
         synRouterStack();
+        initDebug();
+    }
+
+    private void initDebug() {
+        mDebugger = new BMFloatingLayer(mAct);
+        mDebugger.setListener(new BMFloatingLayer.FloatingLayerListener() {
+            @Override
+            public void onClick() {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7
+                        .app.AlertDialog.Builder(mAct);
+                builder.setItems(mDebugOptions, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            Intent intent = new Intent(mAct, DebugActivity.class);
+                            startActivity(intent);
+                        } else if (which == 1) {
+                            refresh();
+                        } else if (which == 2) {
+                            DispatchEventManager dispatchEventManager = ManagerFactory
+                                    .getManagerService(DispatchEventManager.class);
+                            WeexEventBean eventBean = new WeexEventBean();
+                            eventBean.setContext(mAct);
+                            eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+                            dispatchEventManager.getBus().post(eventBean);
+                        }
+                    }
+                });
+                builder.create().show();
+            }
+
+            @Override
+            public void onShow() {
+
+            }
+
+            @Override
+            public void onClose() {
+
+            }
+        });
+        mDebugger.show(mAct);
     }
 
     @Override
@@ -82,14 +133,16 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         rl_root.addView(child, params);
         setNavigationBar();
         setContentView(rootView);
-
     }
 
 
     public void setNavigationBar() {
         if (mNavigationBar == null) return;
         //setVisibility
-        if (null == mRouterParam) mNavigationBar.setNavigationVisible(true);
+        if (null == mRouterParam) {
+            mNavigationBar.setNavigationVisible(false);
+            return;
+        }
         if (!mRouterParam.navShow) {
             mNavigationBar.setNavigationVisible(false);
             return;
@@ -154,6 +207,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             } else {
                 onAttach(this, getClass().getName());
             }
+        } else {
+            onAttach(this);
         }
     }
 
@@ -303,6 +358,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             mWXInstance.onActivityDestroy();
         }
+        if (mDebugger != null) {
+            mDebugger.close();
+        }
     }
 
     @Override
@@ -364,7 +422,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onBackPressed() {
-        if (mRouterParam.isRunBackCallback && null != mRouterParam.backCallback) {
+        if (mRouterParam != null && mRouterParam.isRunBackCallback && null != mRouterParam
+                .backCallback) {
             mRouterParam.backCallback.invoke(null);
         } else {
             RouterTracker.popActivity();

@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class BMInitConfig {
 
     private HashMap<String, String> mEnvs;
-    private boolean mActice;
+    private String mActice;
 
     private BMInitConfig() {
     }
@@ -22,24 +22,24 @@ public class BMInitConfig {
         this.mEnvs = mEnvs;
     }
 
-    public boolean ismActice() {
+    public String getmActice() {
         return mActice;
     }
 
-    public void setmActice(boolean mActice) {
+    public void setmActice(String mActice) {
         this.mActice = mActice;
     }
 
     public static class Builder {
         HashMap<String, String> mCustomerEnv;
-        private boolean mActiveInterceptor;
+        private String mActiveInterceptor;
 
         public Builder setCustomerEnv(HashMap<String, String> mCustomerEnv) {
             this.mCustomerEnv = mCustomerEnv;
             return this;
         }
 
-        public Builder isActiceInterceptor(boolean active) {
+        public Builder isActiceInterceptor(String active) {
             this.mActiveInterceptor = active;
             return this;
         }

@@ -183,20 +183,20 @@ public class SharePreferenceUtil {
     }
 
 
-    public static boolean isInterceptorActive(Context context) {
+    public static String getInterceptorActive(Context context) {
         if (context != null) {
             SharedPreferences sharedPreferences = context.getSharedPreferences(Constant
                     .SP.SP_NATIVE_NAME, Context.MODE_PRIVATE);
-            return sharedPreferences.getBoolean(Constant.SP.SP_INTERCEPTOR_ACTIVE, false);
+            return sharedPreferences.getString(Constant.SP.SP_INTERCEPTOR_ACTIVE, "");
         }
-        return false;
+        return "";
     }
 
-    public static void setInterceptorActive(Context context, boolean active) {
+    public static void setInterceptorActive(Context context, String active) {
         if (context != null) {
             SharedPreferences sharedPreferences = context.getSharedPreferences(Constant
                     .SP.SP_NATIVE_NAME, Context.MODE_PRIVATE);
-            sharedPreferences.edit().putBoolean(Constant.SP.SP_INTERCEPTOR_ACTIVE, active).apply();
+            sharedPreferences.edit().putString(Constant.SP.SP_INTERCEPTOR_ACTIVE, active).apply();
         }
     }
 
