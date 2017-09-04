@@ -25,7 +25,6 @@ import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
-import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
@@ -40,7 +39,6 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
-import com.taobao.weex.ui.component.WXComponentProp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -61,7 +59,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private String mPageName;
     private String mRouterType;
     protected BMLoding mLoding;
-    private BaseToolBar mNavgationBar;
+    private BaseToolBar mNavigationBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +75,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public void setContentView(@LayoutRes int layoutResID) {
         ViewGroup rootView = (ViewGroup) View.inflate(this, R.layout.layout_root, null);
         RelativeLayout rl_root = (RelativeLayout) rootView.findViewById(R.id.rl_root);
-        mNavgationBar = (BaseToolBar) rootView.findViewById(R.id.base_navBar);
+        mNavigationBar = (BaseToolBar) rootView.findViewById(R.id.base_navBar);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams
                 .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         View child = View.inflate(this, layoutResID, null);
@@ -89,31 +87,39 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
 
     public void setNavigationBar() {
-        if (mNavgationBar == null) return;
+        if (mNavigationBar == null) return;
         //setVisibility
-        if (null == mRouterParam) mNavgationBar.setNavigationVisible(true);
+        if (null == mRouterParam) mNavigationBar.setNavigationVisible(true);
         if (!mRouterParam.navShow) {
-            mNavgationBar.setNavigationVisible(false);
+            mNavigationBar.setNavigationVisible(false);
             return;
         }
-        mNavgationBar.setNavigationVisible(true);
+        mNavigationBar.setNavigationVisible(true);
         //set color
         String navBarColor = BMWXEnvironment.mPlatformConfig.getPage().getNavBarColor();
         if (!TextUtils.isEmpty(navBarColor)) {
-            mNavgationBar.setBackgroundColor(Color.parseColor(navBarColor));
+            mNavigationBar.setBackgroundColor(Color.parseColor(navBarColor));
         }
         //set title
-        String title = mRouterParam.title;
-        mNavgationBar.setTitle(title);
+        String title = mRouterParam.navTitle;
+        mNavigationBar.setTitle(title);
 
         //left icon
-        mNavgationBar.setOnLeftListenner(new BaseToolBar.OnLeftIconClick() {
+        mNavigationBar.setOnLeftListenner(new BaseToolBar.OnLeftIconClick() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
 
+        //back
+        mNavigationBar.setLeftIconVisible(mRouterParam.canBack);
+
+    }
+
+
+    public BaseToolBar getNavigationBar() {
+        return mNavigationBar;
     }
 
 
@@ -358,7 +364,11 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onBackPressed() {
-        RouterTracker.popActivity();
+        if (mRouterParam.isRunBackCallback && null != mRouterParam.backCallback) {
+            mRouterParam.backCallback.invoke(null);
+        } else {
+            RouterTracker.popActivity();
+        }
     }
 
 

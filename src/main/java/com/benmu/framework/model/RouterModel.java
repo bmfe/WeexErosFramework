@@ -14,11 +14,11 @@ public class RouterModel implements Serializable {
     public Object params;
     public int length;
     public boolean canBack;
-    public String title;
+    public String navTitle;
     public boolean navShow;
     public String statusBarStyle;
     public boolean isRunBackCallback;
-
+    public BackCallback backCallback;
 
     public RouterModel() {
     }
@@ -29,7 +29,7 @@ public class RouterModel implements Serializable {
         this.url = url;
         this.type = type;
         this.params = params;
-        this.title = title;
+        this.navTitle = title;
         this.navShow = navShow;
         this.statusBarStyle = statusBarStyle;
     }
@@ -43,9 +43,16 @@ public class RouterModel implements Serializable {
         this.params = params;
         this.length = length;
         this.canBack = canBack;
-        this.title = title;
+        this.navTitle = title;
         this.navShow = navShow;
         this.statusBarStyle = statusBarStyle;
         this.isRunBackCallback = isRunBackCallback;
+    }
+
+    public class BackCallback extends SimpleJSCallback implements Serializable {
+
+        public BackCallback(String instanceId, String callbackId) {
+            super(instanceId, callbackId);
+        }
     }
 }

@@ -139,7 +139,8 @@ public class DefaultRouterAdapter {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Constant.BMWEBVIEW_CATEGORY);
         intent.putExtra(Constant.ROUTERPARAMS, new RouterModel(null, Constant
-                .ACTIVITIES_ANIMATION.ANIMATION_PUSH, null,title,true,null));
+                .ACTIVITIES_ANIMATION.ANIMATION_PUSH, null, title, webViewParamBean.isNavShow(),
+                null));
         intent.putExtra(Constant.WEBVIEW_PARAMS, webViewParamBean);
         context.startActivity(intent);
     }

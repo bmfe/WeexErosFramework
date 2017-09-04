@@ -55,12 +55,9 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         String mUrl = mWebViewParams.getUrl();
         WebViewParamBean.ShareInfo shareInfo = mWebViewParams.getShareInfo();
         if (shareInfo != null) {
-//            setRightIcon(R.drawable.icon_share);
+            getNavigationBar().setRightIcon(R.drawable.icon_share);
         }
-        if (!TextUtils.isEmpty(mWebViewParams.getTitle())) {
-            mTitle = mWebViewParams.getTitle();
-//            setAppTitle(mTitle);
-        }
+
         rl_refresh = findViewById(R.id.rl_refresh);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_progress);
         mWeb = (WebView) findViewById(R.id.webView);
