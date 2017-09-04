@@ -53,6 +53,7 @@ public class RouterTracker {
      * @return 移除的activity
      */
     public static Activity popActivity() {
+        if (mTotal.isEmpty()) return null;
         return pop(mTotal.peek());
     }
 
@@ -63,6 +64,7 @@ public class RouterTracker {
      */
 
     public static ActivityStackFrame popStackFrame() {
+        if (mTotal.isEmpty()) return null;
         return pop();
     }
 
@@ -70,13 +72,16 @@ public class RouterTracker {
      * 得到最上方activity
      */
     public static Activity peekActivity() {
+        if (mTotal.isEmpty()) return null;
         return mTotal.peek().getActivities().peek();
     }
+
 
     /**
      * 得到最上方栈帧
      */
     public static ActivityStackFrame peekStackFrame() {
+        if (mTotal.isEmpty()) return null;
         return mTotal.peek();
     }
 
