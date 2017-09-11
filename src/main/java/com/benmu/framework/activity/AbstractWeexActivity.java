@@ -197,7 +197,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     public RouterModel getRouterParam() {
-        return null;
+        return mRouterParam;
     }
 
     protected void synRouterStack() {
