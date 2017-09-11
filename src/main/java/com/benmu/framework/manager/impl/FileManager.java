@@ -78,6 +78,11 @@ public class FileManager extends Manager {
     }
 
 
+    public static File getPathBundleDir(Context context, String path) {
+        return new File(getBundleDir(context), path);
+    }
+
+
     public static boolean isExists(String path) {
         File file = new File(path);
         return file.exists();

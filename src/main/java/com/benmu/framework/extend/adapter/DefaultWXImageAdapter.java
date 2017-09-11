@@ -4,12 +4,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
+import com.benmu.framework.constant.Constant;
+import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.utils.ImageUtil;
+import com.benmu.framework.utils.SharePreferenceUtil;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,6 +29,8 @@ import com.taobao.weex.dom.WXImageQuality;
 import com.taobao.weex.ui.component.WXImage;
 import com.taobao.weex.ui.view.WXImageView;
 
+import java.io.File;
+
 /**
  * Created by Carry on 2017/8/23.
  */
@@ -32,6 +39,8 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
 
     private static final String PLACEHOLDER_DEFAULT = "default";
     private Bitmap mErrorBitmap;
+    private static final String LOCAL_SCHEME = "bmlocal";
+    private String mUrl;
 
     public DefaultWXImageAdapter() {
     }
@@ -46,12 +55,33 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     @Override
     public void setImage(final String url, final ImageView view,
                          WXImageQuality quality, final WXImageStrategy strategy) {
-        if (url == null) return;
-        Glide.with(WXEnvironment.getApplication()).load(url).diskCacheStrategy(DiskCacheStrategy
+        if (TextUtils.isEmpty(url)) return;
+        Uri imageUri = Uri.parse(url);
+        if (LOCAL_SCHEME.equalsIgnoreCase(imageUri.getScheme())) {
+            loadLocalImage(imageUri);
+        } else {
+            mUrl = url;
+        }
+        Glide.with(WXEnvironment.getApplication()).load(mUrl).diskCacheStrategy(DiskCacheStrategy
                 .ALL).into(new
                 BMGlideDrawableImageTarget
                 (view, strategy, validatePlaceHolder(strategy), url));
     }
+
+    private void loadLocalImage(Uri uri) {
+        if (Constant.INTERCEPTOR_ACTIVE.equalsIgnoreCase(SharePreferenceUtil.getInterceptorActive
+                (WXEnvironment.getApplication()))) {
+            String path = "pages" + File.separator + uri.getHost() + File.separator + uri.getPath();
+            mUrl = FileManager.getPathBundleDir(WXEnvironment.getApplication(), path)
+                    .getAbsolutePath();
+
+        } else {
+            mUrl = String.format("%s/fe/dist/%s%s", BMWXEnvironment.mPlatformConfig.getUrl()
+                    .getJsServer
+                            (), uri.getHost(), uri.getPath());
+        }
+    }
+
 
     private Bitmap getErrorBitmap(Context context) {
         if (mErrorBitmap == null) {
