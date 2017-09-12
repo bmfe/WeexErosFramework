@@ -187,7 +187,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     private void fetchUrl(final WXRequest request, final OnHttpListener listener) {
         WXResponse response = new WXResponse();
-        Log.e("url", request.url);
+        Log.e("url", ">>>>>>>>>>>" + request.url);
         try {
             HttpURLConnection connection = openConnection(request, listener);
             Map<String, List<String>> headers = connection.getHeaderFields();
@@ -199,7 +199,14 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             response.statusCode = String.valueOf(responseCode);
             if (responseCode >= 200 && responseCode <= 299) {
                 InputStream rawStream = connection.getInputStream();
-                response.originalData = appendBaseJs(readInputStreamAsBytes(rawStream, listener));
+                if (isInterceptor(request.url)) {
+                    response.originalData = appendBaseJs(readInputStreamAsBytes(rawStream,
+                            listener));
+                } else {
+                    //iconFont
+                    response.originalData = readInputStreamAsBytes(rawStream, listener);
+                }
+
             } else {
                 response.errorMsg = readInputStream(connection.getErrorStream(), listener);
             }
