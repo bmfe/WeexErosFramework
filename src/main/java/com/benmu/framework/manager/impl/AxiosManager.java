@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.http.Api;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -43,7 +44,7 @@ public class AxiosManager extends Manager {
             return;
         }
         if (!safeUrl(mUrl)) {
-            return;
+            mUrl = Api.BASE_URL + mUrl;
         }
         if (header == null) {
             header = new HashMap<>();
@@ -74,9 +75,15 @@ public class AxiosManager extends Manager {
     }
 
 
-    public void post(String url, String data, HashMap<String, String> header, StringCallback
+    public void post(String mUrl, String data, HashMap<String, String> header, StringCallback
             stringCallback, Object tag) {
-        OkHttpUtils.postString().url(url).content(data).mediaType(MediaType
+        if (mUrl == null) {
+            return;
+        }
+        if (!safeUrl(mUrl)) {
+            mUrl = Api.BASE_URL + mUrl;
+        }
+        OkHttpUtils.postString().url(mUrl).content(data).mediaType(MediaType
                 .parse("application/json; charset=utf-8")).headers(header).tag(tag).build()
                 .execute(stringCallback);
     }

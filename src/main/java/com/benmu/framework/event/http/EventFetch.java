@@ -26,10 +26,11 @@ public class EventFetch {
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
         JSONObject object = parseManager.parseObject(params);
         final String mUrl = object.getString("url");
-        //TODO
-//        if (object.getBoolean("noRepeat")) {
-//            axiosManager.cancel(mUrl);
-//        }
+
+        Boolean noRepeat = object.getBoolean("noRepeat");
+        if (noRepeat != null && noRepeat) {
+            axiosManager.cancel(mUrl);
+        }
 
         if ("GET".equals(object.getString("method"))) {
             AxiosGet axiosGet = parseManager.parseObject(params, AxiosGet.class);
@@ -51,7 +52,6 @@ public class EventFetch {
 
                         @Override
                         public void onResponse(String response, int id) {
-                            L.e("http", response);
                             if (jscallback != null) {
                                 L.e("http", response);
                                 jscallback.invoke(JSONObject.parse(response));
@@ -79,7 +79,6 @@ public class EventFetch {
 
                         @Override
                         public void onResponse(String response, int id) {
-                            L.e("http", response);
                             if (jscallback != null) {
                                 jscallback.invoke(JSONObject.parse(response));
                             }
