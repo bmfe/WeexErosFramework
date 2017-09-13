@@ -39,6 +39,15 @@ public class PlatformConfigBean implements Serializable {
         private String homePage;
         private String mediatorPage;
         private String navBarColor;
+        private String navItemColor;
+
+        public String getNavItemColor() {
+            return navItemColor;
+        }
+
+        public void setNavItemColor(String navItemColor) {
+            this.navItemColor = navItemColor;
+        }
 
         public String getHomePage() {
             return homePage;

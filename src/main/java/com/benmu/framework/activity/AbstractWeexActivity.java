@@ -168,6 +168,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         //back
         mNavigationBar.setLeftIconVisible(mRouterParam.canBack);
 
+        //nav item color
+        mNavigationBar.setNavigationItemColor(BMWXEnvironment.mPlatformConfig.getPage()
+                .getNavItemColor(), mNavigationBar);
+
     }
 
 
