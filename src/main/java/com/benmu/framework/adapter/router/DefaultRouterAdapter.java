@@ -138,10 +138,27 @@ public class DefaultRouterAdapter {
         String title = webViewParamBean.getTitle();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Constant.BMWEBVIEW_CATEGORY);
-        intent.putExtra(Constant.ROUTERPARAMS, new RouterModel(null, Constant
-                .ACTIVITIES_ANIMATION.ANIMATION_PUSH, null, title, webViewParamBean.isNavShow(),
-                null));
+        String type = webViewParamBean.getType() == null ? Constant.ACTIVITIES_ANIMATION
+                .ANIMATION_PUSH : webViewParamBean.getType();
+        RouterModel routerModel = new RouterModel(null,type, null, title, webViewParamBean.isNavShow(),
+                null);
+        intent.putExtra(Constant.ROUTERPARAMS,routerModel);
         intent.putExtra(Constant.WEBVIEW_PARAMS, webViewParamBean);
-        context.startActivity(intent);
+        if(context instanceof Activity){
+            Activity activity = (Activity) context;
+            activity.startActivity(intent);
+            if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PUSH.equals(routerModel.type)) {
+                activity.overridePendingTransition(R.anim.right_in, R.anim.view_stay);
+            } else if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PRESENT.equals(routerModel
+                    .type)) {
+                activity.overridePendingTransition(R.anim.bottom_in, R.anim.view_stay);
+            } else if (Constant.ACTIVITIES_ANIMATION.ANIMATION_TRANSLATION.equals(routerModel
+                    .type)) {
+                activity.overridePendingTransition(R.anim.left_in, R.anim.view_stay);
+            } else {
+                activity.overridePendingTransition(R.anim.right_in, R.anim.view_stay);
+            }
+        }
+
     }
 }

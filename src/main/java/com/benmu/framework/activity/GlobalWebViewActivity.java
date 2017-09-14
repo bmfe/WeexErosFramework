@@ -129,7 +129,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
             if (!TextUtils.isEmpty(title) && mTitle == null) {
-//                setAppTitle(title);
+                getNavigationBar().setTitle(title);
             }
         }
 
