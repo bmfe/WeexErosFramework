@@ -43,6 +43,7 @@ public class BMWXEngine {
     private static void initPlatformConfig(Application context) {
         BMWXEnvironment.mPlatformConfig = CustomerEnvOptionManager.initPlatformConfig
                 (context);
+        BMWXEnvironment.mApplicationContext = context;
     }
 
     private static void initInterceptor(Application context, BMInitConfig initConfig) {

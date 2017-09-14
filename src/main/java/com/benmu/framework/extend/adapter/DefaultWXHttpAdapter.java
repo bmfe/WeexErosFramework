@@ -1,13 +1,18 @@
 package com.benmu.framework.extend.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.benmu.framework.activity.AbstractWeexActivity;
+import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.FileManager;
+import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.model.Md5MapperModel;
 import com.benmu.framework.utils.Md5Util;
@@ -106,6 +111,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                     response.errorMsg = "映射中找不到:" + path.getAbsolutePath();
                     listener.onHttpFinish(response);
                 }
+                showError("不存在md5映射");
                 return;
             }
             if (!targetMd5.equals(currentMd5)) {
@@ -116,6 +122,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                     response.errorMsg = "文件不匹配" + path.getAbsolutePath();
                     listener.onHttpFinish(response);
                 }
+                showError("当前md5和config中的md5不一致");
                 return;
             }
             //文件正确  加载本地js
@@ -126,6 +133,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 response.originalData = appendBaseJs(bytes);
                 listener.onHttpFinish(response);
             }
+            hideError();
         } else {
             if (listener != null) {
                 response.statusCode = "-1";
@@ -133,7 +141,34 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 response.errorMsg = "文件不存在" + path.getAbsolutePath();
                 listener.onHttpFinish(response);
             }
+            showError("文件" + path.getAbsolutePath() + "不存在");
         }
+
+    }
+
+    private void hideError() {
+        Activity activity = RouterTracker.peekActivity();
+        if (activity != null && activity instanceof AbstractWeexActivity) {
+            AbstractWeexActivity abs = (AbstractWeexActivity) activity;
+            abs.hideError();
+        }
+    }
+
+
+    private void showError(final String message) {
+        Activity activity = RouterTracker.peekActivity();
+        if (activity != null && activity instanceof AbstractWeexActivity) {
+            AbstractWeexActivity abs = (AbstractWeexActivity) activity;
+            abs.showError();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ModalManager.BmToast.toast(mContext, message,
+                            Toast.LENGTH_SHORT);
+                }
+            });
+        }
+
     }
 
 

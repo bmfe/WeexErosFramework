@@ -67,6 +67,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private BMFloatingLayer mDebugger;
     protected Activity mAct;
     public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
+    private RelativeLayout rl_error;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +127,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public void setContentView(@LayoutRes int layoutResID) {
         ViewGroup rootView = (ViewGroup) View.inflate(this, R.layout.layout_root, null);
         RelativeLayout rl_root = (RelativeLayout) rootView.findViewById(R.id.rl_root);
+        rl_error = (RelativeLayout) rootView.findViewById(R.id.rl_error);
         mNavigationBar = (BaseToolBar) rootView.findViewById(R.id.base_navBar);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams
                 .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -188,6 +190,16 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
 
 
+    }
+
+
+    public void showError() {
+        rl_error.setVisibility(View.VISIBLE);
+    }
+
+
+    public void hideError() {
+        rl_error.setVisibility(View.GONE);
     }
 
     protected void initUrl(Intent data) {

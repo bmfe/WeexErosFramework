@@ -11,6 +11,10 @@ import com.benmu.framework.event.modal.EventAlert;
 import com.benmu.framework.event.modal.EventConfirm;
 import com.benmu.framework.event.modal.EventShowLoading;
 import com.benmu.framework.event.modal.EventToast;
+import com.benmu.framework.event.nav.EventCenterItem;
+import com.benmu.framework.event.nav.EventLeftItem;
+import com.benmu.framework.event.nav.EventNavigationInfo;
+import com.benmu.framework.event.nav.EventRightItem;
 import com.benmu.framework.event.router.EventBack;
 import com.benmu.framework.event.router.EventCall;
 import com.benmu.framework.event.router.EventGetBackParams;
@@ -143,33 +147,19 @@ public class DispatchEventCenter {
                 new EventCamera().scan(jscallback, context);
                 break;
 
-
-//            case WXConstant.WXEventCenter.EVENT_RIGHTITEM:
-//                new EventRightItem().setRightItem(params, weexEventBean.getJscallback());
-//                break;
-//            case WXConstant.WXEventCenter.EVENT_LEFTITEM:
-//                new EventLeftItem().setLeftItem(params, weexEventBean.getJscallback());
-//                break;
-//            case WXConstant.WXEventCenter.EVENT_CENTERITEM:
-//                new EventCenterItem().setCenterItem(params, weexEventBean.getJscallback());
-//                break;
-//            case WXConstant.WXEventCenter.EVENT_NAVIGATIONINFO:
-//                new EventNavigationInfo().setNavigationInfo(params, context, weexEventBean
-//                        .getJscallback());
-//                break;
-
-//            case WXConstant.WXEventCenter.EVENT_COPYSTRING:
-//                if (TextUtils.isEmpty(params)) return;
-//                new EventCopyString().copyString(context, params, weexEventBean.getJscallback());
-//                break;
-//            case WXConstant.WXEventCenter.EVENT_GETCID:
-//                new EventGetClientId().getClientId(context, weexEventBean.getJscallback());
-//                break;
-
-//            case WXConstant.WXEventCenter.EVENT_WATERMARKER:
-//                new EventWaterMarker().add(params,context);
-//                break;
-
+            case WXConstant.WXEventCenter.EVENT_RIGHTITEM:
+                new EventRightItem().setRightItem(params, weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_LEFTITEM:
+                new EventLeftItem().setLeftItem(params, weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_CENTERITEM:
+                new EventCenterItem().setCenterItem(params, weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_NAVIGATIONINFO:
+                new EventNavigationInfo().setNavigationInfo(params, context, weexEventBean
+                        .getJscallback());
+                break;
         }
     }
 
