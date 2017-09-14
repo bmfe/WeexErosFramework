@@ -12,7 +12,24 @@ public class TitleModel implements Serializable {
     public boolean hideNavbar;
     public String bgColor;
     public boolean addStatusBar;
+    private boolean navShow;
+    private String statusBarStyle;
 
+    public boolean isNavShow() {
+        return navShow;
+    }
+
+    public void setNavShow(boolean navShow) {
+        this.navShow = navShow;
+    }
+
+    public String getStatusBarStyle() {
+        return statusBarStyle;
+    }
+
+    public void setStatusBarStyle(String statusBarStyle) {
+        this.statusBarStyle = statusBarStyle;
+    }
 
     private String text;
     private String textColor;

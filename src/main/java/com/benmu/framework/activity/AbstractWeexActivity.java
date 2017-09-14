@@ -28,6 +28,7 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WeexEventBean;
@@ -68,6 +69,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     protected Activity mAct;
     public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
     private RelativeLayout rl_error;
+    private ViewGroup mRootView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,16 +127,22 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
-        ViewGroup rootView = (ViewGroup) View.inflate(this, R.layout.layout_root, null);
-        RelativeLayout rl_root = (RelativeLayout) rootView.findViewById(R.id.rl_root);
-        rl_error = (RelativeLayout) rootView.findViewById(R.id.rl_error);
-        mNavigationBar = (BaseToolBar) rootView.findViewById(R.id.base_navBar);
+        mRootView = (ViewGroup) View.inflate(this, R.layout.layout_root, null);
+        RelativeLayout rl_root = (RelativeLayout) mRootView.findViewById(R.id.rl_root);
+        rl_error = (RelativeLayout) mRootView.findViewById(R.id.rl_error);
+        mNavigationBar = (BaseToolBar) mRootView.findViewById(R.id.base_navBar);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams
                 .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         View child = View.inflate(this, layoutResID, null);
         rl_root.addView(child, params);
+        StatusBarManager.setHeaderBg(mRouterParam, this);
+        StatusBarManager.setStatusBarFontStyle(this,mRouterParam);
         setNavigationBar();
-        setContentView(rootView);
+        setContentView(mRootView);
+    }
+
+    public View getRootView() {
+        return mRootView;
     }
 
 

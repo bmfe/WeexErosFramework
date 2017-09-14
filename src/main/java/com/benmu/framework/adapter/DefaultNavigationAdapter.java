@@ -13,6 +13,7 @@ import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.TitleModel;
 import com.benmu.framework.utils.BMHookGlide;
@@ -126,9 +127,7 @@ public class DefaultNavigationAdapter {
         TitleModel titleModel = parseManager.parseObject(params, TitleModel.class);
         BaseToolBar navigationBar = getToolBar();
         if (navigationBar == null) return;
-
-        setTextView(navigationBar.getTitleTextView(), titleModel);
-
+        navigationBar.setVisibility(titleModel.isNavShow() ? View.VISIBLE : View.GONE);
         if (jscallback != null)
             navigationBar.setOnTitleListenner(new BaseToolBar.OnTitleClick() {
                 @Override
