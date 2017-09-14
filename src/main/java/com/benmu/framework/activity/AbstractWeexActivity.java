@@ -32,6 +32,7 @@ import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WeexEventBean;
+import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
@@ -84,7 +85,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     private void initDebug() {
-        if (!BuildConfig.DEBUG) return;
+        if (!DebugableUtil.isDebug()) return;
         mDebugger = new BMFloatingLayer(mAct);
         mDebugger.setListener(new BMFloatingLayer.FloatingLayerListener() {
             @Override

@@ -8,6 +8,7 @@ import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.http.BMPersistentCookieStore;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
+import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
@@ -33,6 +34,7 @@ public class BMWXEngine {
         initHttpClient(context);
         initInterceptor(context, initConfig);
         initDispatchCenter();
+        DebugableUtil.syncIsDebug(context);
     }
 
 

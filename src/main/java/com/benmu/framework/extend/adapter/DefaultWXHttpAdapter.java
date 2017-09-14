@@ -16,6 +16,7 @@ import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.model.Md5MapperModel;
+import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.adapter.IWXHttpAdapter;
@@ -148,7 +149,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     }
 
     private void hideError() {
-        if (!BuildConfig.DEBUG) return;
+        if (!DebugableUtil.isDebug()) return;
         Activity activity = RouterTracker.peekActivity();
         if (activity != null && activity instanceof AbstractWeexActivity) {
             AbstractWeexActivity abs = (AbstractWeexActivity) activity;
@@ -158,7 +159,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
 
     private void showError(final String message) {
-        if (!BuildConfig.DEBUG) return;
+        if (!DebugableUtil.isDebug()) return;
         final Activity activity = RouterTracker.peekActivity();
         if (activity != null && activity instanceof AbstractWeexActivity) {
             activity.runOnUiThread(new Runnable() {
