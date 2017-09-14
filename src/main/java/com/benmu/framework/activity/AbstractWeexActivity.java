@@ -84,6 +84,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     private void initDebug() {
+        if (!BuildConfig.DEBUG) return;
         mDebugger = new BMFloatingLayer(mAct);
         mDebugger.setListener(new BMFloatingLayer.FloatingLayerListener() {
             @Override
@@ -136,7 +137,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         View child = View.inflate(this, layoutResID, null);
         rl_root.addView(child, params);
         StatusBarManager.setHeaderBg(mRouterParam, this);
-        StatusBarManager.setStatusBarFontStyle(this,mRouterParam);
+        StatusBarManager.setStatusBarFontStyle(this, mRouterParam);
         setNavigationBar();
         setContentView(mRootView);
     }

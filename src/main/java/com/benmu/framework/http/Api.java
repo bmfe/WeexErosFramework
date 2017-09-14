@@ -9,6 +9,4 @@ import com.benmu.framework.BMWXEnvironment;
 public class Api {
     public static String BASE_URL = BMWXEnvironment.mPlatformConfig.getUrl().getRequest();
     public static String UPLOAD_URL = BMWXEnvironment.mPlatformConfig.getUrl().getImage();
-    public static String CHECKUPDATE_URL = BMWXEnvironment.mPlatformConfig.getUrl()
-            .getCheckJsVersionApi();
 }

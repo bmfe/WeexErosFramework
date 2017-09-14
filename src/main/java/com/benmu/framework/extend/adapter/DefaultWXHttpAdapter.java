@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.benmu.framework.BuildConfig;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
@@ -147,6 +148,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     }
 
     private void hideError() {
+        if (!BuildConfig.DEBUG) return;
         Activity activity = RouterTracker.peekActivity();
         if (activity != null && activity instanceof AbstractWeexActivity) {
             AbstractWeexActivity abs = (AbstractWeexActivity) activity;
@@ -156,13 +158,14 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
 
     private void showError(final String message) {
-        Activity activity = RouterTracker.peekActivity();
+        if (!BuildConfig.DEBUG) return;
+        final Activity activity = RouterTracker.peekActivity();
         if (activity != null && activity instanceof AbstractWeexActivity) {
-            AbstractWeexActivity abs = (AbstractWeexActivity) activity;
-            abs.showError();
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    AbstractWeexActivity abs = (AbstractWeexActivity) activity;
+                    abs.showError();
                     ModalManager.BmToast.toast(mContext, message,
                             Toast.LENGTH_SHORT);
                 }
