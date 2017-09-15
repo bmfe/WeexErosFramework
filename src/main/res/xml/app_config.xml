@@ -11,7 +11,7 @@
     <!--weex-module-->
     <module name="bmRouter">com.benmu.framework.extend.module.RouterModule</module>
     <module name="bmNavigator">com.benmu.framework.extend.module.TitleModule</module>
-    <module name="bmAxios">com.benmu.framework.extend.module.AxiosModule</module>m
+    <module name="bmAxios">com.benmu.framework.extend.module.AxiosModule</module>
     <module name="bmGeolocation">com.benmu.framework.extend.module.GeolocationModule</module>
     <module name="bmModal">com.benmu.framework.extend.module.ModalModule</module>
     <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
