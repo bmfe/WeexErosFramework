@@ -13,7 +13,7 @@ public class RouterModel implements Serializable {
     public String type;
     public Object params;
     public int length;
-    public boolean canBack;
+    public boolean canBack=true;
     public String navTitle;
     public boolean navShow;
     public String statusBarStyle;
@@ -31,6 +31,18 @@ public class RouterModel implements Serializable {
         this.params = params;
         this.navTitle = title;
         this.navShow = navShow;
+        this.statusBarStyle = statusBarStyle;
+    }
+
+
+    public RouterModel(String url, String type, Object params, String title, boolean navShow,
+                       String statusBarStyle, boolean canBack) {
+        this.url = url;
+        this.type = type;
+        this.params = params;
+        this.navTitle = title;
+        this.navShow = navShow;
+        this.canBack = canBack;
         this.statusBarStyle = statusBarStyle;
     }
 

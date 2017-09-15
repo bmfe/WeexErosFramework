@@ -79,9 +79,7 @@ public class DefaultNavigationAdapter {
     private static void setTextView(TextView textView, TitleModel titleModel) {
         if (textView == null) return;
         if (!TextUtils.isEmpty(titleModel.getFontSize())) {
-            textView.setTextSize(BaseCommonUtil.px2dp(BMWXEnvironment.mApplicationContext,
-                    WXUtils.getInt(titleModel.getFontSize
-                            ())));
+            textView.setTextSize(WXUtils.getInt(titleModel.getFontSize()) / 2);
         }
         if (!TextUtils.isEmpty(titleModel.getFontWeight())) {
             textView.getPaint().setFakeBoldText(true);
