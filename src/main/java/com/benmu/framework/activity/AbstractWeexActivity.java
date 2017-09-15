@@ -448,12 +448,19 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onBackPressed() {
-        if (mRouterParam != null && mRouterParam.isRunBackCallback && null != mRouterParam
-                .backCallback) {
-            mRouterParam.backCallback.invoke(null);
-        } else {
-            RouterTracker.popActivity();
+
+        if (mRouterParam != null && mRouterParam.isRunBackCallback) {
+            if (mRouterParam.backCallback != null) {
+                mRouterParam.backCallback.invoke(null);
+            }
         }
+
+        if (mRouterParam != null && !mRouterParam.canBack) {
+            return;
+        }
+
+        RouterTracker.popActivity();
+
     }
 
 
