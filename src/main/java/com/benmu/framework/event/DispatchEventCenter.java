@@ -160,6 +160,16 @@ public class DispatchEventCenter {
                 new EventNavigationInfo().setNavigationInfo(params, context, weexEventBean
                         .getJscallback());
                 break;
+            case WXConstant.WXEventCenter.EVENT_RESIGNKEYBOARD:
+
+                break;
+            case WXConstant.WXEventCenter.EVENT_ISINSTALLWXAPP:
+                break;
+            case WXConstant.WXEventCenter.EVENT_GETCID:
+                break;
+            case WXConstant.WXEventCenter.EVENT_COPYSTRING:
+                break;
+
         }
     }
 

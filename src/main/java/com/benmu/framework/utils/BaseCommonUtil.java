@@ -18,6 +18,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -257,6 +258,25 @@ public class BaseCommonUtil {
         if (object == null) {
             throw e;
         }
+    }
+
+
+
+    /**
+     * 键盘是否关闭
+     */
+    public static boolean getKeyBoardState(Context context) {
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity
+                    .INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(),
+                        0);
+                return true;
+            }
+        }
+        return false;
     }
 
 //    public static String getDeviceId(Context context) {

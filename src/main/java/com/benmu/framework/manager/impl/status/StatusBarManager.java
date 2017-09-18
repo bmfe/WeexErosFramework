@@ -74,12 +74,17 @@ public class StatusBarManager extends Manager {
                             .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 }
                 layoutParams.topMargin = 0;
+                translucentStatusBar(activity);
             } else {
                 //不可透明 向上平移状态栏高度
                 View root = activity.getRootView();
                 setOffset(activity, root, false);
             }
         }
+    }
+
+    private static void translucentStatusBar(AbstractWeexActivity activity) {
+
     }
 
 
