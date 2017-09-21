@@ -9,6 +9,7 @@ import com.benmu.framework.event.camera.EventCamera;
 import com.benmu.framework.event.http.EventFetch;
 import com.benmu.framework.event.modal.EventAlert;
 import com.benmu.framework.event.modal.EventConfirm;
+import com.benmu.framework.event.modal.EventDismissLoading;
 import com.benmu.framework.event.modal.EventShowLoading;
 import com.benmu.framework.event.modal.EventToast;
 import com.benmu.framework.event.nav.EventCenterItem;
@@ -27,6 +28,7 @@ import com.benmu.framework.event.shorage.EventDeleteData;
 import com.benmu.framework.event.shorage.EventGetData;
 import com.benmu.framework.event.shorage.EventRemoveData;
 import com.benmu.framework.event.shorage.EventSetData;
+import com.benmu.framework.event.tool.EventTool;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
@@ -161,13 +163,16 @@ public class DispatchEventCenter {
                         .getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_RESIGNKEYBOARD:
-
+                new EventTool().resignKeyboard(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_ISINSTALLWXAPP:
                 break;
             case WXConstant.WXEventCenter.EVENT_GETCID:
                 break;
             case WXConstant.WXEventCenter.EVENT_COPYSTRING:
+                break;
+            case WXConstant.WXEventCenter.EVENT_MODAL_DISMISSLOADING:
+                new EventDismissLoading().dismiss(context,weexEventBean.getJscallback());
                 break;
 
         }

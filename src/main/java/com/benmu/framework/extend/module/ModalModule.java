@@ -51,11 +51,11 @@ public class ModalModule extends WXModule {
 
     @JSMethod(uiThread = true)
     public void hideLoading(JSCallback callback) {
-        //TODO
-//        BMModalManager.BmLoading.dismissLoading(mWXSDKInstance.getContext());
-//        if (callback != null) {
-//            callback.invoke(null);
-//        }
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_MODAL_DISMISSLOADING);
+        eventBean.setJscallback(callback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
 
     @JSMethod(uiThread = true)

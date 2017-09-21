@@ -65,6 +65,7 @@ public class WXConstant {
         public static final String EVENT_MODAL_ALERT = "EVENT_MODAL_ALERT";
         public static final String EVENT_MODAL_CONFIRM = "EVENT_MODAL_CONFIRM";
         public static final String EVENT_MODAL_SHOWLOADING = "EVENT_MODAL_SHOWLOADING";
+        public static final String EVENT_MODAL_DISMISSLOADING="EVENT_MODAL_DISMISSLOADING";
         public static final String EVENT_MODAL_TOAST = "EVENT_MODAL_TOAST";
         public static final String EVENT_FETCH = "EVENT_FETCH";
         public static final String EVENT_GETREQUESTURL = "EVENT_GETREQUESTURL";

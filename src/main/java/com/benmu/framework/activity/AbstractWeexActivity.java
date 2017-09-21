@@ -37,6 +37,7 @@ import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.BaseToolBar;
+import com.benmu.widget.view.loading.SVProgressHUD;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.taobao.weex.IWXRenderListener;
@@ -386,6 +387,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
         if (mDebugger != null) {
             mDebugger.close();
+        }
+        if (SVProgressHUD.isShowing(this)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SVProgressHUD.isShowing(mAct);
+                }
+            });
         }
     }
 

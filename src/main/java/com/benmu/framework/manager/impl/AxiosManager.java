@@ -83,8 +83,16 @@ public class AxiosManager extends Manager {
         if (!safeUrl(mUrl)) {
             mUrl = Api.BASE_URL + mUrl;
         }
+        String contentType = null;
+        if (header != null) {
+            contentType = header.get("Content-Type");
+        }
+        if (TextUtils.isEmpty(contentType)) {
+            contentType = "application/json; charset=utf-8";
+        }
+
         OkHttpUtils.postString().url(mUrl).content(data).mediaType(MediaType
-                .parse("application/json; charset=utf-8")).headers(header).tag(tag).build()
+                .parse(contentType)).headers(header).tag(tag).build()
                 .execute(stringCallback);
     }
 

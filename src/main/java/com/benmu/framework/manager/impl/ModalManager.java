@@ -12,6 +12,11 @@ import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.manager.Manager;
 import com.benmu.widget.view.BMAlert;
 import com.benmu.widget.view.BMLoding;
+import com.benmu.widget.view.loading.SVProgressHUD;
+
+import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.BlackCancel;
+import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.Clear;
+import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.ClearCancel;
 
 /**
  * Created by Carry on 2017/8/7.
@@ -41,34 +46,37 @@ public class ModalManager extends Manager {
     public static class BmLoading {
         private static BMLoding mBmLoading = null;
 
-        public static void showLoading(Context context, String message, boolean
+        public static void showLoading(Context context, final String message, boolean
                 canWatchOutsideTouch) {
             if (context instanceof AbstractWeexActivity) {
-                AbstractWeexActivity activity = (AbstractWeexActivity) context;
-                //TODO
-                if (activity.getLoading() == null) {
-                    BMLoding loading = new BMLoding(activity);
-                    loading.setWatchOutsideTouch(canWatchOutsideTouch);
-                    if (!activity.isFinishing() && Looper.myLooper() == Looper.getMainLooper()) {
-                        activity.setLoading(loading);
-                        activity.getLoading().show();
-                    }
+                final AbstractWeexActivity activity = (AbstractWeexActivity) context;
+                if (activity.isFinishing()) return;
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    SVProgressHUD.showWithStatus(activity, message, BlackCancel);
                 } else {
-                    if (!activity.getLoading().isShowing() && !activity.isFinishing() && Looper
-                            .myLooper() == Looper.getMainLooper()) {
-                        activity.getLoading().show();
-                    }
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SVProgressHUD.showWithStatus(activity, message, BlackCancel);
+                        }
+                    });
                 }
             }
         }
 
         public static void dismissLoading(Context context) {
             if (context instanceof AbstractWeexActivity) {
-                AbstractWeexActivity activity = (AbstractWeexActivity) context;
-                if (activity.getLoading() != null && activity.getLoading().isShowing() && !activity
-                        .isFinishing() && Looper
-                        .myLooper() == Looper.getMainLooper()) {
-                    activity.getLoading().dismiss();
+                final AbstractWeexActivity activity = (AbstractWeexActivity) context;
+                if (activity.isFinishing()) return;
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    SVProgressHUD.dismiss(activity);
+                } else {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SVProgressHUD.dismiss(activity);
+                        }
+                    });
                 }
             }
 
