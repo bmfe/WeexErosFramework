@@ -116,13 +116,21 @@ public class DefaultRouterAdapter {
 
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        final String phone = (String) parseManager.parseObject(params).get("phone");
+        String phone = null;
+        try {
+            phone = (String) parseManager.parseObject(params).get("phone");
+        } catch (Exception e) {
+            e.printStackTrace();
+            phone = "110";
+        }
+
         if (!TextUtils.isEmpty(phone) && context != null) {
+            final String finalPhone = phone;
             ModalManager.BmAlert.showAlert(context, null, phone, "呼叫", new DialogInterface
                     .OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + finalPhone));
                     context.startActivity(dialIntent);
                     dialog.dismiss();
                 }
@@ -140,11 +148,12 @@ public class DefaultRouterAdapter {
         intent.addCategory(Constant.BMWEBVIEW_CATEGORY);
         String type = webViewParamBean.getType() == null ? Constant.ACTIVITIES_ANIMATION
                 .ANIMATION_PUSH : webViewParamBean.getType();
-        RouterModel routerModel = new RouterModel(null,type, null, title, webViewParamBean.isNavShow(),
+        RouterModel routerModel = new RouterModel(null, type, null, title, webViewParamBean
+                .isNavShow(),
                 null);
-        intent.putExtra(Constant.ROUTERPARAMS,routerModel);
+        intent.putExtra(Constant.ROUTERPARAMS, routerModel);
         intent.putExtra(Constant.WEBVIEW_PARAMS, webViewParamBean);
-        if(context instanceof Activity){
+        if (context instanceof Activity) {
             Activity activity = (Activity) context;
             activity.startActivity(intent);
             if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PUSH.equals(routerModel.type)) {

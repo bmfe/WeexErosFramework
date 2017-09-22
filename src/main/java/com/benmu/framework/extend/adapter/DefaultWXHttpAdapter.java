@@ -66,6 +66,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         if (listener != null) {
             listener.onHttpStart();
         }
+
         execute(new Runnable() {
             @Override
             public void run() {

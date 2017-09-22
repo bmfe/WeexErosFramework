@@ -1,29 +1,26 @@
 package com.benmu.framework.manager.impl;
 
-import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
-import com.benmu.framework.constant.Constant;
 import com.benmu.framework.http.Api;
+import com.benmu.framework.http.okhttp.OkHttpUtils;
+import com.benmu.framework.http.okhttp.builder.GetBuilder;
+import com.benmu.framework.http.okhttp.builder.OkHttpRequestBuilder;
+import com.benmu.framework.http.okhttp.builder.OtherRequestBuilder;
+import com.benmu.framework.http.okhttp.builder.PostFormBuilder;
+import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UpLoadImage;
 import com.benmu.framework.model.UploadResultBean;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.GetBuilder;
-import com.zhy.http.okhttp.builder.OkHttpRequestBuilder;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import okhttp3.Call;
 import okhttp3.MediaType;
 
@@ -52,6 +49,71 @@ public class AxiosManager extends Manager {
         GetBuilder builder = OkHttpUtils.get().url(mUrl).tag(tag).headers(header);
         generateParams(params, builder);
         builder.build().execute(stringCallback);
+    }
+
+    public void put(String url, String content, HashMap<String, String> header, StringCallback
+            callBack, Object tag) {
+        if (TextUtils.isEmpty(url)) return;
+        if (!safeUrl(url)) {
+            url = Api.BASE_URL + url;
+        }
+        if (header == null) {
+            header = new HashMap<>();
+        }
+        OtherRequestBuilder builder = OkHttpUtils.put().url(url).tag(tag).headers(header);
+        if (content != null) {
+            builder.requestBody(content);
+        }
+        builder.build().execute(callBack);
+    }
+
+    public void delete(String url, String content, HashMap<String, String> header, StringCallback
+            callBack, Object tag) {
+        if (TextUtils.isEmpty(url)) return;
+        if (!safeUrl(url)) {
+            url = Api.BASE_URL + url;
+        }
+        if (header == null) {
+            header = new HashMap<>();
+        }
+        OtherRequestBuilder builder = OkHttpUtils.delete().url(url).tag(tag).headers(header);
+        if (content != null) {
+            builder.requestBody(content);
+        }
+        builder.build().execute(callBack);
+    }
+
+    public void patch(String url, String content, HashMap<String, String> header, StringCallback
+            callback, Object tag) {
+        if (TextUtils.isEmpty(url)) return;
+        if (!safeUrl(url)) {
+            url = Api.BASE_URL + url;
+        }
+        if (header == null) {
+            header = new HashMap<>();
+        }
+        OtherRequestBuilder builder = OkHttpUtils.patch().url(url).tag(tag).headers(header);
+        if (content != null) {
+            builder.requestBody(content);
+        }
+        builder.build().execute(callback);
+    }
+
+    public void head(String url, HashMap<String, String> params, HashMap<String, String> header,
+                     StringCallback callback, Object tag) {
+        if (TextUtils.isEmpty(url)) return;
+        if (!safeUrl(url)) {
+            url = Api.BASE_URL + url;
+        }
+        if (header == null) {
+            header = new HashMap<>();
+        }
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        OkHttpUtils.head().url(url).tag(tag).headers(header).params(params).build().execute
+                (callback);
+
     }
 
     private boolean safeUrl(String origin) {

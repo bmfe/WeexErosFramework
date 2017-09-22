@@ -7,15 +7,14 @@ import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.http.BMPersistentCookieStore;
+import com.benmu.framework.http.okhttp.OkHttpUtils;
+import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
+import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.cookie.CookieJarImpl;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
-
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 

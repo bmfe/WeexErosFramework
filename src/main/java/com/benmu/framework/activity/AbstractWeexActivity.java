@@ -457,7 +457,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onBackPressed() {
-
+        if (SVProgressHUD.isShowing(this)) {
+            SVProgressHUD.dismiss(this);
+            return;
+        }
         if (mRouterParam != null && mRouterParam.isRunBackCallback) {
             if (mRouterParam.backCallback != null) {
                 mRouterParam.backCallback.invoke(null);
