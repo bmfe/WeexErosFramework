@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
+import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.http.BMPersistentCookieStore;
@@ -15,6 +16,7 @@ import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
+
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +36,7 @@ public class BMWXEngine {
         initInterceptor(context, initConfig);
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
+        EventCenter.getInstance().init();
     }
 
 

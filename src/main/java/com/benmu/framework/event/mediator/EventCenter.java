@@ -14,19 +14,19 @@ import com.taobao.weex.bridge.JSCallback;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Carry on 2017/8/7.
- * eventCenter between native and js
+ * Created by Carry on 2017/8/7. eventCenter between native and js
  */
 
 public class EventCenter {
     private static EventCenter mInstance = new EventCenter();
     private Map<String, List<Event>> mEvents;
-    private List<String> mWxInstances;
+    private HashSet<String> mWxInstances;
 
     public static EventCenter getInstance() {
         return mInstance;
@@ -37,7 +37,7 @@ public class EventCenter {
 
     public void init() {
         mEvents = new HashMap<String, List<Event>>();
-        mWxInstances = new ArrayList<String>();
+        mWxInstances = new HashSet<>();
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
     }
 
@@ -50,6 +50,7 @@ public class EventCenter {
                 list = new ArrayList<>();
             }
             list.add(event);
+            mEvents.put(event.getType(), list);
             if (!TextUtils.isEmpty(event.getInstanceId())) {
                 mWxInstances.add(event.getInstanceId());
             }
@@ -69,7 +70,7 @@ public class EventCenter {
                     Event event = iterator.next();
                     if (event.getJsCallback() != null && mWxInstances.contains(event
                             .getInstanceId())) {
-                        event.getJsCallback().invoke(emit.getParams());
+                        event.getJsCallback().invokeAndKeepAlive(emit.getParams());
                         if (event.isOnce()) {
                             iterator.remove();
                         }
@@ -86,7 +87,7 @@ public class EventCenter {
     public void off(Intent intent) {
         if (WXConstant.WXEventCenter.EVENT_JS_OFF.equals(intent.getAction())) {
             Off off = (Off) intent.getSerializableExtra("data");
-            mEvents.remove(off);
+            mEvents.remove(off.getType());
             if (off.getCallback() != null) {
                 off.getCallback().invoke(null);
             }
