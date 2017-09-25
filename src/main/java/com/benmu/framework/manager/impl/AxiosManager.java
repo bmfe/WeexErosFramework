@@ -16,13 +16,16 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UpLoadImage;
 import com.benmu.framework.model.UploadResultBean;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import okhttp3.Call;
 import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 
 /**
@@ -30,6 +33,7 @@ import okhttp3.MediaType;
  */
 
 public class AxiosManager extends Manager {
+    private static final String DEFAULT_MEDIATYPE = "application/json; charset=utf-8";
 
     public void cancel(Object tag) {
 
@@ -62,7 +66,7 @@ public class AxiosManager extends Manager {
         }
         OtherRequestBuilder builder = OkHttpUtils.put().url(url).tag(tag).headers(header);
         if (content != null) {
-            builder.requestBody(content);
+            builder.requestBody(createRequestBodyByMediaType(header, content));
         }
         builder.build().execute(callBack);
     }
@@ -78,7 +82,7 @@ public class AxiosManager extends Manager {
         }
         OtherRequestBuilder builder = OkHttpUtils.delete().url(url).tag(tag).headers(header);
         if (content != null) {
-            builder.requestBody(content);
+            builder.requestBody(createRequestBodyByMediaType(header, content));
         }
         builder.build().execute(callBack);
     }
@@ -94,7 +98,7 @@ public class AxiosManager extends Manager {
         }
         OtherRequestBuilder builder = OkHttpUtils.patch().url(url).tag(tag).headers(header);
         if (content != null) {
-            builder.requestBody(content);
+            builder.requestBody(createRequestBodyByMediaType(header, content));
         }
         builder.build().execute(callback);
     }
@@ -114,6 +118,23 @@ public class AxiosManager extends Manager {
         OkHttpUtils.head().url(url).tag(tag).headers(header).params(params).build().execute
                 (callback);
 
+    }
+
+    private RequestBody createRequestBodyByMediaType(Map<String, String> header, String content) {
+        if (header != null && !TextUtils.isEmpty(header.get("Content-Type"))) {
+            String s = header.get("Content-Type");
+            MediaType mediaType = null;
+            try {
+                mediaType = MediaType.parse(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (mediaType == null) {
+                mediaType = MediaType.parse(DEFAULT_MEDIATYPE);
+            }
+            return RequestBody.create(mediaType, content);
+        }
+        return RequestBody.create(MediaType.parse(DEFAULT_MEDIATYPE), content);
     }
 
     private boolean safeUrl(String origin) {
@@ -150,7 +171,7 @@ public class AxiosManager extends Manager {
             contentType = header.get("Content-Type");
         }
         if (TextUtils.isEmpty(contentType)) {
-            contentType = "application/json; charset=utf-8";
+            contentType = DEFAULT_MEDIATYPE;
         }
 
         OkHttpUtils.postString().url(mUrl).content(data).mediaType(MediaType
