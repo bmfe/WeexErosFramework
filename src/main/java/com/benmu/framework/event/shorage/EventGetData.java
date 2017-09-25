@@ -31,4 +31,21 @@ public class EventGetData {
             jscallback.invoke(bean);
         }
     }
+
+    public Object getDataSync(Context context, ArrayList<String> list) {
+        String key = list.get(0);
+        StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
+        String result = storageManager.getData(context, key);
+        StorageRaesultBean bean = new StorageRaesultBean();
+        if (result == null) {
+            bean.resCode = 9;
+        } else {
+            bean.resCode = 0;
+        }
+        StorageRaesultBean.Result data = new StorageRaesultBean.Result();
+        data.value = result;
+        bean.data = data;
+
+        return bean;
+    }
 }

@@ -1,6 +1,10 @@
 package com.benmu.framework.extend.module;
 
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.event.shorage.EventDeleteData;
+import com.benmu.framework.event.shorage.EventGetData;
+import com.benmu.framework.event.shorage.EventRemoveData;
+import com.benmu.framework.event.shorage.EventSetData;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
@@ -15,49 +19,92 @@ import java.util.ArrayList;
  */
 
 public class StorageModule extends WXModule {
-    @JSMethod
-    public void setData(String key, String value, JSCallback callback) {
+
+    @JSMethod(uiThread = false)
+    public Object setData(String key, String value, JSCallback callback) {
+        if (callback == null) {
+            return setSync(key, value);
+        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_SETDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
-        ArrayList<String>list=new ArrayList();
+        ArrayList<String> list = new ArrayList();
         list.add(key);
         list.add(value);
         weexEventBean.setParamsList(list);
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+        return null;
     }
 
-    @JSMethod
-    public void getData(String key, JSCallback callback) {
+    private Object setSync(String key, String value) {
+        ArrayList<String> list = new ArrayList();
+        list.add(key);
+        list.add(value);
+        return new EventSetData().setDataSync(mWXSDKInstance.getContext(), list);
+    }
+
+
+    @JSMethod(uiThread = false)
+    public Object getData(String key, JSCallback callback) {
+        if (callback == null) {
+            return getSync(key);
+        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_GETDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
-        ArrayList<String>list=new ArrayList();
+        ArrayList<String> list = new ArrayList();
         list.add(key);
         weexEventBean.setParamsList(list);
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+        return null;
     }
 
-    @JSMethod
-    public void deleteData(String key, JSCallback callback) {
+    private Object getSync(String key) {
+        ArrayList<String> list = new ArrayList();
+        list.add(key);
+        return new EventGetData().getDataSync(mWXSDKInstance.getContext(), list);
+    }
+
+    @JSMethod(uiThread = false)
+    public Object deleteData(String key, JSCallback callback) {
+        if (callback == null) {
+            return deleteSync(key);
+        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_DELETEDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
-        ArrayList<String>list=new ArrayList();
+        ArrayList<String> list = new ArrayList();
         list.add(key);
         weexEventBean.setParamsList(list);
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+        return null;
 
     }
 
-    @JSMethod
-    public void removeData(JSCallback callback) {
+    private Object deleteSync(String key) {
+        ArrayList<String> list = new ArrayList();
+        list.add(key);
+        return new EventDeleteData().deleteDataSync(mWXSDKInstance.getContext(), list);
+    }
+
+    @JSMethod(uiThread = false)
+    public Object removeData(JSCallback callback) {
+        if (callback == null) {
+            return removeSync();
+        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_REMOVEDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
-}}
+        return null;
+    }
+
+    private Object removeSync() {
+        return new EventRemoveData().removeDataSync(mWXSDKInstance.getContext());
+    }
+
+}

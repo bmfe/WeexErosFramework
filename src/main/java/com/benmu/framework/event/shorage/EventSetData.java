@@ -30,4 +30,20 @@ public class EventSetData {
             jscallback.invoke(bean);
         }
     }
+
+
+    public Object setDataSync(Context context, ArrayList<String> paramsList) {
+        StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
+        String key = paramsList.get(0);
+        String value = paramsList.get(1);
+        boolean result = storageManager.setData(context, key, value);
+        BaseResultBean bean = new BaseResultBean();
+        if (result) {
+            bean.resCode = 0;
+        } else {
+            bean.resCode = 9;
+            bean.msg = "存储失败";
+        }
+        return bean;
+    }
 }

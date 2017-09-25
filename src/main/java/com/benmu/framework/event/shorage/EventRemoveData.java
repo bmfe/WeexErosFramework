@@ -28,5 +28,20 @@ public class EventRemoveData {
             jscallback.invoke(bean);
         }
     }
+
+    public Object removeDataSync(Context context) {
+        StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
+        boolean result = storageManager.removeData(context);
+
+        BaseResultBean bean = new BaseResultBean();
+        if (result) {
+            bean.resCode = 0;
+        } else {
+            bean.resCode = 9;
+            bean.msg = "删除失败";
+        }
+
+        return bean;
+    }
 }
 

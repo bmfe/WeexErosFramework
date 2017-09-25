@@ -31,4 +31,18 @@ public class EventDeleteData {
             jscallback.invoke(bean);
         }
     }
+
+    public Object deleteDataSync(Context context,ArrayList<String> paramsList){
+        String key = paramsList.get(0);
+        StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
+        boolean result = storageManager.deleteData(context, key);
+        BaseResultBean bean = new BaseResultBean();
+        if (result) {
+            bean.resCode = 0;
+        } else {
+            bean.resCode = 9;
+            bean.msg = "删除" + key + "失败";
+        }
+        return bean;
+    }
 }
