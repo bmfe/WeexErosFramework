@@ -237,10 +237,10 @@ public class SharePreferenceUtil {
     }
 
 
-    public static void putStringExtra(Context context, String key, String value) {
+    public static boolean putStringExtra(Context context, String key, String value) {
         SharedPreferences preferences = context.getSharedPreferences(
                 Constant.SP.SP_NATIVE_NAME, Context.MODE_PRIVATE);
-        preferences.edit().putString(key, value).apply();
+        return preferences.edit().putString(key, value).commit();
     }
 
     public static String getStringExtra(Context context, String key,
@@ -251,10 +251,10 @@ public class SharePreferenceUtil {
     }
 
 
-    public static void putIntExtra(Context context, String key, int value) {
+    public static boolean putIntExtra(Context context, String key, int value) {
         SharedPreferences preferences = context.getSharedPreferences(
                 Constant.SP.SP_NATIVE_NAME, Context.MODE_PRIVATE);
-        preferences.edit().putInt(key, value).apply();
+        return preferences.edit().putInt(key, value).commit();
     }
 
     public static int getIntExtra(Context context, String key, int defValue) {
@@ -263,10 +263,10 @@ public class SharePreferenceUtil {
         return preferences.getInt(key, defValue);
     }
 
-    public static void putLongExtra(Context context, String key, long value) {
+    public static boolean putLongExtra(Context context, String key, long value) {
         SharedPreferences preferences = context.getSharedPreferences(
                 Constant.SP.SP_NATIVE_NAME, Context.MODE_PRIVATE);
-        preferences.edit().putLong(key, value).apply();
+        return preferences.edit().putLong(key, value).commit();
     }
 
     public static long getLongExtra(Context context, String key, long defValue) {
@@ -306,11 +306,11 @@ public class SharePreferenceUtil {
     public static boolean setData(Context context, String key, Serializable value) {
         if (context != null) {
             if (value instanceof Integer) {
-                putIntExtra(context, key, (Integer) value);
+                return putIntExtra(context, key, (Integer) value);
             } else if (value instanceof String) {
-                putStringExtra(context, key, (String) value);
+                return putStringExtra(context, key, (String) value);
             } else if (value instanceof Long) {
-                putLongExtra(context, key, (Long) value);
+                return putLongExtra(context, key, (Long) value);
             } else {
                 throw new RuntimeException("support value type !");
             }
