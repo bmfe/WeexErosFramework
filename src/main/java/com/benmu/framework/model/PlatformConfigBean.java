@@ -10,6 +10,33 @@ public class PlatformConfigBean implements Serializable {
     private String AppName;
     private Page Page;
     private Url url;
+    private Wechat wechat;
+    private Umeng umeng;
+    private Amap amap;
+
+    public Wechat getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(Wechat wechat) {
+        this.wechat = wechat;
+    }
+
+    public Umeng getUmeng() {
+        return umeng;
+    }
+
+    public void setUmeng(Umeng umeng) {
+        this.umeng = umeng;
+    }
+
+    public Amap getAmap() {
+        return amap;
+    }
+
+    public void setAmap(Amap amap) {
+        this.amap = amap;
+    }
 
     public String getAppName() {
         return AppName;
@@ -119,6 +146,79 @@ public class PlatformConfigBean implements Serializable {
 
         public void setCheckJsVersionApi(String checkJsVersionApi) {
             this.updateVersion = checkJsVersionApi;
+        }
+    }
+
+
+    public class Wechat {
+        private boolean enabled;
+        private String appId;
+        private String appSecret;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public void setAppId(String appId) {
+            this.appId = appId;
+        }
+
+        public String getAppSecret() {
+            return appSecret;
+        }
+
+        public void setAppSecret(String appSecret) {
+            this.appSecret = appSecret;
+        }
+    }
+
+    public class Umeng {
+        private boolean enabled;
+        private String androidAppKey;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getAndroidAppKey() {
+            return androidAppKey;
+        }
+
+        public void setAndroidAppKey(String androidAppKey) {
+            this.androidAppKey = androidAppKey;
+        }
+    }
+
+    public class Amap {
+        private boolean enabled;
+        private String androidAppKey;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getAndroidAppKey() {
+            return androidAppKey;
+        }
+
+        public void setAndroidAppKey(String androidAppKey) {
+            this.androidAppKey = androidAppKey;
         }
     }
 

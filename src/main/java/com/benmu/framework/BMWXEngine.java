@@ -1,7 +1,9 @@
 package com.benmu.framework;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -18,6 +20,9 @@ import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +44,28 @@ public class BMWXEngine {
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
         initMediator(context);
+        initWeChat(context);
+        initUmeng(context);
         EventCenter.getInstance().init();
+    }
+
+    private static void initUmeng(Application context) {
+        boolean enabled = BMWXEnvironment.mPlatformConfig.getUmeng().isEnabled();
+        String androidAppKey = BMWXEnvironment.mPlatformConfig.getUmeng().getAndroidAppKey();
+        if (enabled && !TextUtils.isEmpty(androidAppKey)) {
+            MobclickAgent.setDebugMode(DebugableUtil.isDebug());
+            MobclickAgent.openActivityDurationTrack(false);
+            MobclickAgent.setCatchUncaughtExceptions(!DebugableUtil.isDebug());
+            MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        }
+    }
+
+    private static void initWeChat(Context context) {
+        boolean enabled = BMWXEnvironment.mPlatformConfig.getWechat().isEnabled();
+        String appId = BMWXEnvironment.mPlatformConfig.getWechat().getAppId();
+        if (enabled && !TextUtils.isEmpty(appId)) {
+            BMWXEnvironment.mWXApi = WXAPIFactory.createWXAPI(context, appId, true);
+        }
     }
 
     private static void initMediator(Application context) {

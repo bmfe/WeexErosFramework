@@ -46,6 +46,7 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -341,6 +342,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
+        MobclickAgent.onResume(this);
     }
 
     @Override
@@ -365,6 +367,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillDisappear(mWXInstance, mRouterType);
         }
+        MobclickAgent.onPause(this);
     }
 
     @Override

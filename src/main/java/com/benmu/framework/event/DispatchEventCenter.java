@@ -16,6 +16,7 @@ import com.benmu.framework.event.nav.EventCenterItem;
 import com.benmu.framework.event.nav.EventLeftItem;
 import com.benmu.framework.event.nav.EventNavigationInfo;
 import com.benmu.framework.event.nav.EventRightItem;
+import com.benmu.framework.event.pay.EventPay;
 import com.benmu.framework.event.router.EventBack;
 import com.benmu.framework.event.router.EventCall;
 import com.benmu.framework.event.router.EventGetBackParams;
@@ -71,6 +72,7 @@ public class DispatchEventCenter {
         switch (weexEventBean.getKey()) {
             case WXConstant.WXEventCenter.EVENT_PAYBYWECHAT:
                 if (TextUtils.isEmpty(params)) return;
+                new EventPay().pay(params, context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_OPEN:
                 if (TextUtils.isEmpty(params)) return;
@@ -172,7 +174,7 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_COPYSTRING:
                 break;
             case WXConstant.WXEventCenter.EVENT_MODAL_DISMISSLOADING:
-                new EventDismissLoading().dismiss(context,weexEventBean.getJscallback());
+                new EventDismissLoading().dismiss(context, weexEventBean.getJscallback());
                 break;
 
         }
