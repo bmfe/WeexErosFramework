@@ -6,13 +6,18 @@ import android.content.DialogInterface;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
+import com.benmu.framework.R;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.manager.Manager;
 import com.benmu.widget.view.BMAlert;
+import com.benmu.widget.view.BMGridDialog;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.loading.SVProgressHUD;
+
+import java.util.List;
 
 import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.BlackCancel;
 import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.Clear;
@@ -108,5 +113,28 @@ public class ModalManager extends Manager {
             makeToast(context, message, duration);
         }
 
+    }
+
+    public static class BmShareDialog {
+
+        private static BMGridDialog mDialog;
+
+        public static void show(Activity activity, List<BMGridDialog.GridItem> list, BMGridDialog
+                .OnItemClickListener onItemClickListener) {
+            if (list == null) return;
+            BMGridDialog.Builder builder = new BMGridDialog.Builder(activity, R.style
+                    .ActionSheetDialogStyle);
+            mDialog = builder.setGravity(Gravity.BOTTOM).setNegativeButton("取消",
+                    null).setAdapter(new
+                    BMGridDialog.Adapter(activity, list, 4)).setOnItemClickListenner
+                    (onItemClickListener).build();
+            mDialog.show();
+        }
+
+        public static void dismiss() {
+            if (mDialog != null) {
+                mDialog.hide();
+            }
+        }
     }
 }

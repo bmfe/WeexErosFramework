@@ -59,4 +59,8 @@ dependencies {
     //友盟数据分析
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/libammsdk.jar')
+    compile files('libs/SocialSDK_WeChat_Simplify.jar')
+    compile files('libs/umeng_social_net.jar')
+    compile files('libs/umeng_social_api.jar')
+    compile files('libs/umeng_social_tool.jar')
 }

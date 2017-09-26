@@ -3,6 +3,8 @@ package com.benmu.framework.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -261,7 +263,6 @@ public class BaseCommonUtil {
     }
 
 
-
     /**
      * 键盘是否关闭
      */
@@ -277,6 +278,33 @@ public class BaseCommonUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 是否安装微信
+     */
+
+    public static boolean isWeChatInstall(Context context) {
+        final PackageManager packageManager = context.getPackageManager();
+        // 获取packagemanager
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        // 获取所有已安装程序的包信息
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                if (pn.equals("com.tencent.mm")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static void copyString(Context context, String content) {
+        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context
+                .CLIPBOARD_SERVICE);
+        manager.setPrimaryClip(ClipData.newPlainText("test", content));
     }
 
 //    public static String getDeviceId(Context context) {

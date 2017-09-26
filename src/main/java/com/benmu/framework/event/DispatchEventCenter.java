@@ -25,6 +25,7 @@ import com.benmu.framework.event.router.EventOpen;
 import com.benmu.framework.event.router.EventRefresh;
 import com.benmu.framework.event.router.EventToMap;
 import com.benmu.framework.event.router.EventWebView;
+import com.benmu.framework.event.share.EventShare;
 import com.benmu.framework.event.shorage.EventDeleteData;
 import com.benmu.framework.event.shorage.EventGetData;
 import com.benmu.framework.event.shorage.EventRemoveData;
@@ -168,15 +169,20 @@ public class DispatchEventCenter {
                 new EventTool().resignKeyboard(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_ISINSTALLWXAPP:
+                new EventTool().isWXInstall(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_GETCID:
                 break;
             case WXConstant.WXEventCenter.EVENT_COPYSTRING:
+                new EventTool().copyString(context, params, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_MODAL_DISMISSLOADING:
                 new EventDismissLoading().dismiss(context, weexEventBean.getJscallback());
                 break;
-
+            case WXConstant.WXEventCenter.EVENT_SHARE:
+                new EventShare().share(context, params, weexEventBean.getCallbacks().get(0),
+                        weexEventBean.getCallbacks().get(1));
+                break;
         }
     }
 

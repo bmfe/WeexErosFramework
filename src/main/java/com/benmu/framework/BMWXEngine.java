@@ -23,6 +23,8 @@ import com.taobao.weex.WXSDKEngine;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -57,8 +59,12 @@ public class BMWXEngine {
             MobclickAgent.openActivityDurationTrack(false);
             MobclickAgent.setCatchUncaughtExceptions(!DebugableUtil.isDebug());
             MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
+            PlatformConfig.setWeixin(BMWXEnvironment.mPlatformConfig.getWechat().getAppId(),
+                    BMWXEnvironment.mPlatformConfig.getWechat().getAppSecret());
+            UMShareAPI.get(context);
         }
     }
+
 
     private static void initWeChat(Context context) {
         boolean enabled = BMWXEnvironment.mPlatformConfig.getWechat().isEnabled();
