@@ -1,6 +1,7 @@
 package com.benmu.framework;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -12,6 +13,7 @@ import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
 import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
+import com.benmu.framework.service.BroadcastChannelService;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
@@ -36,7 +38,12 @@ public class BMWXEngine {
         initInterceptor(context, initConfig);
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
+        initMediator(context);
         EventCenter.getInstance().init();
+    }
+
+    private static void initMediator(Application context) {
+        context.startService(new Intent(context, BroadcastChannelService.class));
     }
 
 
