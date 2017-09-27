@@ -3,6 +3,7 @@ package com.benmu.framework.extend.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -95,8 +96,16 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private void doInterceptor(WXRequest request, OnHttpListener listener) {
         WXResponse response = new WXResponse();
         String url = request.url;
-
-        String subPath = url.substring(url.lastIndexOf("pages"));
+        if (TextUtils.isEmpty(url)) {
+            if (listener != null) {
+                response.statusCode = "-1";
+                response.errorCode = "-1";
+                response.errorMsg = "路径不能为空";
+                listener.onHttpFinish(response);
+            }
+            return;
+        }
+        String subPath = url.substring(url.indexOf("/dist/js") + 9);
         File bundleDir = ManagerFactory.getManagerService(FileManager.class).getBundleDir(mContext);
         File path = new File(bundleDir, subPath);
         if (listener != null) {

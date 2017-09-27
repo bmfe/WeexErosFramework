@@ -29,7 +29,8 @@ public class BroadcastChannelService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        String mediatorPage = BMWXEnvironment.mPlatformConfig.getPage().getMediatorPage();
+        String mediatorPage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
+                "/fe/dist/js" + BMWXEnvironment.mPlatformConfig.getPage().getMediatorPage();
         if (TextUtils.isEmpty(mediatorPage)) return;
         mInstance = new WXSDKInstance(this);
         Map<String, Object> options = new HashMap<>();
