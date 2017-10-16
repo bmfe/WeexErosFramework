@@ -1,6 +1,8 @@
 package com.benmu.framework.manager.impl;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.benmu.framework.constant.Constant;
@@ -8,6 +10,7 @@ import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.model.JsVersionInfoBean;
 import com.benmu.framework.model.Md5MapperModel;
+import com.benmu.framework.service.BroadcastChannelService;
 import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.AssetsUtil;
 import com.benmu.framework.utils.BaseCommonUtil;
@@ -53,7 +56,12 @@ public class VersionManager extends Manager {
             ManagerFactory.getManagerService(PersistentManager.class).setFileMapper(mapper
                     .getFilesMd5());
         }
+        initMediator(context);
         return new Date().getTime() - startTime;
+    }
+
+    private static void initMediator(Context context) {
+        context.startService(new Intent(context, BroadcastChannelService.class));
     }
 
     private void checkBundleDir(Context context) {

@@ -17,6 +17,8 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.TitleModel;
 import com.benmu.framework.model.WebViewParamBean;
+import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.bridge.SimpleJSCallback;
 
 import java.util.Map;
 
@@ -34,9 +36,12 @@ public class DefaultRouterAdapter {
         return mInstance;
     }
 
-    public boolean open(Context context, String params) {
+    public boolean open(Context context, String params, JSCallback jsCallback) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         RouterModel routerModel = parseManager.parseObject(params, RouterModel.class);
+        if (jsCallback != null) {
+            routerModel.backCallback = (SimpleJSCallback) jsCallback;
+        }
         return !(routerModel == null || !(context instanceof Activity)) && performStartActivity(
                 (Activity) context, routerModel, Constant.BMPAGE_CATEGORY);
     }
@@ -130,7 +135,8 @@ public class DefaultRouterAdapter {
                     .OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + finalPhone));
+                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +
+                            finalPhone));
                     context.startActivity(dialIntent);
                     dialog.dismiss();
                 }

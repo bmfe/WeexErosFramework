@@ -2,6 +2,7 @@ package com.benmu.framework.manager.impl;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.http.Api;
@@ -18,6 +19,7 @@ import com.benmu.framework.model.UpLoadImage;
 import com.benmu.framework.model.UploadResultBean;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,7 @@ import okhttp3.RequestBody;
 
 public class AxiosManager extends Manager {
     private static final String DEFAULT_MEDIATYPE = "application/json; charset=utf-8";
+    private static final String DEFAULT_HOST = "http://app.weex-eros.com";
 
     public void cancel(Object tag) {
 
@@ -44,9 +47,7 @@ public class AxiosManager extends Manager {
         if (mUrl == null) {
             return;
         }
-        if (!safeUrl(mUrl)) {
-            mUrl = Api.BASE_URL + mUrl;
-        }
+        mUrl = safeUrl(mUrl);
         if (header == null) {
             header = new HashMap<>();
         }
@@ -58,9 +59,7 @@ public class AxiosManager extends Manager {
     public void put(String url, String content, HashMap<String, String> header, StringCallback
             callBack, Object tag) {
         if (TextUtils.isEmpty(url)) return;
-        if (!safeUrl(url)) {
-            url = Api.BASE_URL + url;
-        }
+        url = safeUrl(url);
         if (header == null) {
             header = new HashMap<>();
         }
@@ -74,9 +73,7 @@ public class AxiosManager extends Manager {
     public void delete(String url, String content, HashMap<String, String> header, StringCallback
             callBack, Object tag) {
         if (TextUtils.isEmpty(url)) return;
-        if (!safeUrl(url)) {
-            url = Api.BASE_URL + url;
-        }
+        url = safeUrl(url);
         if (header == null) {
             header = new HashMap<>();
         }
@@ -90,9 +87,7 @@ public class AxiosManager extends Manager {
     public void patch(String url, String content, HashMap<String, String> header, StringCallback
             callback, Object tag) {
         if (TextUtils.isEmpty(url)) return;
-        if (!safeUrl(url)) {
-            url = Api.BASE_URL + url;
-        }
+        url = safeUrl(url);
         if (header == null) {
             header = new HashMap<>();
         }
@@ -106,9 +101,7 @@ public class AxiosManager extends Manager {
     public void head(String url, HashMap<String, String> params, HashMap<String, String> header,
                      StringCallback callback, Object tag) {
         if (TextUtils.isEmpty(url)) return;
-        if (!safeUrl(url)) {
-            url = Api.BASE_URL + url;
-        }
+        url = safeUrl(url);
         if (header == null) {
             header = new HashMap<>();
         }
@@ -137,9 +130,26 @@ public class AxiosManager extends Manager {
         return RequestBody.create(MediaType.parse(DEFAULT_MEDIATYPE), content);
     }
 
-    private boolean safeUrl(String origin) {
+    private String safeUrl(String origin) {
         Uri parse = Uri.parse(origin);
-        return !(TextUtils.isEmpty(parse.getScheme()) || TextUtils.isEmpty(parse.getHost()));
+        StringBuilder builder = new StringBuilder();
+        Uri requestHost = Uri.parse(TextUtils.isEmpty(Api.BASE_URL) ? DEFAULT_HOST : Api.BASE_URL);
+        if (TextUtils.isEmpty(parse.getScheme())) {
+            builder.append(requestHost.getScheme());
+        } else {
+            builder.append(parse.getScheme());
+        }
+        builder.append("://");
+        if (TextUtils.isEmpty(parse.getHost())) {
+            builder.append(requestHost.getHost());
+        } else {
+            builder.append(parse.getHost());
+        }
+        if (!parse.getPath().startsWith("/")) {
+            builder.append("/");
+        }
+        builder.append(parse.getPath());
+        return builder.toString();
     }
 
 
@@ -163,9 +173,7 @@ public class AxiosManager extends Manager {
         if (mUrl == null) {
             return;
         }
-        if (!safeUrl(mUrl)) {
-            mUrl = Api.BASE_URL + mUrl;
-        }
+        mUrl = safeUrl(mUrl);
         String contentType = null;
         if (header != null) {
             contentType = header.get("Content-Type");

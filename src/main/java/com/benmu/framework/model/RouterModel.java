@@ -18,7 +18,7 @@ public class RouterModel implements Serializable {
     public boolean navShow;
     public String statusBarStyle;
     public boolean isRunBackCallback;
-    public BackCallback backCallback;
+    public SimpleJSCallback backCallback;
 
     public RouterModel() {
     }
@@ -61,10 +61,10 @@ public class RouterModel implements Serializable {
         this.isRunBackCallback = isRunBackCallback;
     }
 
-    public class BackCallback extends SimpleJSCallback implements Serializable {
-
-        public BackCallback(String instanceId, String callbackId) {
-            super(instanceId, callbackId);
-        }
-    }
+//    public class BackCallback extends SimpleJSCallback implements Serializable {
+//
+//        public BackCallback(String instanceId, String callbackId) {
+//            super(instanceId, callbackId);
+//        }
+//    }
 }

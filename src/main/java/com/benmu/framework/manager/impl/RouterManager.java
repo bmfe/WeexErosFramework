@@ -15,6 +15,7 @@ import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.TitleModel;
 import com.benmu.framework.model.WebViewParamBean;
 import com.benmu.framework.utils.RouterUtil;
+import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +43,9 @@ public class RouterManager extends Manager {
     }
 
 
-    public boolean open(Context context, String params) {
+    public boolean open(Context context, String params, JSCallback callback) {
         return !(context == null || TextUtils.isEmpty(params)) && DefaultRouterAdapter
-                .getInstance().open(context, params);
+                .getInstance().open(context, params,callback);
     }
 
     public boolean back(Context context, String params) {

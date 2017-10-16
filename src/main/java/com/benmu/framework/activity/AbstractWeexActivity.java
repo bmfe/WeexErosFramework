@@ -466,7 +466,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
         if (mRouterParam != null && mRouterParam.isRunBackCallback) {
             if (mRouterParam.backCallback != null) {
-                mRouterParam.backCallback.invoke(null);
+                mRouterParam. backCallback.invoke(null);
             }
         }
 

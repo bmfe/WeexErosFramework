@@ -45,7 +45,6 @@ public class BMWXEngine {
         initInterceptor(context, initConfig);
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
-        initMediator(context);
         initWeChat(context);
         initUmeng(context);
         EventCenter.getInstance().init();
@@ -74,9 +73,7 @@ public class BMWXEngine {
         }
     }
 
-    private static void initMediator(Application context) {
-        context.startService(new Intent(context, BroadcastChannelService.class));
-    }
+
 
 
     private static void initDispatchCenter() {

@@ -7,6 +7,7 @@ import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.exception.CancelException;
 import com.benmu.framework.http.okhttp.exception.HttpException;
+import com.benmu.framework.http.okhttp.utils.L;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.ModalManager;
@@ -181,8 +182,22 @@ public class EventFetch {
     }
 
     private void parseResponse(String response, JSCallback callBack) {
-        if (callBack != null) {
-            callBack.invoke(JSONObject.parse(response));
+        Object res = null;
+        try {
+            res = JSONObject.parseObject(response);
+            if (callBack != null && res != null) {
+                callBack.invoke(res);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.e("json 解析错误");
+            BaseResultBean bean = new BaseResultBean();
+            bean.resCode = -1;
+            bean.msg = "json 解析错误";
+            if (callBack != null) {
+                callBack.invoke(bean);
+            }
         }
+
     }
 }

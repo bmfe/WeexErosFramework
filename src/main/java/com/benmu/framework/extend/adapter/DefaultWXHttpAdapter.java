@@ -84,13 +84,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     }
 
     private boolean isInterceptor(String url) {
-        for (String filter : mFileFilter) {
-            if (url.endsWith(filter)) {
-                return true;
-            }
-        }
-
-        return false;
+        return url.endsWith(".js");
     }
 
     private void doInterceptor(WXRequest request, OnHttpListener listener) {
@@ -142,7 +136,13 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                     .getAbsolutePath());
             if (listener != null) {
                 response.statusCode = 200 + "";
-                response.originalData = appendBaseJs(bytes);
+                if (isInterceptor(request.url)) {
+                    response.originalData = appendBaseJs(bytes);
+                } else {
+                    //iconFont
+                    response.originalData = bytes;
+                }
+//                response.originalData = appendBaseJs(bytes);
                 listener.onHttpFinish(response);
             }
             hideError();

@@ -77,7 +77,13 @@ public class DispatchEventCenter {
                 break;
             case WXConstant.WXEventCenter.EVENT_OPEN:
                 if (TextUtils.isEmpty(params)) return;
-                new EventOpen().open(params, context, weexEventBean.getJscallback());
+                if (weexEventBean.getCallbacks() != null) {
+                    new EventOpen().open(params, context, weexEventBean.getCallbacks());
+                } else if (weexEventBean.getJscallback() != null) {
+                    new EventOpen().open(params, context, weexEventBean.getJscallback());
+                }else {
+                    new EventOpen().open(params, context);
+                }
                 break;
             case WXConstant.WXEventCenter.EVENT_GETPARAMS:
                 new EventGetParams().getParams(context, weexEventBean.getJscallback());
