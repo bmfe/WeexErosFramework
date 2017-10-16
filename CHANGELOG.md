@@ -18,7 +18,7 @@
 
 # 0.0.3
 1.image标签 border-radius的问题  
-2.中介者实例应该没有注入
+2.中介者实例没有注入
 3.请求没有域名崩溃
 4.router.open backCallback没回调
 
