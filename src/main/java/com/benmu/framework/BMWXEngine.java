@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -16,10 +17,12 @@ import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
 import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.service.BroadcastChannelService;
+import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.common.Constants;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
@@ -38,7 +41,7 @@ import okhttp3.OkHttpClient;
 public class BMWXEngine {
     public static void initialize(Application context, BMInitConfig initConfig) {
         initPlatformConfig(context);
-        initConing(initConfig);
+        initConing(context, initConfig);
         engineStart(context);
         registerBMComponentsAndModules(context);
         initHttpClient(context);
@@ -49,6 +52,7 @@ public class BMWXEngine {
         initUmeng(context);
         EventCenter.getInstance().init();
     }
+
 
     private static void initUmeng(Application context) {
         boolean enabled = BMWXEnvironment.mPlatformConfig.getUmeng().isEnabled();
@@ -72,8 +76,6 @@ public class BMWXEngine {
             BMWXEnvironment.mWXApi = WXAPIFactory.createWXAPI(context, appId, true);
         }
     }
-
-
 
 
     private static void initDispatchCenter() {
@@ -125,12 +127,12 @@ public class BMWXEngine {
         );
     }
 
-    private static void initConing(BMInitConfig initConfig) {
+    private static void initConing(Application context, BMInitConfig initConfig) {
         if (initConfig == null) return;
-        initEnv(initConfig.getmEnvs());
+        initEnv(initConfig.getmEnvs(), context);
     }
 
-    private static void initEnv(HashMap<String, String> Env) {
+    private static void initEnv(HashMap<String, String> Env, Context context) {
         HashMap<String, String> insideEnv = new HashMap<>();
         insideEnv.put(Constant.CustomOptions.CUSTOM_APPNAME, BMWXEnvironment.mPlatformConfig
                 .getAppName());
@@ -139,6 +141,10 @@ public class BMWXEngine {
                 .getJsServer());
         insideEnv.put(Constant.CustomOptions.CUSTOM_REQUESTURL, BMWXEnvironment.mPlatformConfig
                 .getUrl().getRequest());
+        int statusBarHeight = BaseCommonUtil.getStatusBarHeight(context);
+        insideEnv.put(Constant.CustomOptions.CUSTOM_STATUSBARHEIGHT, BaseCommonUtil
+                .transferDimenToFE(context, statusBarHeight) + "");
+
         if (Env != null && !Env.isEmpty()) {
             insideEnv.putAll(Env);
         }

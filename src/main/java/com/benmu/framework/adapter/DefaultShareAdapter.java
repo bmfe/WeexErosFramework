@@ -3,6 +3,8 @@ package com.benmu.framework.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
@@ -12,8 +14,9 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.BaseResultBean;
-import com.benmu.framework.model.WebViewParamBean;
+import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.utils.BaseCommonUtil;
+import com.benmu.framework.utils.WeChatRelayUtil;
 import com.benmu.widget.view.BMGridDialog;
 import com.taobao.weex.bridge.JSCallback;
 import com.umeng.socialize.ShareAction;
@@ -22,6 +25,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,19 +50,28 @@ public class DefaultShareAdapter {
         this.mFailed = fail;
 
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        final WebViewParamBean.ShareInfo shareInfo = parseManager.parseObject(params,
-                WebViewParamBean
-                        .ShareInfo.class);
-        if (shareInfo == null) return;
-        mUMWeb = new UMWeb(shareInfo.getUrl());
-        mUMWeb.setTitle(shareInfo.getTitle());
-        mUMWeb.setDescription(shareInfo.getContent());
-        String image = shareInfo.getImage();
-        if (TextUtils.isEmpty(image)) {
-            mUMWeb.setThumb(new UMImage(mAct, R.drawable.place_holder));
-        } else {
-            mUMWeb.setThumb(new UMImage(mAct, image));
+
+        ShareInfoBean shareInfo = null;
+        try {
+            shareInfo = parseManager.parseObject(params, ShareInfoBean.class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        if (shareInfo == null) return;
+        if (shareInfo.isPopUp()) {
+            if (shareInfo.getPlatforms() == null || shareInfo.getPlatforms().size() > 1) {
+                fail.invoke(new BaseResultBean(9, "请确定分享平台"));
+                return;
+            }
+            shareDirectly(shareInfo, shareInfo.getPlatforms().get(0));
+        } else {
+            showShareDialog(shareInfo);
+        }
+    }
+
+    private void showShareDialog(final ShareInfoBean shareInfo) {
+
         if (shareInfo.getPlatforms() == null) {
             ArrayList<String> platforms = new ArrayList<>();
             platforms.add("Pasteboard");
@@ -101,12 +114,10 @@ public class DefaultShareAdapter {
                         copyClipboard(shareInfo.getUrl());
                         break;
                     case "WechatSession":
-                        startUmweb(mUMWeb, mPlatforms[0],
-                                shareListener);
+                        shareDirectly(shareInfo,"WechatSession");
                         break;
                     case "WechatTimeLine":
-                        startUmweb(mUMWeb, mPlatforms[1],
-                                shareListener);
+                        shareDirectly(shareInfo,"WechatTimeLine");
                         break;
                 }
                 if (dialog != null) {
@@ -116,7 +127,59 @@ public class DefaultShareAdapter {
         });
     }
 
-    private void startUmweb(UMWeb mUMWeb, SHARE_MEDIA mPlatform, UMShareListener shareListener) {
+    private void shareDirectly(ShareInfoBean shareInfo, String platform) {
+        switch (platform) {
+            case "WechatSession":
+                if ("WEB".equals(shareInfo.getMediaType())) {
+                    startUmweb(shareInfo, getShareMedia(platform), shareListener);
+                } else if ("IMAGE".equals(shareInfo.getMediaType())) {
+                } else if ("VIDEO".equals(shareInfo.getMediaType())) {
+
+                } else {
+                    if (mFailed != null) {
+                        mFailed.invoke(new BaseResultBean(9, "不支持的媒体类型"));
+                    }
+                }
+                break;
+            case "WechatTimeLine":
+                if ("WEB".equals(shareInfo.getMediaType())) {
+                    startUmweb(shareInfo, getShareMedia(platform), shareListener);
+                } else if ("IMAGE".equals(shareInfo.getMediaType())) {
+
+                } else if ("VIDEO".equals(shareInfo.getMediaType())) {
+
+                } else {
+                    if (mFailed != null) {
+                        mFailed.invoke(new BaseResultBean(9, "不支持的媒体类型"));
+                    }
+                }
+
+                break;
+            case "Pasteboard":
+                copyClipboard(shareInfo.getUrl());
+                break;
+        }
+    }
+
+    private SHARE_MEDIA getShareMedia(String platform) {
+        if ("WechatSession".equals(platform)) {
+            return SHARE_MEDIA.WEIXIN;
+        }
+        return SHARE_MEDIA.WEIXIN_CIRCLE;
+    }
+
+    private void startUmweb(ShareInfoBean shareInfo, SHARE_MEDIA mPlatform, UMShareListener
+            shareListener) {
+        mUMWeb = new UMWeb(shareInfo.getUrl());
+        mUMWeb.setTitle(shareInfo.getTitle());
+        mUMWeb.setDescription(shareInfo.getContent());
+        String image = shareInfo.getImage();
+        if (TextUtils.isEmpty(image)) {
+            mUMWeb.setThumb(new UMImage(mAct, R.drawable.place_holder));
+        } else {
+            mUMWeb.setThumb(new UMImage(mAct, image));
+        }
+
         new ShareAction(mAct).setPlatform(mPlatform).withMedia(mUMWeb).setCallback(shareListener)
                 .share();
     }

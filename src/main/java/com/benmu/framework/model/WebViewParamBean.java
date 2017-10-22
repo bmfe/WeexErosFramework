@@ -10,7 +10,7 @@ import java.util.List;
 public class WebViewParamBean implements Serializable {
     private String url;
     private String title;
-    private ShareInfo shareInfo;
+    private ShareInfoBean shareInfo;
     private boolean navShow;
     private String type;
 
@@ -46,60 +46,12 @@ public class WebViewParamBean implements Serializable {
         this.title = title;
     }
 
-    public ShareInfo getShareInfo() {
+    public ShareInfoBean getShareInfo() {
         return shareInfo;
     }
 
-    public void setShareInfo(ShareInfo shareInfo) {
+    public void setShareInfo(ShareInfoBean shareInfo) {
         this.shareInfo = shareInfo;
     }
 
-    public static class ShareInfo implements Serializable {
-        private String title;
-        private String content;
-        private String image;
-        private String url;
-        private List<String> platforms;
-
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public String getImage() {
-            return image;
-        }
-
-        public void setImage(String image) {
-            this.image = image;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public List<String> getPlatforms() {
-            return platforms;
-        }
-
-        public void setPlatforms(List<String> platforms) {
-            this.platforms = platforms;
-        }
-    }
 }

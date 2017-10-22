@@ -34,4 +34,32 @@ public class ShareModule extends WXModule {
 //                mWXSDKInstance.getContainerView(), success, fail);
 
     }
+
+    @JSMethod
+    public void relayToFriend(String params, JSCallback successCallback, JSCallback
+            failedCallback) {
+        WeexEventBean weexEventBean = new WeexEventBean();
+        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_RELAYTOFRIEND);
+        weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setJsParams(params);
+        ArrayList<JSCallback> callbacks = new ArrayList<>();
+        callbacks.add(successCallback);
+        callbacks.add(failedCallback);
+        weexEventBean.setCallbacks(callbacks);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+    }
+
+    @JSMethod
+    public void relayToCricle(String params, JSCallback successCallback, JSCallback
+            failedCallback) {
+        WeexEventBean weexEventBean = new WeexEventBean();
+        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_RELAYTOCRICLE);
+        weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setJsParams(params);
+        ArrayList<JSCallback> callbacks = new ArrayList<>();
+        callbacks.add(successCallback);
+        callbacks.add(failedCallback);
+        weexEventBean.setCallbacks(callbacks);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+    }
 }

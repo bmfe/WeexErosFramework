@@ -10,7 +10,12 @@ import com.benmu.framework.manager.Manager;
 
 public class ParseManager extends Manager {
     public <T> T parseObject(String jsonString, Class<T> clazz) {
-        return JSON.parseObject(jsonString, clazz);
+        try {
+            return JSON.parseObject(jsonString, clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String toJsonString(Object object) {
@@ -18,7 +23,12 @@ public class ParseManager extends Manager {
     }
 
     public JSONObject parseObject(String jsonString) {
-        return JSON.parseObject(jsonString);
+        try {
+            return JSON.parseObject(jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

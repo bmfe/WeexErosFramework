@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.ModalManager;
+import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.model.WebViewParamBean;
 import com.benmu.framework.utils.BaseCommonUtil;
 
@@ -53,7 +54,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         Intent data = getIntent();
         mWebViewParams = (WebViewParamBean) data.getSerializableExtra(Constant.WEBVIEW_PARAMS);
         String mUrl = mWebViewParams.getUrl();
-        WebViewParamBean.ShareInfo shareInfo = mWebViewParams.getShareInfo();
+        ShareInfoBean shareInfo = mWebViewParams.getShareInfo();
         if (shareInfo != null) {
             getNavigationBar().setRightIcon(R.drawable.icon_share);
         }

@@ -189,6 +189,12 @@ public class DispatchEventCenter {
                 new EventShare().share(context, params, weexEventBean.getCallbacks().get(0),
                         weexEventBean.getCallbacks().get(1));
                 break;
+            case WXConstant.WXEventCenter.EVENT_RELAYTOFRIEND:
+                new EventShare().relayToFriend(context,params,weexEventBean.getCallbacks());
+                break;
+            case WXConstant.WXEventCenter.EVENT_RELAYTOCRICLE:
+                new EventShare().relayToCricle(context,params,weexEventBean.getCallbacks());
+                break;
         }
     }
 

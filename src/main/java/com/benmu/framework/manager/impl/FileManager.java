@@ -25,7 +25,7 @@ public class FileManager extends Manager {
     public static final String JS_TEMP_REPERTORY = "/.temp_bundle";
     public static final String PATCH_NAME = "patch.zip";
     public static final String TEMP_NEW_BUNDLE_NAME = "newPages.zip";
-    public static final String TEMP_FILE = ".temp_file";
+    public static final String TEMP_FILE = "/.temp_file";
 
     public static boolean isSDCardAvailable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);

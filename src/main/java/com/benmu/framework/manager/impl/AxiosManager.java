@@ -11,6 +11,7 @@ import com.benmu.framework.http.okhttp.builder.GetBuilder;
 import com.benmu.framework.http.okhttp.builder.OkHttpRequestBuilder;
 import com.benmu.framework.http.okhttp.builder.OtherRequestBuilder;
 import com.benmu.framework.http.okhttp.builder.PostFormBuilder;
+import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
@@ -204,6 +205,11 @@ public class AxiosManager extends Manager {
         PostFormBuilder builder = OkHttpUtils.post().url(url).params(uploadParams).headers(heads);
         builder.addFile("file", "file", new File(filePath));
         builder.build().execute(callback);
+    }
+
+
+    public void download(String url, FileCallBack fileCallBack) {
+        OkHttpUtils.get().url(url).build().execute(fileCallBack);
     }
 
 

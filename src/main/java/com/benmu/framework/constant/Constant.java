@@ -130,6 +130,7 @@ public class Constant {
         public static final String CUSTOM_SERVERURL = "jsServer";
         public static final String CUSTOM_DEVICEID = "deviceId";
         public static final String CUSTOM_APPNAME = "appName";
+        public static final String CUSTOM_STATUSBARHEIGHT="statusBarHeight";
     }
 
 

@@ -139,8 +139,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         View child = View.inflate(this, layoutResID, null);
         rl_root.addView(child, params);
-        StatusBarManager.setHeaderBg(mRouterParam, this);
-        StatusBarManager.setStatusBarFontStyle(this, mRouterParam);
+//        StatusBarManager.setHeaderBg(mRouterParam, this);
+//        StatusBarManager.setStatusBarFontStyle(this, mRouterParam);
         setNavigationBar();
         setContentView(mRootView);
     }
