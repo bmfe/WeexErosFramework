@@ -7,6 +7,7 @@ import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.exception.CancelException;
 import com.benmu.framework.http.okhttp.exception.HttpException;
+import com.benmu.framework.http.okhttp.exception.IrregularUrlException;
 import com.benmu.framework.http.okhttp.utils.L;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
@@ -175,7 +176,12 @@ public class EventFetch {
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             bean.resCode = httpException.getmErrorCode();
+        } else if (e instanceof IrregularUrlException) {
+            IrregularUrlException irregularUrlException = (IrregularUrlException) e;
+            bean.resCode = 9;
+            bean.msg = irregularUrlException.getmErrosMeeage();
         }
+
         if (callback != null) {
             callback.invoke(bean);
         }

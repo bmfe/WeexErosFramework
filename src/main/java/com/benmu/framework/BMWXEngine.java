@@ -148,6 +148,7 @@ public class BMWXEngine {
         if (Env != null && !Env.isEmpty()) {
             insideEnv.putAll(Env);
         }
+        BMWXEnvironment.mCustomer = insideEnv;
         CustomerEnvOptionManager.registerCustomConfig(insideEnv);
     }
 

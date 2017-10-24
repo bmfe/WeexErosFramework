@@ -29,10 +29,12 @@ import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
+import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.DebugableUtil;
+import com.benmu.framework.utils.InsertEnvUtil;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
@@ -272,6 +274,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 " null"));
         Map<String, Object> options = new HashMap<>();
         options.put(WXSDKInstance.BUNDLE_URL, mPageUrl);
+        InsertEnvUtil.customerRender(options);
         mWXInstance.renderByUrl(
                 getPageName(),
                 mPageUrl,
@@ -466,7 +469,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
         if (mRouterParam != null && mRouterParam.isRunBackCallback) {
             if (mRouterParam.backCallback != null) {
-                mRouterParam. backCallback.invoke(null);
+                mRouterParam.backCallback.invoke(null);
             }
         }
 

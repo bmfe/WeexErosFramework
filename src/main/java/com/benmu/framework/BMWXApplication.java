@@ -9,6 +9,7 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
+import com.taobao.weex.WXSDKInstance;
 
 /**
  * Created by Carry on 2017/9/4.
@@ -16,6 +17,7 @@ import com.benmu.framework.manager.impl.LifecycleManager;
 
 public class BMWXApplication extends Application {
     private static BMWXApplication mInstance;
+    private WXSDKInstance mMediator;
 
     @Override
     public void onCreate() {
@@ -56,6 +58,7 @@ public class BMWXApplication extends Application {
     private void initWeex() {
         BMWXEngine.initialize(this, new BMInitConfig.Builder().isActiceInterceptor(Constant
                 .INTERCEPTOR_ACTIVE).build());
+
     }
 
 

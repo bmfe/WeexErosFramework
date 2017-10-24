@@ -3,11 +3,13 @@ package com.benmu.framework.extend.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -20,9 +22,11 @@ import com.benmu.framework.model.Md5MapperModel;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.utils.FontDO;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -83,6 +87,44 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         });
     }
 
+    @Override
+    public Typeface loadLocalFont(FontDO fontDO) {
+        if (fontDO == null) return null;
+        if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
+                (BMWXEnvironment.mApplicationContext))) {
+            //拦截器开启  从本地包中加载
+            String url = fontDO.getUrl();
+            if (TextUtils.isEmpty(url)) return null;
+            Uri parse = Uri.parse(url);
+            File localIcon = new File(FileManager.getBundleDir(BMWXEnvironment
+                    .mApplicationContext), "pages" + File.separator + parse.getHost() + File
+                    .separator + parse.getPath());
+            if (!localIcon.exists()) {
+                return null;
+            }
+            Typeface typeface = null;
+            try {
+                typeface = Typeface.createFromFile(localIcon.getAbsolutePath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return typeface;
+
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isInterceptor() {
+        return Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
+                (mContext));
+    }
+
+    @Override
+    public String getIconDownloadUrl() {
+        return BMWXEnvironment.mPlatformConfig.getUrl().getJsServer();
+    }
+
     private boolean isInterceptor(String url) {
         return url.endsWith(".js");
     }
@@ -102,6 +144,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         String subPath = url.substring(url.indexOf("/dist/js") + 9);
         File bundleDir = ManagerFactory.getManagerService(FileManager.class).getBundleDir(mContext);
         File path = new File(bundleDir, subPath);
+        Log.e("bus", "bus>>>>>>>" + path.getAbsolutePath());
         if (listener != null) {
             listener.onHttpStart();
         }
@@ -142,7 +185,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                     //iconFont
                     response.originalData = bytes;
                 }
-//                response.originalData = appendBaseJs(bytes);
                 listener.onHttpFinish(response);
             }
             hideError();
@@ -236,7 +278,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     private void fetchUrl(final WXRequest request, final OnHttpListener listener) {
         WXResponse response = new WXResponse();
-        Log.e("url", ">>>>>>>>>>>" + request.url);
         try {
             HttpURLConnection connection = openConnection(request, listener);
             Map<String, List<String>> headers = connection.getHeaderFields();

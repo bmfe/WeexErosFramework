@@ -22,4 +22,20 @@
 3.请求没有域名崩溃
 4.router.open backCallback没回调
 
-    
+# 0.0.4
+1.修复bug
+  1.1 修复中介者失效问题
+  1.2 修复android weex debug 无法调试问题
+  1.3 修复下拉刷新
+
+2.weex.config.env 调整
+  3.1 原weex.config.env自定义参数调整至weex.config.eros中
+  3.2 weex.config.eros增加状态栏高度参数
+3.iconfont
+  4.1 支持bmLocal本地iconfont加载
+
+4.Storage
+  5.1  增加同步存取方法
+5.http
+  6.1  保留前端调用fetch时url的上的参数
+  6.2  支持添加端口号

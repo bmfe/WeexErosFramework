@@ -20,11 +20,8 @@ import java.util.ArrayList;
 
 public class StorageModule extends WXModule {
 
-    @JSMethod(uiThread = false)
+    @JSMethod(uiThread = true)
     public Object setData(String key, String value, JSCallback callback) {
-        if (callback == null) {
-            return setSync(key, value);
-        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_SETDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
@@ -37,19 +34,8 @@ public class StorageModule extends WXModule {
         return null;
     }
 
-    private Object setSync(String key, String value) {
-        ArrayList<String> list = new ArrayList();
-        list.add(key);
-        list.add(value);
-        return new EventSetData().setDataSync(mWXSDKInstance.getContext(), list);
-    }
-
-
-    @JSMethod(uiThread = false)
+    @JSMethod(uiThread = true)
     public Object getData(String key, JSCallback callback) {
-        if (callback == null) {
-            return getSync(key);
-        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_GETDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
@@ -61,17 +47,8 @@ public class StorageModule extends WXModule {
         return null;
     }
 
-    private Object getSync(String key) {
-        ArrayList<String> list = new ArrayList();
-        list.add(key);
-        return new EventGetData().getDataSync(mWXSDKInstance.getContext(), list);
-    }
-
-    @JSMethod(uiThread = false)
+    @JSMethod(uiThread = true)
     public Object deleteData(String key, JSCallback callback) {
-        if (callback == null) {
-            return deleteSync(key);
-        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_DELETEDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
@@ -84,17 +61,8 @@ public class StorageModule extends WXModule {
 
     }
 
-    private Object deleteSync(String key) {
-        ArrayList<String> list = new ArrayList();
-        list.add(key);
-        return new EventDeleteData().deleteDataSync(mWXSDKInstance.getContext(), list);
-    }
-
-    @JSMethod(uiThread = false)
+    @JSMethod(uiThread = true)
     public Object removeData(JSCallback callback) {
-        if (callback == null) {
-            return removeSync();
-        }
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_REMOVEDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
@@ -103,8 +71,35 @@ public class StorageModule extends WXModule {
         return null;
     }
 
-    private Object removeSync() {
+
+    //   同步存取
+    @JSMethod(uiThread = false)
+    public Object setDataSync(String key, String value) {
+        ArrayList<String> list = new ArrayList();
+        list.add(key);
+        list.add(value);
+        return new EventSetData().setDataSync(mWXSDKInstance.getContext(), list);
+    }
+
+
+    @JSMethod(uiThread = false)
+    public Object getDataSync(String key) {
+        ArrayList<String> list = new ArrayList();
+        list.add(key);
+        return new EventGetData().getDataSync(mWXSDKInstance.getContext(), list);
+    }
+
+    @JSMethod(uiThread = false)
+    public Object deleteDataSync(String key) {
+        ArrayList<String> list = new ArrayList();
+        list.add(key);
+        return new EventDeleteData().deleteDataSync(mWXSDKInstance.getContext(), list);
+    }
+
+    @JSMethod(uiThread = false)
+    public Object removeDataSync() {
         return new EventRemoveData().removeDataSync(mWXSDKInstance.getContext());
     }
+
 
 }

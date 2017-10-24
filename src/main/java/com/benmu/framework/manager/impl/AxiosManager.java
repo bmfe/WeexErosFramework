@@ -13,6 +13,7 @@ import com.benmu.framework.http.okhttp.builder.OtherRequestBuilder;
 import com.benmu.framework.http.okhttp.builder.PostFormBuilder;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
+import com.benmu.framework.http.okhttp.exception.IrregularUrlException;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -45,10 +47,14 @@ public class AxiosManager extends Manager {
 
     public void get(String mUrl, HashMap<String, String> params, HashMap<String, String> header,
                     StringCallback stringCallback, Object tag) {
+
+        mUrl = safeUrl(mUrl);
         if (mUrl == null) {
+            if (stringCallback != null) {
+                stringCallback.onError(null, new IrregularUrlException("url不合法"), 0);
+            }
             return;
         }
-        mUrl = safeUrl(mUrl);
         if (header == null) {
             header = new HashMap<>();
         }
@@ -59,8 +65,13 @@ public class AxiosManager extends Manager {
 
     public void put(String url, String content, HashMap<String, String> header, StringCallback
             callBack, Object tag) {
-        if (TextUtils.isEmpty(url)) return;
         url = safeUrl(url);
+        if (url == null) {
+            if (callBack != null) {
+                callBack.onError(null, new IrregularUrlException("url不合法"), 0);
+            }
+            return;
+        }
         if (header == null) {
             header = new HashMap<>();
         }
@@ -73,8 +84,14 @@ public class AxiosManager extends Manager {
 
     public void delete(String url, String content, HashMap<String, String> header, StringCallback
             callBack, Object tag) {
-        if (TextUtils.isEmpty(url)) return;
         url = safeUrl(url);
+        if (url == null) {
+            if (callBack != null) {
+                callBack.onError(null, new IrregularUrlException("url不合法"), 0);
+            }
+            return;
+        }
+
         if (header == null) {
             header = new HashMap<>();
         }
@@ -87,8 +104,15 @@ public class AxiosManager extends Manager {
 
     public void patch(String url, String content, HashMap<String, String> header, StringCallback
             callback, Object tag) {
-        if (TextUtils.isEmpty(url)) return;
         url = safeUrl(url);
+
+        if (url == null) {
+            if (callback != null) {
+                callback.onError(null, new IrregularUrlException("url不合法"), 0);
+            }
+            return;
+        }
+
         if (header == null) {
             header = new HashMap<>();
         }
@@ -101,8 +125,15 @@ public class AxiosManager extends Manager {
 
     public void head(String url, HashMap<String, String> params, HashMap<String, String> header,
                      StringCallback callback, Object tag) {
-        if (TextUtils.isEmpty(url)) return;
         url = safeUrl(url);
+
+        if (url == null) {
+            if (callback != null) {
+                callback.onError(null, new IrregularUrlException("url不合法"), 0);
+            }
+            return;
+        }
+
         if (header == null) {
             header = new HashMap<>();
         }
@@ -132,6 +163,7 @@ public class AxiosManager extends Manager {
     }
 
     private String safeUrl(String origin) {
+        if (origin == null) return null;
         Uri parse = Uri.parse(origin);
         StringBuilder builder = new StringBuilder();
         Uri requestHost = Uri.parse(TextUtils.isEmpty(Api.BASE_URL) ? DEFAULT_HOST : Api.BASE_URL);
@@ -146,11 +178,16 @@ public class AxiosManager extends Manager {
         } else {
             builder.append(parse.getHost());
         }
-        if (!parse.getPath().startsWith("/")) {
-            builder.append("/");
+        if (parse.getPort() != -1) {
+            builder.append(":").append(parse.getPort());
         }
-        builder.append(parse.getPath());
-        return builder.toString();
+
+        if (!TextUtils.isEmpty(parse.getPath())) {
+            builder.append(origin.substring(origin.indexOf(parse.getPath())));
+        }
+        String finalUrl = builder.toString();
+
+        return HttpUrl.parse(finalUrl) == null ? null : builder.toString();
     }
 
 
@@ -171,10 +208,14 @@ public class AxiosManager extends Manager {
 
     public void post(String mUrl, String data, HashMap<String, String> header, StringCallback
             stringCallback, Object tag) {
+        mUrl = safeUrl(mUrl);
         if (mUrl == null) {
+            if (stringCallback != null) {
+                stringCallback.onError(null, new IrregularUrlException("url不合法"), 0);
+            }
             return;
         }
-        mUrl = safeUrl(mUrl);
+
         String contentType = null;
         if (header != null) {
             contentType = header.get("Content-Type");
