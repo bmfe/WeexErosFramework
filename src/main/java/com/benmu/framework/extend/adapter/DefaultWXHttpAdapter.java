@@ -19,7 +19,9 @@ import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.model.Md5MapperModel;
+import com.benmu.framework.utils.BaseJsInjector;
 import com.benmu.framework.utils.DebugableUtil;
+import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.WXEnvironment;
@@ -53,6 +55,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private String[] mFileFilter = {".js", ".css", ".html"};
     private String mBaseJs;
     private static final String BASE_JS_NAME = "base.js";
+    private BaseJsInjector mInjector;
 
     private void execute(Runnable runnable) {
         if (mExecutorService == null) {
@@ -64,6 +67,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     public DefaultWXHttpAdapter(Context context) {
         this.mContext = context;
+        mInjector=BaseJsInjector.getInstance();
     }
 
     @Override
@@ -180,12 +184,14 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             if (listener != null) {
                 response.statusCode = 200 + "";
                 if (isInterceptor(request.url)) {
-                    response.originalData = appendBaseJs(bytes);
+//                    response.originalData = appendBaseJs(bytes);
+                    appendBaseJs(bytes, response, listener);
                 } else {
                     //iconFont
                     response.originalData = bytes;
+                    listener.onHttpFinish(response);
                 }
-                listener.onHttpFinish(response);
+
             }
             hideError();
         } else {
@@ -240,39 +246,32 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         return "";
     }
 
-    private byte[] appendBaseJs(byte[] origin) {
-        if (mBaseJs == null) {
-            AssetManager assets = mContext.getAssets();
-            InputStream is = null;
-            byte[] bytes = null;
-            try {
-                is = assets.open(BASE_JS_NAME);
-                if (is != null) {
-                    bytes = new byte[is.available()];
-                    is.read(bytes);
-                }
-                if (bytes != null) {
-                    mBaseJs = new String(bytes);
-                }
+    private void appendBaseJs(byte[] origin, final WXResponse response, final OnHttpListener
+            listener) {
+        mInjector.setInjectListener(new BaseJsInjector.InjectJsListener() {
+            @Override
+            public void onInjectStart(String origin) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            }
+
+            @Override
+            public void onInjectFinish(String origin, String result) {
+                L.e("DefaultWXHttpAdapter","注入成功");
+                response.originalData = result.getBytes();
+                if (listener != null) {
+                    listener.onHttpFinish(response);
                 }
             }
-        }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(mBaseJs);
-        sb.append("\n");
-        sb.append(new String(origin));
-        return sb.toString().getBytes();
+            @Override
+            public void onInjectError() {
+                if (listener != null) {
+                    listener.onHttpFinish(response);
+                }
+                Log.e("DefaultWXHttpAdapter", "baseJs注入失败");
+            }
+        });
+        mInjector.injectBaseJs(mContext, new String(origin));
     }
 
 
@@ -290,19 +289,25 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             if (responseCode >= 200 && responseCode <= 299) {
                 InputStream rawStream = connection.getInputStream();
                 if (isInterceptor(request.url)) {
-                    response.originalData = appendBaseJs(readInputStreamAsBytes(rawStream,
-                            listener));
+                    appendBaseJs(readInputStreamAsBytes(rawStream,
+                            listener),response,listener);
+//                    response.originalData = appendBaseJs(readInputStreamAsBytes(rawStream,
+//                            listener));
                 } else {
                     //iconFont
                     response.originalData = readInputStreamAsBytes(rawStream, listener);
+                    if (listener != null) {
+                        listener.onHttpFinish(response);
+                    }
                 }
 
             } else {
                 response.errorMsg = readInputStream(connection.getErrorStream(), listener);
+                if (listener != null) {
+                    listener.onHttpFinish(response);
+                }
             }
-            if (listener != null) {
-                listener.onHttpFinish(response);
-            }
+
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
             response.statusCode = "-1";

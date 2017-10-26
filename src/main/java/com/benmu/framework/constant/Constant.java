@@ -180,7 +180,7 @@ public class Constant {
 
     public static final String PLATFORM_CONFIG_NAME = "config.json";
 
-    public static final String BUNDLE_ZIP_NAME = "pages.zip";
+    public static final String BUNDLE_ZIP_NAME = "bundle.zip";
 
     public static final String INTERCEPTOR_ACTIVE = "active";
     public static final String INTERCEPTOR_DEACTIVE = "deactivate";

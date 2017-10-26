@@ -26,6 +26,9 @@ public class FileManager extends Manager {
     public static final String PATCH_NAME = "patch.zip";
     public static final String TEMP_NEW_BUNDLE_NAME = "newPages.zip";
     public static final String TEMP_FILE = "/.temp_file";
+    public static final String PAGES_DIR = JS_BUNDLE + "/bundle/pages";
+    public static final String ICONFONT_DIR = JS_BUNDLE + "/bundle/iconfont";
+    public static final String BASEJS_DIR = JS_BUNDLE + "/bundle/config";
 
     public static boolean isSDCardAvailable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
@@ -71,6 +74,19 @@ public class FileManager extends Manager {
 
     public static File getBundleDir(Context context) {
         return getAppPath(JS_BUNDLE, context);
+    }
+
+
+    public static File getPagesDir(Context context) {
+        return getAppPath(PAGES_DIR, context);
+    }
+
+    public static File getIconDir(Context context) {
+        return getAppPath(ICONFONT_DIR, context);
+    }
+
+    public static File getBaseJsDir(Context context) {
+        return getAppPath(BASEJS_DIR, context);
     }
 
     public static File getTempBundleDir(Context context) {

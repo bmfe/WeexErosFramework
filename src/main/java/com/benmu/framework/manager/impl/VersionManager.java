@@ -48,7 +48,7 @@ public class VersionManager extends Manager {
             }
         }
 
-        File file = new File(FileManager.getBundleDir(context), "pages/md5.json");
+        File file = new File(FileManager.getBundleDir(context), "bundle/md5.json");
         if (file.exists()) {
             String json = FileManager.loadJs(file.getAbsolutePath());
             Md5MapperModel mapper = ManagerFactory.getManagerService(ParseManager.class)

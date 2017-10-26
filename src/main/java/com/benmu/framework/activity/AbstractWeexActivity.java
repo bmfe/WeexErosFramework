@@ -243,6 +243,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     public void refresh() {
+        DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
+                (DispatchEventManager.class);
+        dispatchEventManager.getBus().post(new Intent(WXConstant.ACTION_WEEX_REFRESH));
         createWXInstance();
         renderPage();
     }

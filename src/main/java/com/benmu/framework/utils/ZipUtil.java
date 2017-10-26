@@ -17,8 +17,8 @@ public class ZipUtil {
         int index = 0;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             if (index == 0) {
-                if (!(entry.isDirectory() && "pages".equals(entry.getName()))) {
-                    outPath = outPath + File.separator + "pages";
+                if (!(entry.isDirectory() && "bundle".equals(entry.getName()))) {
+                    outPath = outPath + File.separator + "bundle";
                 }
             }
             entryName = entry.getName();
