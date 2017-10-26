@@ -214,7 +214,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
             }
             return;
         }
-        wxImageView.setTag(url);
+        wxImageView.setCurrentUrl(url);
         BMHookGlide.load(WXEnvironment.getApplication(),url).diskCacheStrategy(DiskCacheStrategy
                 .ALL).into(new BMDesignSimpleTarget
                 (wxImageView, strategy, validatePlaceHolder
@@ -308,7 +308,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
 
 
     private boolean denyPreviousRequest(String url, View imageView) {
-        return !url.equals(imageView.getTag());
+        return !url.equals(((WXImageView) imageView).getCurrentUrl());
     }
 
 
