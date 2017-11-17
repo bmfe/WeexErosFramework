@@ -28,6 +28,8 @@ public class Constant {
      */
     public static final String MAPVIEW_PARAMS = "MAPVIEW_PARAMS";
 
+    public static final String AMAP_KEY = "a3308e6aef150346915922d2ea292590";
+
 
     /**
      * 通知相关
@@ -130,7 +132,7 @@ public class Constant {
         public static final String CUSTOM_SERVERURL = "jsServer";
         public static final String CUSTOM_DEVICEID = "deviceId";
         public static final String CUSTOM_APPNAME = "appName";
-        public static final String CUSTOM_STATUSBARHEIGHT="statusBarHeight";
+        public static final String CUSTOM_STATUSBARHEIGHT = "statusBarHeight";
     }
 
 

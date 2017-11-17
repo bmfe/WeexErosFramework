@@ -143,6 +143,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="espresso-core-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="analytics-6.1.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
+    <orderEntry type="library" exported="" name="3dmap-5.5.0" level="project" />
     <orderEntry type="library" exported="" name="nbs.newlens.agent-2.5.7" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.5" level="project" />
     <orderEntry type="library" exported="" name="GetuiSDK2.9.3.0" level="project" />
@@ -154,6 +155,7 @@
     <orderEntry type="library" exported="" name="umeng_social_tool" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javawriter-2.1.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-3.3.1" level="project" />
+    <orderEntry type="library" exported="" name="location-3.6.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-25.3.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />

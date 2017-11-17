@@ -22,6 +22,7 @@ import java.util.List;
 
 public class PermissionManager extends Manager {
     public static final int RUNTIME_PERMISSION = 23;
+    private PermissionListener mListenner;
 
     public interface PermissionListener {
 
@@ -45,49 +46,14 @@ public class PermissionManager extends Manager {
         return true;
     }
 
-    public void requestPermissions(Object object, PermissionListener listener, String rationale,
+    public void requestPermissions(Object object, PermissionListener listener,
                                    final String... perms) {
-        requestPermissions(object, listener, rationale, android.R.string.ok, android.R.string
-                .cancel, perms);
+        this.mListenner = listener;
+        executePermissionsRequest(object, perms, RUNTIME_PERMISSION);
     }
 
-    public void requestPermissions(final Object object, final PermissionListener listener, String
-            rationale,
-                                   @StringRes int positiveButton,
-                                   @StringRes int negativeButton, final String... perms) {
 
-        checkCallingObjectSuitability(object);
-
-        boolean shouldShowRationale = false;
-        for (String perm : perms) {
-            shouldShowRationale = shouldShowRationale || shouldShowRequestPermissionRationale
-                    (object, perm);
-        }
-
-        if (shouldShowRationale && !TextUtils.isEmpty(rationale)) {
-            AlertDialog dialog = new AlertDialog.Builder(getActivity(object))
-                    .setMessage(rationale)
-                    .setCancelable(false)
-                    .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            executePermissionsRequest(object, perms, RUNTIME_PERMISSION);
-                        }
-                    })
-                    .setNegativeButton(negativeButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Do nothing, user does not want to request
-                            listener.onPermissionRequestRejected();
-                        }
-                    }).create();
-            dialog.show();
-        } else {
-            executePermissionsRequest(object, perms, RUNTIME_PERMISSION);
-        }
-    }
-
-    public void onRequestPermissionsResult(Object object, PermissionListener callbacks, int
+    public void onRequestPermissionsResult(Object object, int
             requestCode, String[] permissions,
                                            int[] grantResults) {
 
@@ -106,15 +72,17 @@ public class PermissionManager extends Manager {
                 }
             }
 
+            if (mListenner == null) return;
+
             // Report granted permissions, if any.
             if (!granted.isEmpty()) {
                 // Notify callbacks
-                callbacks.onPermissionsGranted(granted);
+                mListenner.onPermissionsGranted(granted);
             }
 
             // Report denied permissions, if any.
             if (!denied.isEmpty()) {
-                callbacks.onPermissionsDenied(denied);
+                mListenner.onPermissionsDenied(denied);
             }
         }
     }

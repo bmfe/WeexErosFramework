@@ -59,7 +59,7 @@ public class PushManager extends Manager {
 
     private void showNotification(Context context, NotificationBean bean) {
         if (bean == null) return;
-        int iconId = ResourceUtil.getMipmapId(context.getPackageName(), "app_icon");
+        int iconId = ResourceUtil.getMipmapId("com.benmu.wx", "app_icon");
         String appName = context.getResources().getString(ResourceUtil.getStringId(context
                 .getPackageName(), "app_name"));
 

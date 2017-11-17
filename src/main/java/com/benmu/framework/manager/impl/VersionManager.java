@@ -48,6 +48,12 @@ public class VersionManager extends Manager {
             }
         }
 
+        initMapper(context);
+        initMediator(context);
+        return new Date().getTime() - startTime;
+    }
+
+    public void initMapper(Context context) {
         File file = new File(FileManager.getBundleDir(context), "bundle/md5.json");
         if (file.exists()) {
             String json = FileManager.loadJs(file.getAbsolutePath());
@@ -56,8 +62,6 @@ public class VersionManager extends Manager {
             ManagerFactory.getManagerService(PersistentManager.class).setFileMapper(mapper
                     .getFilesMd5());
         }
-        initMediator(context);
-        return new Date().getTime() - startTime;
     }
 
     private static void initMediator(Context context) {

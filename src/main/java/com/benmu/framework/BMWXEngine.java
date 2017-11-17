@@ -16,7 +16,9 @@ import com.benmu.framework.http.BMPersistentCookieStore;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
 import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
+import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
+import com.benmu.framework.manager.impl.GeoManager;
 import com.benmu.framework.service.BroadcastChannelService;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
@@ -52,6 +54,12 @@ public class BMWXEngine {
         initWeChat(context);
         initUmeng(context);
         EventCenter.getInstance().init();
+        initMap();
+    }
+
+    private static void initMap() {
+        GeoManager geoManager = ManagerFactory.getManagerService(GeoManager.class);
+        geoManager.init();
     }
 
 

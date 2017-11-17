@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
+import com.benmu.framework.manager.impl.PermissionManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
@@ -535,6 +537,16 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        PermissionManager permissionManager = ManagerFactory.getManagerService(PermissionManager
+                .class);
+        permissionManager.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 
     private void handleDecodeInternally(String code) {

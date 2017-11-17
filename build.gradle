@@ -23,6 +23,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs=['libs']
+        }
+    }
 }
 
 repositories {
@@ -56,6 +62,10 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile project(':bmwidget')
     compile 'com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7'
+    //高德地图
+    compile 'com.amap.api:location:latest.integration'
+    compile 'com.amap.api:3dmap:latest.integration'
+
     //友盟数据分析
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile files('libs/libammsdk.jar')

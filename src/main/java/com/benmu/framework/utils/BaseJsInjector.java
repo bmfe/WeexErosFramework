@@ -30,8 +30,8 @@ import okhttp3.Call;
 public class BaseJsInjector {
     private static BaseJsInjector mInstance = new BaseJsInjector();
     private String mBaseJs;
-    private static final String REMOTE_URL = "http://fe.benmu-health" +
-            ".com/dist/js/config/index.js";
+    private static final String REMOTE_URL = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer
+            () + "/dist/js" + BMWXEnvironment.mPlatformConfig.getAppBoard();
 
     public static BaseJsInjector getInstance() {
         return mInstance;

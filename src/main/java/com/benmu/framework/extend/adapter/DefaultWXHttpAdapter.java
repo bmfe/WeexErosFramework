@@ -18,6 +18,7 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.PersistentManager;
+import com.benmu.framework.manager.impl.VersionManager;
 import com.benmu.framework.model.Md5MapperModel;
 import com.benmu.framework.utils.BaseJsInjector;
 import com.benmu.framework.utils.DebugableUtil;
@@ -66,7 +67,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     public DefaultWXHttpAdapter(Context context) {
         this.mContext = context;
-        mInjector=BaseJsInjector.getInstance();
+        mInjector = BaseJsInjector.getInstance();
     }
 
     @Override
@@ -109,7 +110,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         }
         String subPath = url.substring(url.indexOf("/dist/js") + 9);
         File bundleDir = ManagerFactory.getManagerService(FileManager.class).getBundleDir(mContext);
-        File path = new File(bundleDir, "bundle/"+subPath);
+        File path = new File(bundleDir, "bundle/" + subPath);
         Log.e("bus", "bus>>>>>>>" + path.getAbsolutePath());
         if (listener != null) {
             listener.onHttpStart();
@@ -199,7 +200,12 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private String findMd5(String path) {
         List<Md5MapperModel.Item> lists = ManagerFactory.getManagerService(PersistentManager
                 .class).getFileMapper();
-        if (lists == null) return "";
+        if (lists == null) {
+            VersionManager versionManager = ManagerFactory.getManagerService(VersionManager.class);
+            versionManager.initMapper(BMWXEnvironment.mApplicationContext);
+            lists = ManagerFactory.getManagerService(PersistentManager
+                    .class).getFileMapper();
+        }
         for (Md5MapperModel.Item item : lists) {
             if (path.endsWith(item.getPage())) {
                 return item.getMd5();
@@ -251,7 +257,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 InputStream rawStream = connection.getInputStream();
                 if (isInterceptor(request.url)) {
                     appendBaseJs(readInputStreamAsBytes(rawStream,
-                            listener),response,listener);
+                            listener), response, listener);
 //                    response.originalData = appendBaseJs(readInputStreamAsBytes(rawStream,
 //                            listener));
                 } else {

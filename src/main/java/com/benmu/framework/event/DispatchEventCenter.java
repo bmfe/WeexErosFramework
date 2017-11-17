@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.event.browse.EventBrowse;
 import com.benmu.framework.event.camera.EventCamera;
+import com.benmu.framework.event.geo.EventGeo;
 import com.benmu.framework.event.http.EventFetch;
 import com.benmu.framework.event.modal.EventAlert;
 import com.benmu.framework.event.modal.EventConfirm;
@@ -81,7 +82,7 @@ public class DispatchEventCenter {
                     new EventOpen().open(params, context, weexEventBean.getCallbacks());
                 } else if (weexEventBean.getJscallback() != null) {
                     new EventOpen().open(params, context, weexEventBean.getJscallback());
-                }else {
+                } else {
                     new EventOpen().open(params, context);
                 }
                 break;
@@ -178,7 +179,7 @@ public class DispatchEventCenter {
                 new EventTool().isWXInstall(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_GETCID:
-                new EventTool().getCid(context,weexEventBean.getJscallback());
+                new EventTool().getCid(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_COPYSTRING:
                 new EventTool().copyString(context, params, weexEventBean.getJscallback());
@@ -191,10 +192,13 @@ public class DispatchEventCenter {
                         weexEventBean.getCallbacks().get(1));
                 break;
             case WXConstant.WXEventCenter.EVENT_RELAYTOFRIEND:
-                new EventShare().relayToFriend(context,params,weexEventBean.getCallbacks());
+                new EventShare().relayToFriend(context, params, weexEventBean.getCallbacks());
                 break;
             case WXConstant.WXEventCenter.EVENT_RELAYTOCRICLE:
-                new EventShare().relayToCricle(context,params,weexEventBean.getCallbacks());
+                new EventShare().relayToCricle(context, params, weexEventBean.getCallbacks());
+                break;
+            case WXConstant.WXEventCenter.EVENT_GEOLOCATION_GET:
+                new EventGeo().getLocation(context, weexEventBean.getJscallback());
                 break;
         }
     }
