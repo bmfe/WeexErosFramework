@@ -40,13 +40,13 @@ public class BMHookGlide {
     private static String loadLocalImage(Uri imageUri) {
         if (Constant.INTERCEPTOR_ACTIVE.equalsIgnoreCase(SharePreferenceUtil.getInterceptorActive
                 (WXEnvironment.getApplication()))) {
-            String path = "pages" + File.separator + imageUri.getHost() + File.separator +
+            String path = imageUri.getHost() + File.separator +
                     imageUri.getPath();
-            return FileManager.getPathBundleDir(WXEnvironment.getApplication(), path)
+            return FileManager.getPathBundleDir(WXEnvironment.getApplication(), "bundle/"+path)
                     .getAbsolutePath();
 
         } else {
-            return String.format("%s/fe/dist/%s%s", BMWXEnvironment.mPlatformConfig.getUrl()
+            return String.format("%s/dist/%s%s", BMWXEnvironment.mPlatformConfig.getUrl()
                     .getJsServer
                             (), imageUri.getHost(), imageUri.getPath());
         }

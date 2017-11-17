@@ -178,6 +178,7 @@ public class DispatchEventCenter {
                 new EventTool().isWXInstall(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_GETCID:
+                new EventTool().getCid(context,weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_COPYSTRING:
                 new EventTool().copyString(context, params, weexEventBean.getJscallback());

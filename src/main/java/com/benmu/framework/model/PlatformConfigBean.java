@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 public class PlatformConfigBean implements Serializable {
     private String AppName;
+    private String appBoard;
     private Page Page;
     private Url url;
     private Wechat wechat;
@@ -60,6 +61,15 @@ public class PlatformConfigBean implements Serializable {
 
     public void setUrl(Url url) {
         this.url = url;
+    }
+
+
+    public String getAppBoard() {
+        return appBoard;
+    }
+
+    public void setAppBoard(String appBoard) {
+        this.appBoard = appBoard;
     }
 
     public class Page {

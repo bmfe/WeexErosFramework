@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no,email=no" />
+    <title>ECharts</title>
+</head>
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:260px;width: 100%;"></div>
+    <!-- ECharts单文件引入 -->
+    <script type="text/javascript">
+        
+        var mainDom = document.querySelector('#main')
+        
+        function setHeight(height) {
+            mainDom.style.height = height || '300px';
+        }
+    
+        function setOption(options) {
+            var myChart = echarts.init(mainDom);
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(options);
+
+        }
+    </script>
+
+</body>
+
+</html>

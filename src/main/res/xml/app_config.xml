@@ -8,6 +8,9 @@
     <component name="bmpop">com.benmu.framework.extend.comoponents.BMPop</component>
     <component name="bmrichtext">com.benmu.framework.extend.comoponents.BMRich</component>
     <component name="bmspan">com.benmu.framework.extend.comoponents.BMSpan</component>
+    <component name="bmcalendar">com.benmu.framework.extend.comoponents.BMCalendar</component>
+    <component name="bmchart">com.benmu.framework.extend.comoponents.BMChart</component>
+
     <!--weex-module-->
     <module name="bmRouter">com.benmu.framework.extend.module.RouterModule</module>
     <module name="bmNavigator">com.benmu.framework.extend.module.TitleModule</module>

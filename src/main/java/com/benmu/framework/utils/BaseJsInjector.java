@@ -7,12 +7,15 @@ import android.text.TextUtils;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.squareup.otto.Subscribe;
+import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.common.WXResponse;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,68 +30,71 @@ import okhttp3.Call;
 public class BaseJsInjector {
     private static BaseJsInjector mInstance = new BaseJsInjector();
     private String mBaseJs;
-    private static final String BASE_JS_NAME = "base.js";
-    private InjectJsListener mListener;
-    private static final String REMOTE_URL = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer
-            () + "/config/base.js";
+    private static final String REMOTE_URL = "http://fe.benmu-health" +
+            ".com/dist/js/config/index.js";
 
     public static BaseJsInjector getInstance() {
         return mInstance;
     }
 
     private BaseJsInjector() {
-        DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
+        DispatchEventManager managerService = ManagerFactory.getManagerService
                 (DispatchEventManager.class);
-        dispatchEventManager.getBus().register(this);
+        managerService.getBus().register(this);
     }
 
-    public void injectBaseJs(Context context, final String origin) {
+    public void injectBaseJs(Context context, final WXResponse origin, final InjectJsListener
+            listener) {
+
         if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(context))) {
             if (TextUtils.isEmpty(mBaseJs)) {
                 loadFromAssets(context);
             }
             //注入basejs
             if (TextUtils.isEmpty(mBaseJs)) {
-                if (mListener != null) {
-                    mListener.onInjectError();
+                if (listener != null) {
+                    listener.onInjectError();
                 }
                 return;
             }
-            insert(origin);
+            insert(origin, listener);
         } else {
             //去本地服务下载后注入
             if (TextUtils.isEmpty(mBaseJs)) {
-                AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
-                axiosManager.get(REMOTE_URL, null, null, new StringCallback() {
+                OkHttpUtils.get().url(REMOTE_URL).build().execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         L.e("BaseJsInjector", "远端base.js请求失败");
+                        if (listener != null) {
+                            listener.onInjectError();
+                        }
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         mBaseJs = response;
-                        insert(origin);
+                        insert(origin, listener);
                     }
-                }, REMOTE_URL);
+                });
             } else {
-                insert(origin);
+                insert(origin, listener);
             }
         }
     }
 
 
-    private void insert(String origin) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(mBaseJs).append("\n").append(origin);
+    private void insert(WXResponse origin, InjectJsListener listener) {
+        origin.originalData = (mBaseJs + "\n" + new String(origin.originalData)).getBytes();
         //注入完成 回调页面
-        if (mListener != null) {
-            mListener.onInjectFinish(origin, builder.toString());
+        if (listener != null) {
+
+            listener.onInjectFinish(origin);
         }
     }
 
     private void loadFromAssets(Context context) {
-        File baseJs = new File(FileManager.getBaseJsDir(context), BASE_JS_NAME);
+        File baseJs = new File(FileManager.getBundleDir(context), "bundle" + BMWXEnvironment
+                .mPlatformConfig.getAppBoard());
         if (baseJs.exists()) {
             InputStream inputStream = null;
             try {
@@ -107,23 +113,18 @@ public class BaseJsInjector {
     public void onRefresh(Intent intent) {
         if (intent != null && WXConstant.ACTION_WEEX_REFRESH.equals(intent.getAction())) {
             //页面刷新了 如果这时候拦截器关闭将mbaseJs=null
-            if (Constant.INTERCEPTOR_DEACTIVE.equals(SharePreferenceUtil.getInterceptorActive
-                    (BMWXEnvironment.mApplicationContext))) {
+            if (!(Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
+                    (BMWXEnvironment.mApplicationContext)))) {
                 this.mBaseJs = null;
             }
         }
     }
 
 
-    public void setInjectListener(InjectJsListener listener) {
-        this.mListener = listener;
-    }
-
-
     public interface InjectJsListener {
         void onInjectStart(String origin);
 
-        void onInjectFinish(String origin, String result);
+        void onInjectFinish(WXResponse response);
 
         void onInjectError();
     }

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -40,6 +41,7 @@ import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.BaseToolBar;
 import com.benmu.widget.view.loading.SVProgressHUD;
+import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.taobao.weex.IWXRenderListener;
@@ -86,6 +88,11 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initUrl(data);
         synRouterStack();
         initDebug();
+        initPush();
+    }
+
+    private void initPush() {
+        PushManager.getInstance().initialize(this.getApplicationContext());
     }
 
     private void initDebug() {
@@ -141,8 +148,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 .MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         View child = View.inflate(this, layoutResID, null);
         rl_root.addView(child, params);
-//        StatusBarManager.setHeaderBg(mRouterParam, this);
-//        StatusBarManager.setStatusBarFontStyle(this, mRouterParam);
+        StatusBarManager.setHeaderBg(mRouterParam, this);
+        StatusBarManager.setStatusBarFontStyle(this, mRouterParam);
         setNavigationBar();
         setContentView(mRootView);
     }
@@ -411,6 +418,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public void onViewCreated(WXSDKInstance instance, View view) {
         if (view != null && view.getParent() == null) {
             mContainer.addView(view);
+        }
+        if (view instanceof RenderContainer) {
+            RenderContainer container = (RenderContainer) view;
+            int childCount = container.getChildCount();
+            if (childCount > 0) {
+                container.getChildAt(0).setBackgroundColor(ContextCompat.getColor(this, R.color
+                        .c_eff3f4));
+            }
         }
         mContainer.requestLayout();
         GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);

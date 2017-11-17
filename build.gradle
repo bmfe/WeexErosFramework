@@ -63,4 +63,5 @@ dependencies {
     compile files('libs/umeng_social_net.jar')
     compile files('libs/umeng_social_api.jar')
     compile files('libs/umeng_social_tool.jar')
+    compile files('libs/GetuiSDK2.9.3.0.jar')
 }

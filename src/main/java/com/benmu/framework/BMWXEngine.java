@@ -9,6 +9,7 @@ import android.util.Log;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
+import com.benmu.framework.extend.adapter.BMTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.http.BMPersistentCookieStore;
@@ -122,7 +123,7 @@ public class BMWXEngine {
         WXSDKEngine.initialize(app,
                 new InitConfig.Builder()
                         .setImgAdapter(new DefaultWXImageAdapter()).setHttpAdapter(new
-                        DefaultWXHttpAdapter(app))
+                        DefaultWXHttpAdapter(app)).setTypefaceAdapter(new BMTypefaceAdapter(app))
                         .build()
         );
     }

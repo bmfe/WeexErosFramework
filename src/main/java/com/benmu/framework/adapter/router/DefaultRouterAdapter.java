@@ -54,7 +54,7 @@ public class DefaultRouterAdapter {
         if (!TextUtils.equals("http", pathUri.getScheme()) && !TextUtils.equals("https", pathUri
                 .getScheme())) {
             pathUri = Uri.parse(BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
-                    "/fe/dist/js" + pathUrl);
+                    "/dist/js" + pathUrl);
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.putExtra(Constant.ROUTERPARAMS, routerModel);

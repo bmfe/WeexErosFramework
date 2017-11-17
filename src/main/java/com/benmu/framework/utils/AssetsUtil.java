@@ -41,7 +41,7 @@ public class AssetsUtil {
 
 
     public static AssetsJsVersion getAssetsVersionInfo(Context context) {
-        String fromAssets = getFromAssets(context, "pages.config");
+        String fromAssets = getFromAssets(context, "bundle.config");
         return JSON.parseObject(fromAssets, AssetsJsVersion.class);
     }
 

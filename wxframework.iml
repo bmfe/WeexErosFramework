@@ -145,6 +145,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" name="nbs.newlens.agent-2.5.7" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.5" level="project" />
+    <orderEntry type="library" exported="" name="GetuiSDK2.9.3.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.annotation-api-1.2" level="project" />
     <orderEntry type="library" exported="" name="umeng_social_net" level="project" />
     <orderEntry type="library" exported="" name="zxing-android-embedded-3.4.0" level="project" />

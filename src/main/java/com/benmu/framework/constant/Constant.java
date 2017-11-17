@@ -178,7 +178,7 @@ public class Constant {
     }
 
 
-    public static final String PLATFORM_CONFIG_NAME = "config.json";
+    public static final String PLATFORM_CONFIG_NAME = "eros.native.json";
 
     public static final String BUNDLE_ZIP_NAME = "bundle.zip";
 

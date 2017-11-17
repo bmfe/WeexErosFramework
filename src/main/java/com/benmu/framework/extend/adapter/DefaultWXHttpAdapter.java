@@ -54,7 +54,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private Context mContext;
     private String[] mFileFilter = {".js", ".css", ".html"};
     private String mBaseJs;
-    private static final String BASE_JS_NAME = "base.js";
     private BaseJsInjector mInjector;
 
     private void execute(Runnable runnable) {
@@ -91,43 +90,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         });
     }
 
-    @Override
-    public Typeface loadLocalFont(FontDO fontDO) {
-        if (fontDO == null) return null;
-        if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
-                (BMWXEnvironment.mApplicationContext))) {
-            //拦截器开启  从本地包中加载
-            String url = fontDO.getUrl();
-            if (TextUtils.isEmpty(url)) return null;
-            Uri parse = Uri.parse(url);
-            File localIcon = new File(FileManager.getBundleDir(BMWXEnvironment
-                    .mApplicationContext), "pages" + File.separator + parse.getHost() + File
-                    .separator + parse.getPath());
-            if (!localIcon.exists()) {
-                return null;
-            }
-            Typeface typeface = null;
-            try {
-                typeface = Typeface.createFromFile(localIcon.getAbsolutePath());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return typeface;
-
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isInterceptor() {
-        return Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
-                (mContext));
-    }
-
-    @Override
-    public String getIconDownloadUrl() {
-        return BMWXEnvironment.mPlatformConfig.getUrl().getJsServer();
-    }
 
     private boolean isInterceptor(String url) {
         return url.endsWith(".js");
@@ -147,7 +109,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         }
         String subPath = url.substring(url.indexOf("/dist/js") + 9);
         File bundleDir = ManagerFactory.getManagerService(FileManager.class).getBundleDir(mContext);
-        File path = new File(bundleDir, subPath);
+        File path = new File(bundleDir, "bundle/"+subPath);
         Log.e("bus", "bus>>>>>>>" + path.getAbsolutePath());
         if (listener != null) {
             listener.onHttpStart();
@@ -248,16 +210,16 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     private void appendBaseJs(byte[] origin, final WXResponse response, final OnHttpListener
             listener) {
-        mInjector.setInjectListener(new BaseJsInjector.InjectJsListener() {
+        response.originalData = origin;
+        mInjector.injectBaseJs(mContext, response, new BaseJsInjector.InjectJsListener() {
             @Override
             public void onInjectStart(String origin) {
 
             }
 
             @Override
-            public void onInjectFinish(String origin, String result) {
-                L.e("DefaultWXHttpAdapter","注入成功");
-                response.originalData = result.getBytes();
+            public void onInjectFinish(WXResponse response) {
+                L.e("DefaultWXHttpAdapter", "注入成功");
                 if (listener != null) {
                     listener.onHttpFinish(response);
                 }
@@ -265,13 +227,12 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
             @Override
             public void onInjectError() {
+                Log.e("DefaultWXHttpAdapter", "baseJs注入失败");
                 if (listener != null) {
                     listener.onHttpFinish(response);
                 }
-                Log.e("DefaultWXHttpAdapter", "baseJs注入失败");
             }
         });
-        mInjector.injectBaseJs(mContext, new String(origin));
     }
 
 

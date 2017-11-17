@@ -30,7 +30,7 @@ public class BroadcastChannelService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String mediatorPage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
-                "/fe/dist/js" + BMWXEnvironment.mPlatformConfig.getPage().getMediatorPage();
+                "/dist/js" + BMWXEnvironment.mPlatformConfig.getPage().getMediatorPage();
         if (TextUtils.isEmpty(mediatorPage)) return super.onStartCommand(intent, flags, startId);
         mInstance = new WXSDKInstance(this);
         Map<String, Object> options = new HashMap<>();
