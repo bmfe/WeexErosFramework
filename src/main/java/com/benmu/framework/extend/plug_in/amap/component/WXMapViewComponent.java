@@ -3,6 +3,9 @@ package com.benmu.framework.extend.plug_in.amap.component;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,12 +25,16 @@ import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.MapsInitializer;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.benmu.framework.extend.plug_in.amap.component.adapter.BMCustomerInfoWindowAdapter;
 import com.benmu.framework.extend.plug_in.amap.util.Constant;
+import com.benmu.framework.extend.plug_in.amap.util.GifDecoder;
+import com.benmu.framework.extend.plug_in.amap.util.Utils;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.dom.WXDomObject;
@@ -38,6 +45,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WXMapViewComponent extends WXVContainer<MapView> implements LocationSource,
@@ -246,19 +258,21 @@ public class WXMapViewComponent extends WXVContainer<MapView> implements Locatio
         }
     }
 
+
+
     @WXComponentProp(name = Constant.Name.KEYS)
     public void setApiKey(String keys) {
-        try {
-            JSONObject object = new JSONObject(keys);
-            String key = object.optString("android");
-            if (!TextUtils.isEmpty(key)) {
-                MapsInitializer.setApiKey(key);
-                AMapLocationClient.setApiKey(key);
-                //ServiceSettings.getInstance().setApiKey(key);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            JSONObject object = new JSONObject(keys);
+//            String key = object.optString("android");
+//            if (!TextUtils.isEmpty(key)) {
+//                MapsInitializer.setApiKey(key);
+//                AMapLocationClient.setApiKey(key);
+//                //ServiceSettings.getInstance().setApiKey(key);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

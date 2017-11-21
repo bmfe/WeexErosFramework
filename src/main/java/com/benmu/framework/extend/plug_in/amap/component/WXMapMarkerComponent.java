@@ -2,6 +2,7 @@ package com.benmu.framework.extend.plug_in.amap.component;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.benmu.framework.R;
 import com.benmu.framework.extend.plug_in.amap.component.adapter.BMCustomerInfoWindowAdapter;
 import com.benmu.framework.extend.plug_in.amap.util.Constant;
+import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.framework.utils.ImageUtil;
 import com.benmu.framework.utils.L;
 import com.bumptech.glide.Glide;
@@ -165,6 +167,7 @@ public class WXMapMarkerComponent extends WXComponent<View> {
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         markerOptions.setFlat(true);
         mMarker = mMapView.getMap().addMarker(markerOptions);
+        setMarkerIcon(icon);
     }
 
 
@@ -180,7 +183,7 @@ public class WXMapMarkerComponent extends WXComponent<View> {
 
 
     private void setMarkerIcon(final String icon) {
-        Glide.with(getContext()).load(icon).into(new SimpleTarget<GlideDrawable>() {
+        BMHookGlide.load(getContext(),icon).into(new SimpleTarget<GlideDrawable>() {
             @Override
             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super
                     GlideDrawable> glideAnimation) {
@@ -193,76 +196,25 @@ public class WXMapMarkerComponent extends WXComponent<View> {
                 }
             }
         });
-//        if (!TextUtils.isEmpty(icon)) {
-//            new AsyncTask<Void, String, Uri>() {
-//
-//                @Override
-//                protected Uri doInBackground(Void... params) {
-//                    try {
-//                        return fetchIcon(icon, getContext().getExternalCacheDir());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Uri result) {
-//                    if (result != null && new File(result.getPath()).exists()) {
-//                        if (Utils.isGif(result.getPath())) {
-//                            GifDecoder gifDecoder = new GifDecoder();
-//                            FileInputStream imgFile = null;
-//                            try {
-//
-//                                imgFile = new FileInputStream(result.getPath());
-//                                gifDecoder.read(imgFile);
-//                                ArrayList<BitmapDescriptor> bitmapDescriptors = new
-//                                        ArrayList<BitmapDescriptor>();
-//                                for (int i = 1; i < gifDecoder.getFrameCount(); i++) {
-//                                    Bitmap bitmap = gifDecoder.getFrame(i);
-//                                    if (bitmap != null && !bitmap.isRecycled()) {
-//
-//                                        bitmapDescriptors.add(BitmapDescriptorFactory.fromBitmap
-//                                                (bitmap));
-//                                    }
-//                                }
-//                                mMarker.setIcons(bitmapDescriptors);
-//                                mMarker.setPeriod(2);
-//
-//                            } catch (FileNotFoundException e) {
-//                                e.printStackTrace();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            } finally {
-//                                if (imgFile != null) {
-//                                    try {
-//                                        imgFile.close();
-//                                    } catch (IOException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }
-//
-//                        } else {
-//                            Bitmap src = BitmapFactory.decodeFile(result.getPath());
-//                            mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(src));
-//                        }
-//
-//                    }
-//                }
-//            }.execute();
     }
 
-    private void handleNormal(GlideDrawable resource) {
-        if (resource instanceof GlideBitmapDrawable) {
-            GlideBitmapDrawable bitmapDrawable = (GlideBitmapDrawable) resource;
-            MarkerOptions options = mMarker.getOptions();
-            options.icon(BitmapDescriptorFactory.fromBitmap(getDesireBitmap(bitmapDrawable
-                    .getBitmap())));
-            mMarker.setMarkerOptions(options);
-        } else {
-            L.e("amap", "错误的图片资源类型");
-        }
+
+    private void handleNormal(final GlideDrawable resource) {
+        if (getHostView() == null) return;
+        getHostView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (resource instanceof GlideBitmapDrawable) {
+                    GlideBitmapDrawable bitmapDrawable = (GlideBitmapDrawable) resource;
+                    BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap
+                            (getDesireBitmap(bitmapDrawable
+                                    .getBitmap()));
+                    mMarker.setIcon(bitmapDescriptor);
+                } else {
+                    L.e("amap", "错误的图片资源类型");
+                }
+            }
+        }, 100);
     }
 
 

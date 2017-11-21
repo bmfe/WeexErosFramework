@@ -15,4 +15,5 @@
     <string name="str_locate_failed">定位失败</string>
     <string name="str_privilege_deny">权限拒绝</string>
     <string name="str_init_failed">初始化失败</string>
+    <string name="str_ensure">确定</string>
 </resources>
