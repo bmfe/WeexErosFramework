@@ -262,17 +262,17 @@ public class WXMapViewComponent extends WXVContainer<MapView> implements Locatio
 
     @WXComponentProp(name = Constant.Name.KEYS)
     public void setApiKey(String keys) {
-//        try {
-//            JSONObject object = new JSONObject(keys);
-//            String key = object.optString("android");
-//            if (!TextUtils.isEmpty(key)) {
-//                MapsInitializer.setApiKey(key);
-//                AMapLocationClient.setApiKey(key);
-//                //ServiceSettings.getInstance().setApiKey(key);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            JSONObject object = new JSONObject(keys);
+            String key = object.optString("android");
+            if (!TextUtils.isEmpty(key)) {
+                MapsInitializer.setApiKey(key);
+                AMapLocationClient.setApiKey(key);
+                //ServiceSettings.getInstance().setApiKey(key);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
