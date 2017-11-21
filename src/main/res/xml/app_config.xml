@@ -26,4 +26,18 @@
     <module name="bmBrowserImg">com.benmu.framework.extend.module.BrowserImgModule</module>
     <module name="bmTool">com.benmu.framework.extend.module.ToolModule</module>
     <module name="bmAuthorLogin">com.benmu.framework.extend.module.WeChatLoginModule</module>
+
+    <!--plug-in-->
+    <!--amap-->
+    <component name="weex-amap">com.benmu.framework.extend.plug_in.amap.component.WXMapViewComponent
+    </component>
+    <component name="weex-amap-marker">com.benmu.framework.extend.plug_in.amap.component.WXMapMarkerComponent</component>
+    <component name="weex-amap-info-window">com.benmu.framework.extend.plug_in.amap.component.WXMapInfoWindowComponent</component>
+    <component name="weex-amap-circle">com.benmu.framework.extend.plug_in.amap.component.WXMapCircleComponent</component>
+    <component name="weex-amap-polyline">com.benmu.framework.extend.plug_in.amap.component.WXMapPolyLineComponent</component>
+    <component name="weex-amap-polygon">com.benmu.framework.extend.plug_in.amap.component.WXMapPolygonComponent</component>
+    <module name="amap">com.benmu.framework.extend.plug_in.amap.module.WXMapModule</module>
+    <!--amap-->
+
+    <!--plug-in-->
 </app_config>

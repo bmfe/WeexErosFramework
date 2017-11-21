@@ -109,7 +109,7 @@ public class CustomerEnvOptionManager extends Manager {
 
     public static void registerComponent(String name, String className) {
         try {
-            Class clazz = Class.forName(className);
+            Class clazz = Class.forName(className.trim());
             WXSDKEngine.registerComponent(name, clazz);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
