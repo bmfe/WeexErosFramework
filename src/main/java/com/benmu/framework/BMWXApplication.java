@@ -2,6 +2,8 @@ package com.benmu.framework;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -26,6 +28,13 @@ public class BMWXApplication extends Application {
         initWeex();
         registerLifecycle();
     }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        MultiDex.install(base);
+        super.attachBaseContext(base);
+    }
+
 
     private void registerLifecycle() {
         LifecycleManager lifecycleManager = ManagerFactory.getManagerService(LifecycleManager
