@@ -145,7 +145,7 @@ public class Constant {
         //上传图片最大宽度像素
         public static int BIGGESTWIDTH = 828;
 
-        public static final String UPLOADIMAGERBEAN_WITH = "uploadimagerbean_with";
+        public static final String UPLOAD_IMAGE_BEAN = "upload_image_bean";
 
         public static final int PICK_FROM_CAMERA = 1000;
         public static final int PICK_FROM_GALLERY = 1001;

@@ -17,7 +17,9 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
+import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.PermissionManager;
+import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.utils.ImageUtil;
 import com.bumptech.glide.Glide;
@@ -30,6 +32,8 @@ import com.lzy.imagepicker.view.CropImageView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -57,7 +61,10 @@ public class DefaultImageAdapter {
         imagePicker.setMultiMode(true);//是否是多张
         imagePicker.setSelectLimit(bean.maxCount);    //选中数量限制
         Intent intent = new Intent(context, ImageGridActivity.class);
-        intent.putExtra(Constant.ImageConstants.UPLOADIMAGERBEAN_WITH, bean.imageWidth);
+        PersistentManager persistentManager = ManagerFactory.getManagerService(PersistentManager
+                .class);
+        persistentManager.setCacheData(Constant.ImageConstants.UPLOAD_IMAGE_BEAN, bean);
+//        intent.putExtra(Constant.ImageConstants.UPLOADIMAGERBEAN_WITH, bean.imageWidth);
         ((Activity) context).startActivityForResult(intent, Constant.ImageConstants.IMAGE_PICKER);
 
     }
@@ -74,12 +81,17 @@ public class DefaultImageAdapter {
         imagePicker.setFocusWidth(Constant.ImageConstants.BIGGESTWIDTH);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
         imagePicker.setFocusHeight(Constant.ImageConstants.BIGGESTWIDTH);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         Intent intent = new Intent(context, ImageGridActivity.class);
-        intent.putExtra(Constant.ImageConstants.UPLOADIMAGERBEAN_WITH, bean.imageWidth);
+//        intent.putExtra(Constant.ImageConstants.UPLOADIMAGERBEAN_WITH, bean.imageWidth);
+        PersistentManager persistentManager = ManagerFactory.getManagerService(PersistentManager
+                .class);
+        persistentManager.setCacheData(Constant.ImageConstants.UPLOAD_IMAGE_BEAN, bean);
+
         ((Activity) context).startActivityForResult(intent, Constant.ImageConstants.IMAGE_PICKER);
     }
 
 
-    public void UpMultipleImageData(Context context, ArrayList<ImageItem> items, int newWidth) {
+    public void UpMultipleImageData(Context context, ArrayList<ImageItem> items, UploadImageBean
+            bean) {
         ModalManager.BmLoading.showLoading(context, null, false);
         ArrayList imagesFilrUrl = new ArrayList();
         if (items != null && items.size() > 0) {
@@ -88,15 +100,22 @@ public class DefaultImageAdapter {
                 //TODO 图片改为全路径
                 String path = new File(FileManager.getTempFilePath(context), String.valueOf
                         (SystemClock.currentThreadTimeMillis())).getAbsolutePath();
-                String imageFileUrl = ImageUtil.zoomImage(context, bitmap, newWidth, Constant
+                String imageFileUrl = ImageUtil.zoomImage(context, bitmap, bean == null ? 0 :
+                        (int)bean.imageWidth, Constant
                         .ImageConstants.BIGGESTWIDTH, path);
                 imagesFilrUrl.add(imageFileUrl);
                 bitmap.recycle();
 
             }
         }
+        HashMap<String,String> uploadParams=null;
+        if(bean!=null){
+            String params = bean.params;
+            ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+            uploadParams=parseManager.parseObject(params, HashMap.class);
+        }
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
-        axiosManager.upload(Api.UPLOAD_URL, imagesFilrUrl, null, null);
+        axiosManager.upload(Api.UPLOAD_URL, imagesFilrUrl, uploadParams, null);
     }
 
 

@@ -37,11 +37,12 @@ public class ImageManager extends Manager {
     /**
      * 上传多张图片
      *
-     * @param items    选择图片集合
-     * @param newWidth Js指定压缩图片的最大宽度
+     * @param items 选择图片集合
+     * @param bean  uplaod 参数对象
      */
-    public void UpMultipleImageData(Context context, ArrayList<ImageItem> items, int newWidth) {
-        DefaultImageAdapter.getInstance().UpMultipleImageData(context, items, newWidth);
+    public void UpMultipleImageData(Context context, ArrayList<ImageItem> items, UploadImageBean
+            bean) {
+        DefaultImageAdapter.getInstance().UpMultipleImageData(context, items, bean);
 
     }
 }

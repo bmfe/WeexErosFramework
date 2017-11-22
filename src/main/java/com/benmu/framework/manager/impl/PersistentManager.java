@@ -19,6 +19,7 @@ public class PersistentManager extends Manager {
     private Map<String, JSCallback> mBackCallbacks;
     private static Map<String, Object> mAwakeParams;
     private String mScreenPath;
+    private Map<String, Object> mCacheData;
 
     public Object getmAwakeParams(String key) {
         Object value = mAwakeParams.get(key);
@@ -82,6 +83,42 @@ public class PersistentManager extends Manager {
     public void removeBackCallback(String key) {
         if (mBackCallbacks != null) {
             mBackCallbacks.remove(key);
+        }
+    }
+
+
+    public void setCacheData(String key, Object value) {
+        if (mCacheData == null) {
+            mCacheData = new HashMap<>();
+        }
+        mCacheData.put(key, value);
+    }
+
+    public <T> T getCacheData(String key, Class<T> type) {
+        if (key == null || type == null) return null;
+        if (mCacheData == null) {
+            mCacheData = new HashMap<>();
+        }
+        T result = null;
+        try {
+            result = (T) mCacheData.get(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public void deleteCacheData(String key) {
+        if (mCacheData != null) {
+            mCacheData.remove(key);
+        }
+    }
+
+
+    public void removeCacheData() {
+        if (mCacheData != null) {
+            mCacheData.clear();
         }
     }
 

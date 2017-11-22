@@ -6,11 +6,13 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.benmu.framework.R;
+import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.CameraManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.UploadImageBean;
@@ -76,5 +78,7 @@ public class EventCamera {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         mScreenShotCallback = null;
         mUploadAvatar = null;
+        ManagerFactory.getManagerService(PersistentManager.class).deleteCacheData(Constant
+                .ImageConstants.UPLOAD_IMAGE_BEAN);
     }
 }

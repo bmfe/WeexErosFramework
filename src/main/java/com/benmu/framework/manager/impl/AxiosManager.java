@@ -2,7 +2,6 @@ package com.benmu.framework.manager.impl;
 
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.http.Api;
@@ -17,11 +16,9 @@ import com.benmu.framework.http.okhttp.exception.IrregularUrlException;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
-import com.benmu.framework.model.UpLoadImage;
 import com.benmu.framework.model.UploadResultBean;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -271,21 +268,15 @@ public class AxiosManager extends Manager {
         public void onError(Call call, Exception e, int id) {
             DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
                     (DispatchEventManager.class);
-            dispatchEventManager.getBus().post(resultBean(9, "上传文件失败！！！", arrayList));
+            dispatchEventManager.getBus().post(resultBean(9, "文件上传失败", arrayList));
         }
 
         @Override
         public void onResponse(String response, int id) {
-            String resourceId = ManagerFactory.getManagerService(ParseManager.class).parseObject
-                    (response, UpLoadImage.class)
-                    .getData().getResourceId();
-            if (!TextUtils.isEmpty(resourceId)) {
-                String url = BMWXEnvironment.mPlatformConfig.getUrl().getImage() + resourceId;
-                arrayList.add(url);
-            }
+            arrayList.add(response);
             if (arrayList.size() == fileUrlMapSize) {
                 ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
-                        (resultBean(0, "", arrayList));
+                        (resultBean(0, "文件上传成功", arrayList));
             }
         }
     }

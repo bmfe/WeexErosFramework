@@ -30,11 +30,13 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.PermissionManager;
+import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
+import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.InsertEnvUtil;
@@ -528,11 +530,12 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 if (data != null && requestCode == Constant.ImageConstants.IMAGE_PICKER) {
                     ArrayList<ImageItem> items = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    int newWidth = data.getIntExtra(Constant.ImageConstants
-                            .UPLOADIMAGERBEAN_WITH, 0);
                     ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
                             .class);
-                    imageManager.UpMultipleImageData(this, items, newWidth);
+                    UploadImageBean bean = ManagerFactory.getManagerService
+                            (PersistentManager.class).getCacheData
+                            (Constant.ImageConstants.UPLOAD_IMAGE_BEAN, UploadImageBean.class);
+                    imageManager.UpMultipleImageData(this, items, bean);
                 }
                 break;
         }
@@ -544,7 +547,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                                            @NonNull int[] grantResults) {
         PermissionManager permissionManager = ManagerFactory.getManagerService(PermissionManager
                 .class);
-        permissionManager.onRequestPermissionsResult(this,requestCode,permissions,grantResults);
+        permissionManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
