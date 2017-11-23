@@ -1,6 +1,7 @@
 package com.benmu.framework;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
@@ -11,7 +12,11 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
+import com.benmu.framework.update.SynSerivceBinder;
+import com.benmu.framework.update.VersionChecker;
 import com.taobao.weex.WXSDKInstance;
+
+import java.util.List;
 
 /**
  * Created by Carry on 2017/9/4.
@@ -20,19 +25,42 @@ import com.taobao.weex.WXSDKInstance;
 public class BMWXApplication extends Application {
     private static BMWXApplication mInstance;
     private WXSDKInstance mMediator;
+    private VersionChecker mVersionChecker;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
-        initWeex();
-        registerLifecycle();
+        if (shouldInit()) {
+            mInstance = this;
+            initWeex();
+            mVersionChecker = new VersionChecker(this);
+            registerLifecycle();
+        }
     }
+
+
+    private boolean shouldInit() {
+        ActivityManager am = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+        String mainProcessName = getPackageName();
+        int myPid = android.os.Process.myPid();
+        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     protected void attachBaseContext(Context base) {
         MultiDex.install(base);
         super.attachBaseContext(base);
+    }
+
+    private void checkVersion() {
+
     }
 
     private void registerLifecycle() {
@@ -48,6 +76,10 @@ public class BMWXApplication extends Application {
                 if (activity != null) {
                     GlobalEventManager.appActive(((AbstractWeexActivity) activity)
                             .getWXSDkInstance());
+                }
+                //app resume  try check verison
+                if(mVersionChecker!=null){
+                    mVersionChecker.checkVersion();
                 }
             }
 

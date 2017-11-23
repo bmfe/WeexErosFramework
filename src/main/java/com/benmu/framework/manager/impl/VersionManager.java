@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.http.okhttp.OkHttpUtils;
+import com.benmu.framework.http.okhttp.callback.FileCallBack;
+import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.model.JsVersionInfoBean;
@@ -18,6 +22,8 @@ import com.benmu.framework.utils.SharePreferenceUtil;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Carry on 2017/8/23.
@@ -126,4 +132,36 @@ public class VersionManager extends Manager {
         return !assets.getJsVersion().equals(current.getJsVersion()) && assets.getTimestamp()
                 .compareTo(current.getTimestamp()) > 0;
     }
+
+
+    public void checkBundleUpdate(Context context, String url, boolean isDiff, StringCallback
+            callback) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("appName", BMWXEnvironment.mPlatformConfig.getAppName());
+        params.put("android", BaseCommonUtil.getVersionName(context));
+        String verisonInfo = SharePreferenceUtil.getVersion(context);
+        if (TextUtils.isEmpty(verisonInfo)) {
+            verisonInfo = "";
+        } else {
+            ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+            JsVersionInfoBean jsVersionInfoBean = parseManager.parseObject(verisonInfo,
+                    JsVersionInfoBean.class);
+            if (jsVersionInfoBean == null) {
+                verisonInfo = "";
+            } else {
+                verisonInfo = jsVersionInfoBean.getJsVersion();
+            }
+        }
+        params.put("jsVersion", verisonInfo);
+        params.put("isDiff", isDiff ? "1" : "0");
+        AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
+        axiosManager.get(url, params, null, callback, url);
+    }
+
+    public void downloadBundle(String url, FileCallBack fileCallBack) {
+        AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
+        axiosManager.download(url, fileCallBack);
+    }
+
+
 }

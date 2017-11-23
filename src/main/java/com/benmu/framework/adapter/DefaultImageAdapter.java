@@ -64,7 +64,6 @@ public class DefaultImageAdapter {
         PersistentManager persistentManager = ManagerFactory.getManagerService(PersistentManager
                 .class);
         persistentManager.setCacheData(Constant.ImageConstants.UPLOAD_IMAGE_BEAN, bean);
-//        intent.putExtra(Constant.ImageConstants.UPLOADIMAGERBEAN_WITH, bean.imageWidth);
         ((Activity) context).startActivityForResult(intent, Constant.ImageConstants.IMAGE_PICKER);
 
     }
@@ -81,7 +80,6 @@ public class DefaultImageAdapter {
         imagePicker.setFocusWidth(Constant.ImageConstants.BIGGESTWIDTH);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
         imagePicker.setFocusHeight(Constant.ImageConstants.BIGGESTWIDTH);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         Intent intent = new Intent(context, ImageGridActivity.class);
-//        intent.putExtra(Constant.ImageConstants.UPLOADIMAGERBEAN_WITH, bean.imageWidth);
         PersistentManager persistentManager = ManagerFactory.getManagerService(PersistentManager
                 .class);
         persistentManager.setCacheData(Constant.ImageConstants.UPLOAD_IMAGE_BEAN, bean);

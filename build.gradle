@@ -75,4 +75,7 @@ dependencies {
     compile files('libs/umeng_social_tool.jar')
     compile files('libs/GetuiSDK2.9.3.0.jar')
     compile 'com.android.support:multidex:1.0.1'
+
+    //bs patch
+    compile 'me.ele:bspatch:1.0.6'
 }

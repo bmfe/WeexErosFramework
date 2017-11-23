@@ -60,11 +60,12 @@ public class PushManager extends Manager {
     private void showNotification(Context context, NotificationBean bean) {
         if (bean == null) return;
         int iconId = ResourceUtil.getMipmapId("com.benmu.wx", "app_icon");
-        String appName = context.getResources().getString(ResourceUtil.getStringId(context
-                .getPackageName(), "app_name"));
+        String appName = context.getResources().getString(ResourceUtil.getStringId("com.benmu" +
+                ".wx", "app_name"));
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(iconId).setContentTitle(appName).setTicker(bean.aps.alert).setContentText(bean.aps.alert.trim
+                .setSmallIcon(iconId).setContentTitle(appName).setTicker(bean.aps.alert)
+                .setContentText(bean.aps.alert.trim
                         ()).setAutoCancel(true).setDefaults(Notification.DEFAULT_LIGHTS |
                         Notification.DEFAULT_VIBRATE);
         Intent resultIntent = new Intent(context, ResultActivity.class);

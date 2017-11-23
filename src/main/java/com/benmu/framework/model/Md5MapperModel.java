@@ -11,6 +11,15 @@ public class Md5MapperModel implements Serializable {
     private String android;
     private String appName;
     private String jsVersion;
+    private String timestamp;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public String getAndroid() {
         return android;

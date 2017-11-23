@@ -20,6 +20,7 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.manager.impl.GeoManager;
 import com.benmu.framework.service.BroadcastChannelService;
+import com.benmu.framework.update.SynVersionService;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
@@ -35,6 +36,7 @@ import com.umeng.socialize.UMShareAPI;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import me.ele.patch.BsPatch;
 import okhttp3.OkHttpClient;
 
 /**
@@ -43,6 +45,7 @@ import okhttp3.OkHttpClient;
 
 public class BMWXEngine {
     public static void initialize(Application context, BMInitConfig initConfig) {
+        initPatch(context);
         initPlatformConfig(context);
         initConing(context, initConfig);
         engineStart(context);
@@ -55,6 +58,11 @@ public class BMWXEngine {
         initUmeng(context);
         EventCenter.getInstance().init();
         initMap();
+    }
+
+
+    private static void initPatch(Application context) {
+        BsPatch.init(context);
     }
 
     private static void initMap() {

@@ -187,4 +187,9 @@ public class Constant {
     public static final String INTERCEPTOR_ACTIVE = "active";
     public static final String INTERCEPTOR_DEACTIVE = "deactivate";
 
+    public static class Version {
+        public static final int UPDATING = 0;
+        public static final int SLEEP = 1;
+    }
+
 }

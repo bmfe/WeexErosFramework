@@ -115,7 +115,7 @@ public class PlatformConfigBean implements Serializable {
         private String request;
         private String jsServer;
         private String image;
-        private String updateVersion;
+        private String bundleUpdate;
 
         public String getRequest() {
             return request;
@@ -133,14 +133,6 @@ public class PlatformConfigBean implements Serializable {
             this.jsServer = jsServer;
         }
 
-        public String getUpdateVersion() {
-            return updateVersion;
-        }
-
-        public void setUpdateVersion(String updateVersion) {
-            this.updateVersion = updateVersion;
-        }
-
         public String getImage() {
             return image;
         }
@@ -149,13 +141,12 @@ public class PlatformConfigBean implements Serializable {
             this.image = image;
         }
 
-
-        public String getCheckJsVersionApi() {
-            return updateVersion;
+        public String getBundleUpdate() {
+            return bundleUpdate;
         }
 
-        public void setCheckJsVersionApi(String checkJsVersionApi) {
-            this.updateVersion = checkJsVersionApi;
+        public void setBundleUpdate(String bundleUpdate) {
+            this.bundleUpdate = bundleUpdate;
         }
     }
 
