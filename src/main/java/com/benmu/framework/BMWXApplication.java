@@ -12,6 +12,7 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
+import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.update.SynSerivceBinder;
 import com.benmu.framework.update.VersionChecker;
 import com.benmu.framework.utils.DebugableUtil;
@@ -44,14 +45,14 @@ public class BMWXApplication extends Application {
     }
 
     private void initShare() {
+        PlatformConfigBean.Wechat wechat = BMWXEnvironment.mPlatformConfig.getWechat();
+        if (wechat != null && wechat.isEnabled()) {
+            PlatformConfig.setWeixin(wechat.getAppId(), wechat.getAppSecret());
+        }
         Config.DEBUG = DebugableUtil.isDebug();
         UMShareAPI.get(this);
     }
 
-    {
-        PlatformConfig.setWeixin(BMWXEnvironment.mPlatformConfig.getWechat().getAppId(),
-                BMWXEnvironment.mPlatformConfig.getWechat().getAppSecret());
-    }
 
 
     private boolean shouldInit() {
