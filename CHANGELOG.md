@@ -53,3 +53,4 @@
 3.修复上传问题 上传图片可附带参数
 4.支持BMChart
 5.集成weex-amap
+6.增加bmAuth moudle 支持微信授权登陆
