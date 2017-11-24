@@ -360,6 +360,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
         MobclickAgent.onResume(this);
+
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
+                (new Intent(Constant.Action
+                        .ACTION_AUTHLOGIN_CANCEL));
     }
 
     @Override

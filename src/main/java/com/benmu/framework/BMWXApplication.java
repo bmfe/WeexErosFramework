@@ -14,7 +14,11 @@ import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
 import com.benmu.framework.update.SynSerivceBinder;
 import com.benmu.framework.update.VersionChecker;
+import com.benmu.framework.utils.DebugableUtil;
 import com.taobao.weex.WXSDKInstance;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 
 import java.util.List;
 
@@ -35,7 +39,18 @@ public class BMWXApplication extends Application {
             initWeex();
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
+            initShare();
         }
+    }
+
+    private void initShare() {
+        Config.DEBUG = DebugableUtil.isDebug();
+        UMShareAPI.get(this);
+    }
+
+    {
+        PlatformConfig.setWeixin(BMWXEnvironment.mPlatformConfig.getWechat().getAppId(),
+                BMWXEnvironment.mPlatformConfig.getWechat().getAppSecret());
     }
 
 
@@ -78,7 +93,7 @@ public class BMWXApplication extends Application {
                             .getWXSDkInstance());
                 }
                 //app resume  try check verison
-                if(mVersionChecker!=null){
+                if (mVersionChecker != null) {
                     mVersionChecker.checkVersion();
                 }
             }

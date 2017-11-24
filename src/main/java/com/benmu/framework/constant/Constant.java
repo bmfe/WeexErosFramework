@@ -89,6 +89,8 @@ public class Constant {
         public static String ACTION_UPDATE_DEBUG = "com.benmu.jyt.ACTION_UPDATE_DEBUG";
         public static final String ACTION_NOTIFICATION = "com.benmu.jyt.ACTION_NOTIFICATION";
         public static final String ACTION_ALERT_UPDATE = "com.benmu.jyt.ACTION_ALERT_UPDATE";
+        public static final String ACTION_AUTHLOGIN_CANCEL = "com.benmu.jyt" +
+                ".ACTION_AUTHLOGIN_CANCEL";
     }
 
     /**

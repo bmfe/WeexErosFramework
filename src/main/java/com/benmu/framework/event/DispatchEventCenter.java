@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.event.auth.EventAuth;
 import com.benmu.framework.event.browse.EventBrowse;
 import com.benmu.framework.event.camera.EventCamera;
 import com.benmu.framework.event.geo.EventGeo;
@@ -199,6 +200,9 @@ public class DispatchEventCenter {
                 break;
             case WXConstant.WXEventCenter.EVENT_GEOLOCATION_GET:
                 new EventGeo().getLocation(context, weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_WECHATLOGIN:
+                new EventAuth().wechat(context,params,weexEventBean.getJscallback());
                 break;
         }
     }

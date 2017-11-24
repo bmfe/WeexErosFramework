@@ -46,3 +46,10 @@
 3.集成日历控件
 5.iconfont加载逻辑优化
 6.集成bmGeo模块
+
+#2.0.1
+1.更新编译gradle版本
+2.打开jsbundle更新逻辑
+3.修复上传问题 上传图片可附带参数
+4.支持BMChart
+5.集成weex-amap

@@ -2,6 +2,8 @@ package com.benmu.framework.extend.comoponents;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
@@ -21,6 +23,8 @@ import com.taobao.weex.ui.view.IWebView;
 import com.taobao.weex.ui.view.WXWebView;
 import com.taobao.weex.utils.WXUtils;
 
+import java.util.Date;
+
 /**
  * Created by Carry on 2017/11/16.
  */
@@ -33,6 +37,7 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     private WebView mWeb;
     private String mChartJs;
     private String mCharInfo;
+    private Date s;
 
     public BMChart(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, int type) {
         super(instance, dom, parent, type);
@@ -67,6 +72,8 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
         WebSettings settings = mWeb.getSettings();
         settings.setJavaScriptEnabled(true);
         mWebView.setOnPageListener(this);
+        s = new Date();
+        Log.e("bmChart", "start" + s.getTime());
         mWeb.loadUrl("file:///android_asset/bm-chart.html");
         mWeb.setWebChromeClient(new WebChromeClient() {
 
@@ -109,22 +116,20 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
 
     @WXComponentProp(name = "chartInfo")
     public void setChartInfo(String info) {
+        if (!TextUtils.isEmpty(mCharInfo) && !mCharInfo.equals(info)) {
+            mWeb.reload();
+        }
         this.mCharInfo = info;
-
     }
 
 
     @Override
     public void onPageFinish(String url, boolean canGoBack, boolean canGoForward) {
-
-            mWeb.evaluateJavascript(mChartJs, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String s) {
-                    mWeb.loadUrl("javascript:setHeight(" + mHeight + ")");
-                    mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
-                    fireEvent("finish");
-                }
-            });
-
+        Date e = new Date();
+        Log.e("bmChart", "finsh" + e.getTime() + "耗时" + (e.getTime() - s.getTime()));
+        mWeb.loadUrl("javascript:setHeight(" + mHeight + ")");
+        mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
+        fireEvent("finish");
     }
+
 }
