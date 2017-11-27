@@ -155,7 +155,7 @@ public class VersionManager extends Manager {
         params.put("jsVersion", verisonInfo);
         params.put("isDiff", isDiff ? "1" : "0");
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
-        axiosManager.get(url, params, null, callback, url);
+        axiosManager.get(url, params, null, callback, url,0);
     }
 
     public void downloadBundle(String url, FileCallBack fileCallBack) {
