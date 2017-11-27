@@ -1,10 +1,12 @@
 package com.benmu.framework.manager.impl;
 
+import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.http.Api;
+import com.benmu.framework.http.BMPersistentCookieStore;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.builder.GetBuilder;
 import com.benmu.framework.http.okhttp.builder.OkHttpRequestBuilder;
@@ -12,7 +14,9 @@ import com.benmu.framework.http.okhttp.builder.OtherRequestBuilder;
 import com.benmu.framework.http.okhttp.builder.PostFormBuilder;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
+import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
 import com.benmu.framework.http.okhttp.exception.IrregularUrlException;
+import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -23,10 +27,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 
@@ -38,13 +44,30 @@ public class AxiosManager extends Manager {
     private static final String DEFAULT_MEDIATYPE = "application/json; charset=utf-8";
     private static final String DEFAULT_HOST = "http://app.weex-eros.com";
 
+
+    public OkHttpClient createClient(Context context, long timeout) {
+        CookieJarImpl cookieJar = new CookieJarImpl(new BMPersistentCookieStore
+                (context));
+        return new OkHttpClient.Builder()
+                .addInterceptor(new LoggerInterceptor("TAG"))
+                //接口超时时间  默认3000毫秒
+                .connectTimeout(timeout == 0 ? 3000L : timeout, TimeUnit.MILLISECONDS)
+                .readTimeout(timeout == 0 ? 3000L : timeout, TimeUnit.MILLISECONDS).cookieJar
+                        (cookieJar)
+                //其他配置
+                .build();
+    }
+
+    public void initClient(Context context) {
+        OkHttpUtils.initClient(createClient(context, 0));
+    }
+
     public void cancel(Object tag) {
 
     }
 
     public void get(String mUrl, HashMap<String, String> params, HashMap<String, String> header,
-                    StringCallback stringCallback, Object tag) {
-
+                    StringCallback stringCallback, Object tag, long timeout) {
         mUrl = safeUrl(mUrl);
         if (mUrl == null) {
             if (stringCallback != null) {
@@ -55,13 +78,21 @@ public class AxiosManager extends Manager {
         if (header == null) {
             header = new HashMap<>();
         }
+        setTimeout(timeout);
         GetBuilder builder = OkHttpUtils.get().url(mUrl).tag(tag).headers(header);
         generateParams(params, builder);
         builder.build().execute(stringCallback);
     }
 
+    private void setTimeout(long timeout) {
+        if (timeout != 0) {
+            OkHttpUtils.getInstance().updateHttpClient(createClient(BMWXEnvironment
+                    .mApplicationContext, timeout));
+        }
+    }
+
     public void put(String url, String content, HashMap<String, String> header, StringCallback
-            callBack, Object tag) {
+            callBack, Object tag, long timeout) {
         url = safeUrl(url);
         if (url == null) {
             if (callBack != null) {
@@ -72,6 +103,7 @@ public class AxiosManager extends Manager {
         if (header == null) {
             header = new HashMap<>();
         }
+        setTimeout(timeout);
         OtherRequestBuilder builder = OkHttpUtils.put().url(url).tag(tag).headers(header);
         if (content != null) {
             builder.requestBody(createRequestBodyByMediaType(header, content));
@@ -80,7 +112,7 @@ public class AxiosManager extends Manager {
     }
 
     public void delete(String url, String content, HashMap<String, String> header, StringCallback
-            callBack, Object tag) {
+            callBack, Object tag, long timeout) {
         url = safeUrl(url);
         if (url == null) {
             if (callBack != null) {
@@ -92,6 +124,7 @@ public class AxiosManager extends Manager {
         if (header == null) {
             header = new HashMap<>();
         }
+        setTimeout(timeout);
         OtherRequestBuilder builder = OkHttpUtils.delete().url(url).tag(tag).headers(header);
         if (content != null) {
             builder.requestBody(createRequestBodyByMediaType(header, content));
@@ -100,7 +133,7 @@ public class AxiosManager extends Manager {
     }
 
     public void patch(String url, String content, HashMap<String, String> header, StringCallback
-            callback, Object tag) {
+            callback, Object tag, long timeout) {
         url = safeUrl(url);
 
         if (url == null) {
@@ -113,6 +146,7 @@ public class AxiosManager extends Manager {
         if (header == null) {
             header = new HashMap<>();
         }
+        setTimeout(timeout);
         OtherRequestBuilder builder = OkHttpUtils.patch().url(url).tag(tag).headers(header);
         if (content != null) {
             builder.requestBody(createRequestBodyByMediaType(header, content));
@@ -121,7 +155,7 @@ public class AxiosManager extends Manager {
     }
 
     public void head(String url, HashMap<String, String> params, HashMap<String, String> header,
-                     StringCallback callback, Object tag) {
+                     StringCallback callback, Object tag, long timeout) {
         url = safeUrl(url);
 
         if (url == null) {
@@ -137,6 +171,7 @@ public class AxiosManager extends Manager {
         if (params == null) {
             params = new HashMap<>();
         }
+        setTimeout(timeout);
         OkHttpUtils.head().url(url).tag(tag).headers(header).params(params).build().execute
                 (callback);
 
@@ -204,7 +239,7 @@ public class AxiosManager extends Manager {
 
 
     public void post(String mUrl, String data, HashMap<String, String> header, StringCallback
-            stringCallback, Object tag) {
+            stringCallback, Object tag, long timeout) {
         mUrl = safeUrl(mUrl);
         if (mUrl == null) {
             if (stringCallback != null) {
@@ -213,6 +248,7 @@ public class AxiosManager extends Manager {
             return;
         }
 
+        setTimeout(timeout);
         String contentType = null;
         if (header != null) {
             contentType = header.get("Content-Type");

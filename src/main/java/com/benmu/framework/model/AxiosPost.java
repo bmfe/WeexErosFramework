@@ -12,5 +12,5 @@ public class AxiosPost implements Serializable {
     public HashMap<String, String> header;
     public boolean noRepeat;
     public String data;
-    public boolean authorize;
+    public long timeout;
 }

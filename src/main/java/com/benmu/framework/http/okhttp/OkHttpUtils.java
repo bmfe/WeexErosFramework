@@ -38,6 +38,11 @@ public class OkHttpUtils {
         mPlatform = Platform.get();
     }
 
+    public void updateHttpClient(OkHttpClient okHttpClient) {
+        if (okHttpClient == null) return;
+        mOkHttpClient = okHttpClient;
+    }
+
 
     public static OkHttpUtils initClient(OkHttpClient okHttpClient) {
         if (mInstance == null) {

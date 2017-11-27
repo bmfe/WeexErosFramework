@@ -78,7 +78,7 @@ public class EventFetch {
             public void onResponse(String response, int id) {
                 parseResponse(response, jscallback);
             }
-        }, axiosPatch.url);
+        }, axiosPatch.url, axiosPatch.timeout);
     }
 
     private void put(final Context context, AxiosManager axiosManager, AxiosPost axiosPut, final
@@ -93,7 +93,7 @@ public class EventFetch {
             public void onResponse(String response, int id) {
                 parseResponse(response, jscallback);
             }
-        }, axiosPut.url);
+        }, axiosPut.url, axiosPut.timeout);
     }
 
     private void delete(final Context context, AxiosManager axiosManager, AxiosPost axiosDelete,
@@ -109,7 +109,7 @@ public class EventFetch {
                     public void onResponse(String response, int id) {
                         parseResponse(response, jscallback);
                     }
-                }, axiosDelete.url);
+                }, axiosDelete.url, axiosDelete.timeout);
     }
 
 
@@ -125,7 +125,7 @@ public class EventFetch {
             public void onResponse(String response, int id) {
                 parseResponse(response, jscallback);
             }
-        }, axiosHead.url);
+        }, axiosHead.url, axiosHead.timeout);
     }
 
     private void post(final Context context, AxiosManager axiosManager, AxiosPost axiosPost,
@@ -144,7 +144,7 @@ public class EventFetch {
                     public void onResponse(String response, int id) {
                         parseResponse(response, jscallback);
                     }
-                }, axiosPost.url);
+                }, axiosPost.url, axiosPost.timeout);
     }
 
 
@@ -162,7 +162,7 @@ public class EventFetch {
                     public void onResponse(String response, int id) {
                         parseResponse(response, jscallback);
                     }
-                }, axiosGet.url);
+                }, axiosGet.url, axiosGet.timeout);
     }
 
 

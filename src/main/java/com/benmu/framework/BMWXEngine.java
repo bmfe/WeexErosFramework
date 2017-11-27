@@ -17,6 +17,7 @@ import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
 import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.manager.impl.GeoManager;
 import com.benmu.framework.service.BroadcastChannelService;
@@ -117,16 +118,7 @@ public class BMWXEngine {
     }
 
     private static void initHttpClient(Application context) {
-        CookieJarImpl cookieJar = new CookieJarImpl(new BMPersistentCookieStore
-                (context));
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new LoggerInterceptor("TAG"))
-                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-                .readTimeout(10000L, TimeUnit.MILLISECONDS).cookieJar(cookieJar)
-                //其他配置
-                .build();
-
-        OkHttpUtils.initClient(okHttpClient);
+        ManagerFactory.getManagerService(AxiosManager.class).initClient(context);
     }
 
     private static void registerBMComponentsAndModules(Application context) {

@@ -11,5 +11,5 @@ public class AxiosGet {
     public HashMap<String, String> header;
     public boolean noRepeat;
     public HashMap<String, String> data;
-    public boolean authorize;
+    public long timeout;
 }
