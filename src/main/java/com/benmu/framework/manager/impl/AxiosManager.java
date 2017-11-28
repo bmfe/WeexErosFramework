@@ -21,6 +21,7 @@ import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.utils.AppUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -277,7 +278,9 @@ public class AxiosManager extends Manager {
     private void upload(String url, String filePath, Map<String, String> uploadParams,
                         Map<String, String> heads, StringCallback callback) {
         PostFormBuilder builder = OkHttpUtils.post().url(url).params(uploadParams).headers(heads);
-        builder.addFile("file", "file", new File(filePath));
+        String ext = AppUtils.getFileExtName(filePath);
+        builder.addFile("file", TextUtils.isEmpty(ext) ? "file.jpg" : "file." + ext, new File
+                (filePath));
         builder.build().execute(callback);
     }
 
