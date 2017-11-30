@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -412,14 +413,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mDebugger != null) {
             mDebugger.close();
         }
-        if (SVProgressHUD.isShowing(this)) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    SVProgressHUD.isShowing(mAct);
-                }
-            });
-        }
     }
 
     @Override
@@ -489,13 +482,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onBackPressed() {
-        if (SVProgressHUD.isShowing(this)) {
-            SVProgressHUD.dismiss(this);
-            return;
-        }
         if (mRouterParam != null && mRouterParam.isRunBackCallback) {
             if (mRouterParam.backCallback != null) {
                 mRouterParam.backCallback.invoke(null);
+                return;
             }
         }
 
@@ -595,5 +585,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                         ().post(bean);
             }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
     }
 }
