@@ -213,10 +213,7 @@ public class AxiosManager extends Manager {
         }
         if (parse.getPort() != -1) {
             builder.append(":").append(parse.getPort());
-        }else if(requestHost.getPort()!=-1){
-            builder.append(":").append(requestHost.getPort());
         }
-
         if (!TextUtils.isEmpty(parse.getPath())) {
             builder.append(origin.substring(origin.indexOf(parse.getPath())));
         }
