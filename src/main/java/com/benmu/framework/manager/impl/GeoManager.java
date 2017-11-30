@@ -33,7 +33,7 @@ public class GeoManager extends Manager implements AMapLocationListener {
         PlatformConfigBean.Amap amap = BMWXEnvironment.mPlatformConfig.getAmap();
         if (amap != null) {
             String androidAppKey = amap.getAndroidAppKey();
-            if (!TextUtils.isEmpty(androidAppKey) && Constant.AMAP_KEY.equals(androidAppKey)) {
+            if (!TextUtils.isEmpty(androidAppKey) && !Constant.AMAP_KEY.equals(androidAppKey)) {
                 MapsInitializer.setApiKey(androidAppKey);
                 AMapLocationClient.setApiKey(androidAppKey);
 
