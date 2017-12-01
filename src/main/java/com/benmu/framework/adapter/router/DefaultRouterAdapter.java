@@ -122,26 +122,38 @@ public class DefaultRouterAdapter {
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         String phone = null;
+        int nowCall = 0;
         try {
             phone = (String) parseManager.parseObject(params).get("phone");
+            if (parseManager.parseObject(params).get("nowCall") != null) {
+                nowCall = (int) parseManager.parseObject(params).get("nowCall");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             phone = "110";
         }
+        if (TextUtils.isEmpty(phone) || context == null) return;
 
-        if (!TextUtils.isEmpty(phone) && context != null) {
-            final String finalPhone = phone;
+        final String finalPhone = phone;
+
+        if (nowCall == 1) {
+            callPhone(finalPhone, context);
+        } else {
             ModalManager.BmAlert.showAlert(context, null, phone, "呼叫", new DialogInterface
                     .OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +
-                            finalPhone));
-                    context.startActivity(dialIntent);
+                    callPhone(finalPhone, context);
                     dialog.dismiss();
                 }
             }, "取消", null, null, null);
         }
+    }
+
+    private void callPhone(String finalPhone, Context context) {
+        Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" +
+                finalPhone));
+        context.startActivity(dialIntent);
     }
 
     public void toWebView(Context context, String params) {
