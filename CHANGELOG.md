@@ -58,3 +58,8 @@
 #2.0.2
 1.修改 AbstractWeexActivity 基类，删除 基类里返回和销毁 时检查是否开启dialog代码。
 2.修改 bmRouter callPhone方法，增加 int型 nowCall参数，如果传递并且 等于1时 不弹出dialog 直接跳转拨打电话页面
+
+#2.0.3
+1、增加第一个页面的 物理返回按钮监听抛出事件'homeBack'
+2、增加 finish 方法 给前端调用。
+3、eros.native.json 增加配置 isListentHomeBack 等于1时 监听HomeBack
