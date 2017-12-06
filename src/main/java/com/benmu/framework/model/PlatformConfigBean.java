@@ -9,19 +9,19 @@ import java.io.Serializable;
 public class PlatformConfigBean implements Serializable {
     private String AppName;
     private String appBoard;
-    private int isListentHomeBack;
+    private boolean androidIsListenHomeBack;
     private Page Page;
     private Url url;
     private Wechat wechat;
     private Umeng umeng;
     private Amap amap;
 
-    public int getIsListentHomeBack() {
-        return isListentHomeBack;
+    public boolean isAndroidIsListenHomeBack() {
+        return androidIsListenHomeBack;
     }
 
-    public void setIsListentHomeBack(int isListentHomeBack) {
-        this.isListentHomeBack = isListentHomeBack;
+    public void setAndroidIsListenHomeBack(boolean androidIsListenHomeBack) {
+        this.androidIsListenHomeBack = androidIsListenHomeBack;
     }
 
     public Wechat getWechat() {

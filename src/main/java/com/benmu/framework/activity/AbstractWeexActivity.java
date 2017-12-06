@@ -599,7 +599,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (isHomePage && BMWXEnvironment.mPlatformConfig.getIsListentHomeBack() == 1) { //如果是首页
+            if (isHomePage && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
                 GlobalEventManager.homeBack(getWXSDkInstance());
                 return true;
             }
