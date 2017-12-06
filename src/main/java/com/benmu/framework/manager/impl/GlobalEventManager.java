@@ -63,6 +63,12 @@ public class GlobalEventManager extends Manager {
 
     }
 
+    public static void homeBack(WXSDKInstance instance){
+        if (instance != null) {
+            instance.fireGlobalEventCallback("homeBack", null);
+        }
+    }
+
     public static void screenShotFinish(WXSDKInstance instance) {
         if (instance != null) {
             instance.fireGlobalEventCallback("screenshotFeedback", null);

@@ -1,5 +1,6 @@
 package com.benmu.framework.activity;
 
+import com.benmu.framework.BMWXApplication;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -18,11 +20,11 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.benmu.framework.BMWXEnvironment;
-import com.benmu.framework.BuildConfig;
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
@@ -34,7 +36,6 @@ import com.benmu.framework.manager.impl.PermissionManager;
 import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
-import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.UploadImageBean;
@@ -45,7 +46,6 @@ import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.BaseToolBar;
-import com.benmu.widget.view.loading.SVProgressHUD;
 import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -82,12 +82,17 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
     private RelativeLayout rl_error;
     private ViewGroup mRootView;
+    private boolean isHomePage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAct = this;
         mRouterType = GlobalEventManager.TYPE_OPEN;
+        if (!BMWXApplication.getWXApplication().isRecordHomeActivity) {
+            BMWXApplication.getWXApplication().isRecordHomeActivity = true;
+            isHomePage = true;
+        }
         Intent data = getIntent();
         initRouterParams(data);
         initUrl(data);
@@ -413,6 +418,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mDebugger != null) {
             mDebugger.close();
         }
+        if (isHomePage) {
+            BMWXApplication.getWXApplication().isRecordHomeActivity = false;
+            isHomePage = false;
+        }
     }
 
     @Override
@@ -589,6 +598,12 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            if (isHomePage && BMWXEnvironment.mPlatformConfig.getIsListentHomeBack() == 1) { //如果是首页
+                GlobalEventManager.homeBack(getWXSDkInstance());
+                return true;
+            }
+        }
         return super.onKeyDown(keyCode, event);
     }
 }

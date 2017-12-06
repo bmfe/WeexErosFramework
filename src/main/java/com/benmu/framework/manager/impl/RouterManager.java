@@ -62,6 +62,9 @@ public class RouterManager extends Manager {
 
     }
 
+    public boolean finish(Context context){
+        return context != null && DefaultRouterAdapter.finish(context);
+    }
     public void toWebView(Context context, String params) {
         DefaultRouterAdapter.getInstance().toWebView(context, params);
     }

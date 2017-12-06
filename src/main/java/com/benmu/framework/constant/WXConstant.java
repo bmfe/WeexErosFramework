@@ -40,6 +40,7 @@ public class WXConstant {
         public static final String EVENT_GETBACKPARAMS = "EVENT_GETBACKPARAMS";
         public static final String EVENT_LOGINSUCCESS = "EVENT_LOGINSUCCESS";
         public static final String EVENT_REFRESH = "EVENT_REFRESH";
+        public static final String EVENT_FINISH = "EVENT_FINISH";
         public static final String EVENT_BACKHOME = "EVENT_BACKHOME";
         public static final String EVENT_TOLOGIN = "EVENT_TOLOGIN";
         public static final String EVENT_TOMAP = "EVENT_TOMAP";

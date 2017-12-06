@@ -1,18 +1,15 @@
 package com.benmu.framework.extend.module;
 
-import android.util.Log;
 
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
-import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Carry on 17/1/11.
@@ -47,6 +44,15 @@ public class RouterModule extends WXModule {
     public void back(String params, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_BACK);
+        weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setJsParams(params);
+        weexEventBean.setJscallback(callback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+    }
+    @JSMethod(uiThread = true)
+    public void finish(String params, JSCallback callback) {
+        WeexEventBean weexEventBean = new WeexEventBean();
+        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_FINISH);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJsParams(params);
         weexEventBean.setJscallback(callback);

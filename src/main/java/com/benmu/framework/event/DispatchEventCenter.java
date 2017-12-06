@@ -21,6 +21,7 @@ import com.benmu.framework.event.nav.EventRightItem;
 import com.benmu.framework.event.pay.EventPay;
 import com.benmu.framework.event.router.EventBack;
 import com.benmu.framework.event.router.EventCall;
+import com.benmu.framework.event.router.EventFinish;
 import com.benmu.framework.event.router.EventGetBackParams;
 import com.benmu.framework.event.router.EventGetParams;
 import com.benmu.framework.event.router.EventOpen;
@@ -98,6 +99,9 @@ public class DispatchEventCenter {
                 break;
             case WXConstant.WXEventCenter.EVENT_REFRESH:
                 new EventRefresh().refresh(context, weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_FINISH:
+                new EventFinish().finish(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_TOMAP:
                 new EventToMap().toMap(params, context, weexEventBean.getJscallback());

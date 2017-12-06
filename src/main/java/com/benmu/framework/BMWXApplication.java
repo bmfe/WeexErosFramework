@@ -31,6 +31,7 @@ public class BMWXApplication extends Application {
     private static BMWXApplication mInstance;
     private WXSDKInstance mMediator;
     private VersionChecker mVersionChecker;
+    public boolean isRecordHomeActivity;
 
     @Override
     public void onCreate() {
@@ -52,7 +53,6 @@ public class BMWXApplication extends Application {
         Config.DEBUG = DebugableUtil.isDebug();
         UMShareAPI.get(this);
     }
-
 
 
     private boolean shouldInit() {

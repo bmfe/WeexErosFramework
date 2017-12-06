@@ -118,6 +118,13 @@ public class DefaultRouterAdapter {
         }
         return false;
     }
+    public static boolean finish(Context context) {
+        if (context instanceof AbstractWeexActivity) {
+            ((AbstractWeexActivity) context).finish();
+            return true;
+        }
+        return false;
+    }
 
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
