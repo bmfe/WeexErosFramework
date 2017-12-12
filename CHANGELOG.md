@@ -63,3 +63,7 @@
 1、增加第一个页面的 物理返回按钮监听抛出事件'homeBack'
 2、增加 finish 方法 给前端调用。
 3、eros.native.json 增加配置 isListentHomeBack 等于1时 监听HomeBack
+
+#2.0.4
+1、修改 EventFetch patch 方法
+2、修改 pages.zip 改成 bundle.zip

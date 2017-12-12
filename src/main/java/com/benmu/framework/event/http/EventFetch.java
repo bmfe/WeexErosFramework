@@ -68,7 +68,7 @@ public class EventFetch {
 
     private void patch(final Context context, AxiosManager axiosManager, AxiosPost axiosPatch,
                        final JSCallback jscallback) {
-        axiosManager.put(axiosPatch.url, axiosPatch.data, axiosPatch.header, new StringCallback() {
+        axiosManager.patch(axiosPatch.url, axiosPatch.data, axiosPatch.header, new StringCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 parseError(context, e, jscallback);

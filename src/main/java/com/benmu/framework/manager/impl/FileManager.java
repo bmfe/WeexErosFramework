@@ -19,7 +19,7 @@ import java.util.zip.ZipFile;
 
 public class FileManager extends Manager {
     public static final String BASE_DIR = "benmu";
-    public static final String BUNDLE_NAME = "pages.zip";
+    public static final String BUNDLE_NAME = "bundle.zip";
     public static final String TEMP_BUNDLE_NAME = "temp_pages.zip";
     public static final String JS_BUNDLE = "/.bundle";
     public static final String JS_TEMP_REPERTORY = "/.temp_bundle";
