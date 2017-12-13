@@ -64,6 +64,10 @@
 2、增加 finish 方法 给前端调用。
 3、eros.native.json 增加配置 isListentHomeBack 等于1时 监听HomeBack
 
-#2.0.4
-1、修改 EventFetch patch 方法
-2、修改 pages.zip 改成 bundle.zip
+# 2.0.4
+1. 修改 EventFetch patch 方法
+2. 修改 pages.zip 改成 bundle.zip
+
+# 2.0.5
+1. 图片上传增加传递head 参数 默认为null
+2. 修改loading 实现，并做了微小修改

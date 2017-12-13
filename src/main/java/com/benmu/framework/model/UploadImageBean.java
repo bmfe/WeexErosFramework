@@ -10,5 +10,5 @@ public class UploadImageBean implements Serializable {
     public double imageWidth;// 压缩后，图片最大宽度
     public boolean allowCrop;//是否需要剪切为圆形
     public String params; //上传附带参数 json
-    public String heads;
+    public String header;
 }

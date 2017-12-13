@@ -33,7 +33,6 @@ import com.lzy.imagepicker.view.CropImageView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -112,7 +111,7 @@ public class DefaultImageAdapter {
             String params = bean.params;
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
             uploadParams=parseManager.parseObject(params, HashMap.class);
-            heads=parseManager.parseObject(bean.heads, HashMap.class);
+            heads=parseManager.parseObject(bean.header, HashMap.class);
         }
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
         axiosManager.upload(Api.UPLOAD_URL, imagesFilrUrl, uploadParams, heads);
