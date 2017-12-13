@@ -107,13 +107,15 @@ public class DefaultImageAdapter {
             }
         }
         HashMap<String,String> uploadParams=null;
+        HashMap<String,String> heads = null;
         if(bean!=null){
             String params = bean.params;
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
             uploadParams=parseManager.parseObject(params, HashMap.class);
+            heads=parseManager.parseObject(bean.heads, HashMap.class);
         }
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
-        axiosManager.upload(Api.UPLOAD_URL, imagesFilrUrl, uploadParams, null);
+        axiosManager.upload(Api.UPLOAD_URL, imagesFilrUrl, uploadParams, heads);
     }
 
 

@@ -1,10 +1,12 @@
 package com.benmu.framework.activity;
 
 import com.benmu.framework.BMWXApplication;
+import com.benmu.widget.view.loading.LoadingDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,10 +19,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -83,11 +88,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private RelativeLayout rl_error;
     private ViewGroup mRootView;
     private boolean isHomePage;
-
+    private ViewGroup decorView;//activity的根View
+    private ViewGroup rootView;// mSharedView 的 根View
+    private LoadingDialog loadingDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAct = this;
+        Log.d("SVProgressHUD", "onCreate hasCode -> " + this.hashCode() + " simpleName -> " + getClass().getSimpleName());
         mRouterType = GlobalEventManager.TYPE_OPEN;
         if (!BMWXApplication.getWXApplication().isRecordHomeActivity) {
             BMWXApplication.getWXApplication().isRecordHomeActivity = true;
@@ -267,7 +275,46 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         renderPage();
     }
 
+    //改造SVProgressHUD loadingView
+    private void createLoadingView() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        Log.d("SVProgressHUD", "context hasCode -> " + this.hashCode());
+        decorView = (ViewGroup) (this).getWindow().getDecorView().findViewById(android.R.id.content);
+        rootView = (ViewGroup) layoutInflater.inflate(com.benmu.widget.R.layout.layout_svprogresshud, null, false);
+        rootView.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+    }
 
+    public ViewGroup getLoadingDecorView() {
+        if (decorView == null) {
+            createLoadingView();
+        }
+        return decorView;
+    }
+
+    public ViewGroup getLoadingRootView() {
+        if (rootView == null) {
+            createLoadingView();
+        }
+        return rootView;
+    }
+
+    public void showLoadingDialog(String msg){
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog();
+            loadingDialog.createLoadingDialog(this,msg);
+        }
+        loadingDialog.setTipText(msg);
+        loadingDialog.show();
+    }
+
+
+    public void closeDialog(){
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
+        }
+    }
     public void setPageUrl(String url) {
         this.mPageUrl = url;
     }

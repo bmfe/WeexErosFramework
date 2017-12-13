@@ -15,13 +15,9 @@ import com.benmu.framework.manager.Manager;
 import com.benmu.widget.view.BMAlert;
 import com.benmu.widget.view.BMGridDialog;
 import com.benmu.widget.view.BMLoding;
-import com.benmu.widget.view.loading.SVProgressHUD;
 
 import java.util.List;
 
-import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.BlackCancel;
-import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.Clear;
-import static com.benmu.widget.view.loading.SVProgressHUD.SVProgressHUDMaskType.ClearCancel;
 
 /**
  * Created by Carry on 2017/8/7.
@@ -57,12 +53,12 @@ public class ModalManager extends Manager {
                 final AbstractWeexActivity activity = (AbstractWeexActivity) context;
                 if (activity.isFinishing()) return;
                 if (Looper.myLooper() == Looper.getMainLooper()) {
-                    SVProgressHUD.showWithStatus(activity, message, BlackCancel);
+                    activity.showLoadingDialog(message);
                 } else {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            SVProgressHUD.showWithStatus(activity, message, BlackCancel);
+                            activity.showLoadingDialog(message);
                         }
                     });
                 }
@@ -73,13 +69,13 @@ public class ModalManager extends Manager {
             if (context instanceof AbstractWeexActivity) {
                 final AbstractWeexActivity activity = (AbstractWeexActivity) context;
                 if (activity.isFinishing()) return;
+                activity.closeDialog();
                 if (Looper.myLooper() == Looper.getMainLooper()) {
-                    SVProgressHUD.dismiss(activity);
                 } else {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            SVProgressHUD.dismiss(activity);
+                            activity.closeDialog();
                         }
                     });
                 }

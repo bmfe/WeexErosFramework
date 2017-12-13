@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
@@ -73,7 +74,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        mWeb.setWebViewClient(new MyWebViewClient());
+        mWeb.setWebViewClient(new MyWebViewClient(this));
         mWeb.setWebChromeClient(new MyWebChromeClient());
         if (!TextUtils.isEmpty(mUrl)) {
             mWeb.loadUrl(mUrl);
@@ -89,8 +90,13 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         ModalManager.BmLoading.showLoading(this, "", true);
     }
 
-    private class MyWebViewClient extends WebViewClient {
+    private static class MyWebViewClient extends WebViewClient {
+        GlobalWebViewActivity activity;
 
+        public MyWebViewClient(GlobalWebViewActivity activity) {
+            Log.d("SVProgressHUD", "MyWebViewClient hasCode -> " + activity.hashCode());
+            this.activity = activity;
+        }
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -105,7 +111,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            ModalManager.BmLoading.dismissLoading(GlobalWebViewActivity.this);
+            ModalManager.BmLoading.dismissLoading(activity);
             super.onPageFinished(view, url);
         }
 
@@ -114,8 +120,8 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
                 failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             //L.i("web failingUrl == " + failingUrl);
-            GlobalWebViewActivity.this.mFailUrl = failingUrl;
-            showRefreshView();
+            activity.mFailUrl = failingUrl;
+            activity.showRefreshView();
         }
     }
 
