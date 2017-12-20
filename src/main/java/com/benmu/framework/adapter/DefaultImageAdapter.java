@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -98,23 +99,24 @@ public class DefaultImageAdapter {
                 String path = new File(FileManager.getTempFilePath(context), String.valueOf
                         (SystemClock.currentThreadTimeMillis())).getAbsolutePath();
                 String imageFileUrl = ImageUtil.zoomImage(context, bitmap, bean == null ? 0 :
-                        (int)bean.imageWidth, Constant
+                        (int) bean.imageWidth, Constant
                         .ImageConstants.BIGGESTWIDTH, path);
                 imagesFilrUrl.add(imageFileUrl);
                 bitmap.recycle();
 
             }
         }
-        HashMap<String,String> uploadParams=null;
-        HashMap<String,String> heads = null;
-        if(bean!=null){
+        HashMap<String, String> uploadParams = null;
+        HashMap<String, String> heads = null;
+        if (bean != null) {
             String params = bean.params;
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-            uploadParams=parseManager.parseObject(params, HashMap.class);
-            heads=parseManager.parseObject(bean.header, HashMap.class);
+            uploadParams = parseManager.parseObject(params, HashMap.class);
+            heads = parseManager.parseObject(bean.header, HashMap.class);
         }
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
-        axiosManager.upload(Api.UPLOAD_URL, imagesFilrUrl, uploadParams, heads);
+        String url = TextUtils.isEmpty(bean.url) ? Api.UPLOAD_URL : bean.url;
+        axiosManager.upload(url, imagesFilrUrl, uploadParams, heads);
     }
 
 
