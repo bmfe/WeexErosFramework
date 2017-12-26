@@ -74,5 +74,6 @@ public class WXConstant {
         public static final String EVENT_COPYSTRING = "EVENT_COPYSTRING";
         public static final String EVENT_RELAYTOFRIEND = "EVENT_RELAYTOFRIEND";
         public static final String EVENT_RELAYTOCRICLE = "EVENT_RELAYTOCRICLE";
+        public static final String EVENT_OPENBROWSER="EVENT_OPENBROWSER";
     }
 }

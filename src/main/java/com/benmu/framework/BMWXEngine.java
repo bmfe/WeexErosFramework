@@ -22,6 +22,7 @@ import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.manager.impl.GeoManager;
 import com.benmu.framework.service.BroadcastChannelService;
 import com.benmu.framework.update.SynVersionService;
+import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
@@ -153,7 +154,10 @@ public class BMWXEngine {
         int statusBarHeight = BaseCommonUtil.getStatusBarHeight(context);
         insideEnv.put(Constant.CustomOptions.CUSTOM_STATUSBARHEIGHT, BaseCommonUtil
                 .transferDimenToFE(context, statusBarHeight) + "");
-
+        insideEnv.put(Constant.CustomOptions.CUSTOM_NAVBARHEIGHT, BaseCommonUtil
+                .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 44)) + "");
+        insideEnv.put(Constant.CustomOptions.CUSTOM_JSVERSION, AppUtils.getJsVersion(context));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEID, AppUtils.getDeviceId(context));
         if (Env != null && !Env.isEmpty()) {
             insideEnv.putAll(Env);
         }

@@ -70,9 +70,5 @@ public class ToolModule extends WXModule {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
 
-    @JSMethod(uiThread = false)
-    public void env(JSCallback callback) {
-
-    }
 
 }

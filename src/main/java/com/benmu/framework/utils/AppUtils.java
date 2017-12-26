@@ -1,11 +1,18 @@
 package com.benmu.framework.utils;
 
+import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.model.JsVersionInfoBean;
 import com.taobao.weex.common.Constants;
 
 import java.io.File;
+import java.util.UUID;
 
 /**
  * Created by Carry on 2017/7/11.
@@ -73,4 +80,49 @@ public class AppUtils {
         if (TextUtils.isEmpty(filePath)) return "";
         return new File(filePath).getName();
     }
+
+    public static String getJsVersion(Context context) {
+        String jsVersion = SharePreferenceUtil.getVersion(context);
+        if (TextUtils.isEmpty(jsVersion)) {
+            AssetsUtil.AssetsJsVersion assetsVersionInfo = AssetsUtil.getAssetsVersionInfo(context);
+            if (assetsVersionInfo != null) {
+                ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+                SharePreferenceUtil.setVersion(context, parseManager.toJsonString
+                        (assetsVersionInfo));
+            }
+            return assetsVersionInfo == null ? "" : assetsVersionInfo.getJsVersion();
+        }
+        ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+        JsVersionInfoBean jsVersionInfoBean = parseManager.parseObject(jsVersion,
+                JsVersionInfoBean.class);
+
+        return jsVersionInfoBean == null ? "" : jsVersionInfoBean.getJsVersion();
+    }
+
+
+    /**
+     * 使用AndroidId和报名为种子生成的32位id
+     * @param context
+     * @return
+     */
+    @NonNull
+    public static String getDeviceId(Context context) {
+
+        String packageName = "";
+
+        if (!TextUtils.isEmpty(context.getPackageName())) {
+            packageName = context.getPackageName();
+        }
+
+        String androidid = "";
+        String id = android.provider.Settings.Secure.getString(context.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+        if (!TextUtils.isEmpty(id)) {
+            androidid = id;
+        }
+        UUID deviceUuid = new UUID(androidid.hashCode(), ((long) packageName.hashCode() << 32));
+        return Md5Util.getMd5code(deviceUuid.toString());
+    }
+
+
 }

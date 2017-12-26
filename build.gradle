@@ -61,7 +61,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile project(':bmwidget')
-    compile 'com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.7'
     //高德地图
     compile 'com.amap.api:location:latest.integration'
     compile 'com.amap.api:3dmap:latest.integration'

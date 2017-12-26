@@ -129,12 +129,22 @@ public class Constant {
      * -------------------------客制化环境配置-------------------------------
      **/
     public static class CustomOptions {
+        //font
         public static final String CUSTOM_FONTSIZE = "bmFontSize";
+        //reqeust
         public static final String CUSTOM_REQUESTURL = "request";
+        //jsServer
         public static final String CUSTOM_SERVERURL = "jsServer";
+        //deviceId
         public static final String CUSTOM_DEVICEID = "deviceId";
+        //appName
         public static final String CUSTOM_APPNAME = "appName";
+        //状态栏高度
         public static final String CUSTOM_STATUSBARHEIGHT = "statusBarHeight";
+        //导航栏高度
+        public static final String CUSTOM_NAVBARHEIGHT = "navBarHeight";
+        //内置js版本
+        public static final String CUSTOM_JSVERSION = "jsVersion";
     }
 
 

@@ -25,6 +25,7 @@ import com.benmu.framework.event.router.EventFinish;
 import com.benmu.framework.event.router.EventGetBackParams;
 import com.benmu.framework.event.router.EventGetParams;
 import com.benmu.framework.event.router.EventOpen;
+import com.benmu.framework.event.router.EventOpenBrowser;
 import com.benmu.framework.event.router.EventRefresh;
 import com.benmu.framework.event.router.EventToMap;
 import com.benmu.framework.event.router.EventWebView;
@@ -206,7 +207,10 @@ public class DispatchEventCenter {
                 new EventGeo().getLocation(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_WECHATLOGIN:
-                new EventAuth().wechat(context,params,weexEventBean.getJscallback());
+                new EventAuth().wechat(context, params, weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_OPENBROWSER:
+                new EventOpenBrowser().openBrowser(context, params, weexEventBean.getJscallback());
                 break;
         }
     }
