@@ -1,6 +1,7 @@
 package com.benmu.framework.event.shorage;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.StorageManager;
@@ -19,7 +20,7 @@ public class EventGetData {
         StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
         String result = storageManager.getData(context, key);
         StorageRaesultBean bean = new StorageRaesultBean();
-        if (result == null) {
+        if (TextUtils.isEmpty(result)) {
             bean.resCode = 9;
         } else {
             bean.resCode = 0;

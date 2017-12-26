@@ -154,6 +154,8 @@ public class BMWXEngine {
         insideEnv.put(Constant.CustomOptions.CUSTOM_STATUSBARHEIGHT, BaseCommonUtil
                 .transferDimenToFE(context, statusBarHeight) + "");
 
+        insideEnv.put(Constant.CustomOptions.CUSTOM_REALDEVICEHEIGHT, "" + BaseCommonUtil.transferDimenToFE(context, BaseCommonUtil.getRealDeviceHeight(context)));
+
         if (Env != null && !Env.isEmpty()) {
             insideEnv.putAll(Env);
         }

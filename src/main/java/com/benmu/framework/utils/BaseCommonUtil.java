@@ -20,6 +20,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -356,6 +358,25 @@ public class BaseCommonUtil {
                 localContentValues);
     }
 
+    public static int getRealDeviceHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        int height = 0;
+        try {
+            Class c;
+            c = Class.forName("android.view.Display");
+            @SuppressWarnings("unchecked")
+            Method method = c.getMethod("getRealMetrics",DisplayMetrics.class);
+            method.invoke(display, dm);
+            height = dm.heightPixels;
+        }catch (Exception e){
+            e.printStackTrace();
+            height = context.getResources().getDisplayMetrics().heightPixels;
+        }
+
+        return height;
+    }
 
 //    public static String getDeviceId(Context context) {
 //        if (!PermissionManager.hasPermissions(context, Manifest.permission.READ_PHONE_STATE)) {
@@ -407,4 +428,4 @@ public class BaseCommonUtil {
 //        return "";
 //    }
 
-}
+    }

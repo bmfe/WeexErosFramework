@@ -176,6 +176,7 @@ public class EventFetch {
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             bean.resCode = httpException.getmErrorCode();
+            bean.msg = httpException.getmErrorMessage();
         } else if (e instanceof IrregularUrlException) {
             IrregularUrlException irregularUrlException = (IrregularUrlException) e;
             bean.resCode = 9;
