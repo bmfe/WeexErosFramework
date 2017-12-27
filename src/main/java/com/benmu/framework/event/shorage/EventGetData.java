@@ -24,9 +24,7 @@ public class EventGetData {
         } else {
             bean.resCode = 0;
         }
-        StorageRaesultBean.Result data = new StorageRaesultBean.Result();
-        data.value = result;
-        bean.data = data;
+        bean.value = result;
         if (jscallback != null) {
             jscallback.invoke(bean);
         }
@@ -42,9 +40,7 @@ public class EventGetData {
         } else {
             bean.resCode = 0;
         }
-        StorageRaesultBean.Result data = new StorageRaesultBean.Result();
-        data.value = result;
-        bean.data = data;
+        bean.value = result;
 
         return bean;
     }

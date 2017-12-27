@@ -204,4 +204,8 @@ public class Constant {
         public static final int SLEEP = 1;
     }
 
+    /**
+     * 解密Key
+     */
+    public static final String AES_KEY = "";
 }
