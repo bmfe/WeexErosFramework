@@ -136,7 +136,7 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
         Date e = new Date();
         Log.e("bmChart", "finsh" + e.getTime() + "耗时" + (e.getTime() - s.getTime()));
         mWeb.loadUrl("javascript:setHeight(" + mHeight + ")");
-        mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
+//        mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
         fireEvent("finish");
     }
 
