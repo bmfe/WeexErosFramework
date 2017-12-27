@@ -1,6 +1,7 @@
 package com.benmu.framework.activity;
 
 import com.benmu.framework.BMWXApplication;
+import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -13,6 +14,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -71,7 +74,7 @@ import java.util.Map;
  * Created by Carry on 2017/8/16.
  */
 
-public class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener,
+public class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener, Handler.Callback,
         RouterTracker.RouterTrackerListener {
     protected RouterModel mRouterParam;
     private WXSDKInstance mWXInstance;
@@ -91,11 +94,29 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private ViewGroup decorView;//activity的根View
     private ViewGroup rootView;// mSharedView 的 根View
     private LoadingDialog loadingDialog;
+    private DebugErrorDialog errorDialog;
+    private final int EVENT_SINGLE_CILKE = 1;
+    private final int EVENT_DOUBLE_CILKE = 2;
+    private Handler mHandler = new Handler(this);
+    private long mLastTime, mCurTime; // 调试按钮点击时间
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case EVENT_SINGLE_CILKE:
+                debugLayerClick();
+                break;
+            case EVENT_DOUBLE_CILKE:
+                refresh();
+                break;
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAct = this;
-        Log.d("SVProgressHUD", "onCreate hasCode -> " + this.hashCode() + " simpleName -> " + getClass().getSimpleName());
         mRouterType = GlobalEventManager.TYPE_OPEN;
         if (!BMWXApplication.getWXApplication().isRecordHomeActivity) {
             BMWXApplication.getWXApplication().isRecordHomeActivity = true;
@@ -119,28 +140,17 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         mDebugger.setListener(new BMFloatingLayer.FloatingLayerListener() {
             @Override
             public void onClick() {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7
-                        .app.AlertDialog.Builder(mAct);
-                builder.setItems(mDebugOptions, new DialogInterface.OnClickListener() {
+                mLastTime = mCurTime;
+                mCurTime = System.currentTimeMillis();
+                if (mCurTime - mLastTime < 300) {//双击事件
+                    mCurTime = 0;
+                    mLastTime = 0;
+                    mHandler.removeMessages(1);
+                    mHandler.sendEmptyMessage(2);
+                } else {//单击事件
+                    mHandler.sendEmptyMessageDelayed(1, 310);
+                }
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            Intent intent = new Intent(mAct, DebugActivity.class);
-                            startActivity(intent);
-                        } else if (which == 1) {
-                            refresh();
-                        } else if (which == 2) {
-                            DispatchEventManager dispatchEventManager = ManagerFactory
-                                    .getManagerService(DispatchEventManager.class);
-                            WeexEventBean eventBean = new WeexEventBean();
-                            eventBean.setContext(mAct);
-                            eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
-                            dispatchEventManager.getBus().post(eventBean);
-                        }
-                    }
-                });
-                builder.create().show();
             }
 
             @Override
@@ -154,6 +164,31 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             }
         });
         mDebugger.show(mAct);
+    }
+
+    private void debugLayerClick() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7
+                .app.AlertDialog.Builder(mAct);
+        builder.setItems(mDebugOptions, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    Intent intent = new Intent(mAct, DebugActivity.class);
+                    startActivity(intent);
+                } else if (which == 1) {
+                    refresh();
+                } else if (which == 2) {
+                    DispatchEventManager dispatchEventManager = ManagerFactory
+                            .getManagerService(DispatchEventManager.class);
+                    WeexEventBean eventBean = new WeexEventBean();
+                    eventBean.setContext(mAct);
+                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+                    dispatchEventManager.getBus().post(eventBean);
+                }
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -300,21 +335,23 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         return rootView;
     }
 
-    public void showLoadingDialog(String msg){
-        if(loadingDialog == null){
+    public void showLoadingDialog(String msg) {
+        if (loadingDialog == null) {
             loadingDialog = new LoadingDialog();
-            loadingDialog.createLoadingDialog(this,msg);
+            loadingDialog.createLoadingDialog(this, msg);
         }
         loadingDialog.setTipText(msg);
         loadingDialog.show();
+
     }
 
 
-    public void closeDialog(){
-        if(loadingDialog != null){
+    public void closeDialog() {
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
     }
+
     public void setPageUrl(String url) {
         this.mPageUrl = url;
     }
@@ -501,6 +538,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
+        if (!DebugableUtil.isDebug()) return;
+        if (errorDialog == null) {
+            errorDialog = new DebugErrorDialog();
+            errorDialog.createErrorDialog(this);
+        }
+        String errorMsg = "errCode -> " + errCode + " msg -> " + msg;
+        errorDialog.setTextMsg(errorMsg);
+        errorDialog.show();
 
     }
 
@@ -653,4 +698,5 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }
