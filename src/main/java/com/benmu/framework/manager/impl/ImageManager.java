@@ -44,5 +44,14 @@ public class ImageManager extends Manager {
             bean) {
         DefaultImageAdapter.getInstance().UpMultipleImageData(context, items, bean);
 
+
+    }
+
+    /**
+     * 打开照相器 拍照上传
+     */
+    public void openCameraUpload(Context context, UploadImageBean
+            bean) {
+        DefaultImageAdapter.getInstance().cameraUploade(context, bean);
     }
 }

@@ -157,12 +157,13 @@ public class CustomerEnvOptionManager extends Manager {
 
     public static PlatformConfigBean initPlatformConfig(Context context) {
         String platform = AssetsUtil.getFromAssets(context, Constant.PLATFORM_CONFIG_NAME);
-//        try {
-//            AESUtils aesUtils = new AESUtils();
-//            platform = aesUtils.decrypt(platform, Constant.AES_KEY, "RjatRGC4W72PJXTE");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            AESUtils aesUtils = new AESUtils();
+            platform = aesUtils.decrypt(platform, Constant.AES_KEY, "RjatRGC4W72PJXTE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("PlatformConfigBean","PlatformConfigBean -> "+ platform);
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         return parseManager.parseObject(platform,
                 PlatformConfigBean.class);

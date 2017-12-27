@@ -1,6 +1,7 @@
 package com.benmu.framework.manager.impl;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.benmu.framework.adapter.DefaultStorageAdapter;
 import com.benmu.framework.manager.Manager;
@@ -22,6 +23,10 @@ public class StorageManager extends Manager {
     }
 
     public boolean deleteData(Context context, String key) {
+        String result = getData(context, key);
+        if (result == null) {
+            return false;
+        }
         return DefaultStorageAdapter.getInstance().deleteData(context, key);
     }
 

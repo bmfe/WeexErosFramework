@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -57,6 +58,7 @@ import com.benmu.widget.view.BaseToolBar;
 import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.BitmapUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.RenderContainer;
 import com.taobao.weex.WXEnvironment;
@@ -65,6 +67,9 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,6 +104,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private final int EVENT_DOUBLE_CILKE = 2;
     private Handler mHandler = new Handler(this);
     private long mLastTime, mCurTime; // 调试按钮点击时间
+    private ImagePicker imagePicker;
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -128,6 +134,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         synRouterStack();
         initDebug();
         initPush();
+        imagePicker = ImagePicker.getInstance();
     }
 
     private void initPush() {
@@ -620,22 +627,62 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             }
         }
 
+        if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
+            cameraResult();
+            return;
+        }
         switch (resultCode) {
             case ImagePicker.RESULT_CODE_ITEMS:
                 if (data != null && requestCode == Constant.ImageConstants.IMAGE_PICKER) {
                     ArrayList<ImageItem> items = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
-                            .class);
-                    UploadImageBean bean = ManagerFactory.getManagerService
-                            (PersistentManager.class).getCacheData
-                            (Constant.ImageConstants.UPLOAD_IMAGE_BEAN, UploadImageBean.class);
-                    imageManager.UpMultipleImageData(this, items, bean);
+                    UpMultipleImageData(items);
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    /**
+     * 上传图片
+     * @param items
+     */
+    private void UpMultipleImageData(ArrayList<ImageItem> items) {
+        ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
+                .class);
+        UploadImageBean bean = ManagerFactory.getManagerService
+                (PersistentManager.class).getCacheData
+                (Constant.ImageConstants.UPLOAD_IMAGE_BEAN, UploadImageBean.class);
+        imageManager.UpMultipleImageData(this, items, bean);
+    }
+
+    private void cameraResult() {
+        ImagePicker.galleryAddPic(this, this.imagePicker.getTakeImageFile());
+        String path = this.imagePicker.getTakeImageFile().getAbsolutePath();
+        int degree = BitmapUtil.getBitmapDegree(path);
+        if (degree != 0) {
+            Bitmap bitmap = BitmapUtil.rotateBitmapByDegree(path, degree);
+            if (bitmap != null) {
+                File file = new File(path);
+
+                try {
+                    FileOutputStream bos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                    bos.flush();
+                    bos.close();
+                } catch (IOException var9) {
+                    var9.printStackTrace();
+                }
+            }
+        }
+
+        ImageItem imageItem = new ImageItem();
+        imageItem.path = path;
+        this.imagePicker.clearSelectedImages();
+        this.imagePicker.addSelectedImageItem(0, imageItem, true);
+        UpMultipleImageData(imagePicker.getSelectedImages());
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

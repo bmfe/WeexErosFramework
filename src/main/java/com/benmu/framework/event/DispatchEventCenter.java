@@ -159,6 +159,9 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_CAMERA_UPLOADIMAGE:
                 new EventCamera().uploadImage(params, context, weexEventBean.getJscallback());
                 break;
+            case WXConstant.WXEventCenter.EVENT_CAMERA_UPLOAD:
+                new EventCamera().cameraUpload(params, context, weexEventBean.getJscallback());
+                break;
 
             case WXConstant.WXEventCenter.EVENT_CAMERA:
                 JSCallback jscallback = weexEventBean.getJscallback();
