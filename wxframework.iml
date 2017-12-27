@@ -130,7 +130,6 @@
     <orderEntry type="library" name="__local_aars__:/Users/Carry/Code/workSapce/weex/eors-v2/eros-demo/platforms/android/WeexFrameworkWrapper/wxframework/libs/GetuiSDK2.9.3.0.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-utils-25.3.1" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-25.3.1" level="project" />
-    <orderEntry type="library" name="com.android.support:recyclerview-v7-23.1.1" level="project" />
     <orderEntry type="library" name="com.android.support:support-fragment-25.3.1" level="project" />
     <orderEntry type="library" name="com.android.support:support-media-compat-25.3.1" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.3.1@jar" level="project" />
@@ -153,6 +152,7 @@
     <orderEntry type="library" name="com.android.support:support-vector-drawable-25.3.1" level="project" />
     <orderEntry type="library" name="__local_aars__:/Users/Carry/Code/workSapce/weex/eors-v2/eros-demo/platforms/android/WeexFrameworkWrapper/wxframework/libs/umeng_social_api.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp:okhttp:2.3.0@jar" level="project" />
+    <orderEntry type="library" name="com.android.support:recyclerview-v7-25.3.1" level="project" />
     <orderEntry type="library" name="com.getkeepsafe.relinker:relinker-1.2.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-annotations:25.3.1@jar" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:glide:3.7.0@jar" level="project" />

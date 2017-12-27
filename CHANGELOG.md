@@ -75,3 +75,4 @@
 # 2.0.6
 1. config.eros 中加入jsVersion deviceId环境参数
 2. bmRouter增加openBrowser方法以打开浏览器
+3. 升级WeexSDK到0.17.0

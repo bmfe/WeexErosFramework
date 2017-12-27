@@ -667,7 +667,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             } else if (code.contains("_wx_debug")) {
                 uri = Uri.parse(code);
                 String debug_url = uri.getQueryParameter("_wx_debug");
-                WXSDKEngine.switchDebugModel(true, debug_url);
+//                WXSDKEngine.switchDebugModel(true, debug_url);
                 finish();
             } else {
                 CameraResultBean bean = new CameraResultBean();
