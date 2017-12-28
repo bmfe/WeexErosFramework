@@ -1,6 +1,7 @@
 package com.benmu.framework.event.http;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
@@ -15,6 +16,7 @@ import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.AxiosGet;
 import com.benmu.framework.model.AxiosPost;
+import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.BaseResultBean;
 import com.taobao.weex.bridge.JSCallback;
 
@@ -76,7 +78,7 @@ public class EventFetch {
 
             @Override
             public void onResponse(String response, int id) {
-                parseResponse(response, jscallback);
+                parseResponse(response, jscallback, code);
             }
         }, axiosPatch.url, axiosPatch.timeout);
     }
@@ -91,7 +93,7 @@ public class EventFetch {
 
             @Override
             public void onResponse(String response, int id) {
-                parseResponse(response, jscallback);
+                parseResponse(response, jscallback, code);
             }
         }, axiosPut.url, axiosPut.timeout);
     }
@@ -107,7 +109,7 @@ public class EventFetch {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        parseResponse(response, jscallback);
+                        parseResponse(response, jscallback, code);
                     }
                 }, axiosDelete.url, axiosDelete.timeout);
     }
@@ -123,7 +125,7 @@ public class EventFetch {
 
             @Override
             public void onResponse(String response, int id) {
-                parseResponse(response, jscallback);
+                parseResponse(response, jscallback, code);
             }
         }, axiosHead.url, axiosHead.timeout);
     }
@@ -142,7 +144,7 @@ public class EventFetch {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        parseResponse(response, jscallback);
+                        parseResponse(response, jscallback, code);
                     }
                 }, axiosPost.url, axiosPost.timeout);
     }
@@ -160,7 +162,7 @@ public class EventFetch {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        parseResponse(response, jscallback);
+                        parseResponse(response, jscallback, code);
                     }
                 }, axiosGet.url, axiosGet.timeout);
     }
@@ -172,14 +174,15 @@ public class EventFetch {
             ModalManager.BmLoading.dismissLoading(context);
             return;
         }
-        BaseResultBean bean = new BaseResultBean();
+        AxiosResultBean bean = new AxiosResultBean();
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
-            bean.resCode = httpException.getmErrorCode();
+            bean.status = httpException.getmErrorCode();
+            bean.errorMsg = httpException.getmErrorMessage();
         } else if (e instanceof IrregularUrlException) {
             IrregularUrlException irregularUrlException = (IrregularUrlException) e;
-            bean.resCode = 9;
-            bean.msg = irregularUrlException.getmErrosMeeage();
+            bean.status = 9;
+            bean.errorMsg = irregularUrlException.getmErrosMeeage();
         }
 
         if (callback != null) {
@@ -187,19 +190,21 @@ public class EventFetch {
         }
     }
 
-    private void parseResponse(String response, JSCallback callBack) {
-        Object res = null;
+    private void parseResponse(String response, JSCallback callBack, int code) {
         try {
-            res = JSONObject.parseObject(response);
-            if (callBack != null && res != null) {
-                callBack.invoke(res);
+            AxiosResultBean bean = new AxiosResultBean();
+            if (callBack != null && !TextUtils.isEmpty(response)) {
+                bean.status = code;
+                bean.errorMsg = "";
+                bean.data = response;
+                callBack.invoke(bean);
             }
         } catch (Exception e) {
             e.printStackTrace();
             L.e("json 解析错误");
-            BaseResultBean bean = new BaseResultBean();
-            bean.resCode = -1;
-            bean.msg = "json 解析错误";
+            AxiosResultBean bean = new AxiosResultBean();
+            bean.status = -1;
+            bean.errorMsg = "json 解析错误";
             if (callBack != null) {
                 callBack.invoke(bean);
             }
