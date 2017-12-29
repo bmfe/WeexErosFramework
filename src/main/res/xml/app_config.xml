@@ -26,6 +26,7 @@
     <module name="bmBrowserImg">com.benmu.framework.extend.module.BrowserImgModule</module>
     <module name="bmTool">com.benmu.framework.extend.module.ToolModule</module>
     <module name="bmAuth">com.benmu.framework.extend.module.WeChatLoginModule</module>
+    <module name="bmCommunication">com.benmu.framework.extend.module.CommunicationModule</module>
 
     <!--plug-in-->
     <!--amap-->

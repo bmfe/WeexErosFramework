@@ -68,4 +68,8 @@ public class RouterManager extends Manager {
     public void toWebView(Context context, String params) {
         DefaultRouterAdapter.getInstance().toWebView(context, params);
     }
+
+    public boolean openBrowser(Context context,String params){
+        return DefaultRouterAdapter.getInstance().openBrowser(context, params);
+    }
 }

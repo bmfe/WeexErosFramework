@@ -118,6 +118,7 @@ public class DefaultRouterAdapter {
         }
         return false;
     }
+
     public static boolean finish(Context context) {
         if (context instanceof AbstractWeexActivity) {
             ((AbstractWeexActivity) context).finish();
@@ -194,5 +195,18 @@ public class DefaultRouterAdapter {
             }
         }
 
+    }
+
+    public boolean openBrowser(Context context, String params) {
+        if (context == null || TextUtils.isEmpty(params)) return false;
+        ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+        RouterModel routerModel = parseManager.parseObject(params, RouterModel.class);
+        if (routerModel == null) return false;
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri parse = Uri.parse(routerModel.url);
+        intent.setData(parse);
+        context.startActivity(intent);
+        return true;
     }
 }

@@ -71,3 +71,8 @@
 # 2.0.5
 1. 图片上传增加传递head 参数 默认为null
 2. 修改loading 实现，并做了微小修改
+
+# 2.0.6
+1. config.eros 中加入jsVersion deviceId环境参数
+2. bmRouter增加openBrowser方法以打开浏览器
+3. 升级WeexSDK到0.17.0

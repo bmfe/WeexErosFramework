@@ -1,18 +1,26 @@
 package com.benmu.framework.activity;
 
 import com.benmu.framework.BMWXApplication;
+import com.benmu.framework.model.AxiosResultBean;
+import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,6 +62,7 @@ import com.benmu.widget.view.BaseToolBar;
 import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.BitmapUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.RenderContainer;
 import com.taobao.weex.WXEnvironment;
@@ -62,6 +71,12 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +86,7 @@ import java.util.Map;
  * Created by Carry on 2017/8/16.
  */
 
-public class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener,
+public class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener, Handler.Callback,
         RouterTracker.RouterTrackerListener {
     protected RouterModel mRouterParam;
     private WXSDKInstance mWXInstance;
@@ -91,11 +106,30 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private ViewGroup decorView;//activity的根View
     private ViewGroup rootView;// mSharedView 的 根View
     private LoadingDialog loadingDialog;
+    private DebugErrorDialog errorDialog;
+    private final int EVENT_SINGLE_CILKE = 1;
+    private final int EVENT_DOUBLE_CILKE = 2;
+    private Handler mHandler = new Handler(this);
+    private long mLastTime, mCurTime; // 调试按钮点击时间
+    private ImagePicker imagePicker;
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case EVENT_SINGLE_CILKE:
+                debugLayerClick();
+                break;
+            case EVENT_DOUBLE_CILKE:
+                refresh();
+                break;
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAct = this;
-        Log.d("SVProgressHUD", "onCreate hasCode -> " + this.hashCode() + " simpleName -> " + getClass().getSimpleName());
         mRouterType = GlobalEventManager.TYPE_OPEN;
         if (!BMWXApplication.getWXApplication().isRecordHomeActivity) {
             BMWXApplication.getWXApplication().isRecordHomeActivity = true;
@@ -107,6 +141,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         synRouterStack();
         initDebug();
         initPush();
+        imagePicker = ImagePicker.getInstance();
     }
 
     private void initPush() {
@@ -119,28 +154,17 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         mDebugger.setListener(new BMFloatingLayer.FloatingLayerListener() {
             @Override
             public void onClick() {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7
-                        .app.AlertDialog.Builder(mAct);
-                builder.setItems(mDebugOptions, new DialogInterface.OnClickListener() {
+                mLastTime = mCurTime;
+                mCurTime = System.currentTimeMillis();
+                if (mCurTime - mLastTime < 300) {//双击事件
+                    mCurTime = 0;
+                    mLastTime = 0;
+                    mHandler.removeMessages(1);
+                    mHandler.sendEmptyMessage(2);
+                } else {//单击事件
+                    mHandler.sendEmptyMessageDelayed(1, 310);
+                }
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            Intent intent = new Intent(mAct, DebugActivity.class);
-                            startActivity(intent);
-                        } else if (which == 1) {
-                            refresh();
-                        } else if (which == 2) {
-                            DispatchEventManager dispatchEventManager = ManagerFactory
-                                    .getManagerService(DispatchEventManager.class);
-                            WeexEventBean eventBean = new WeexEventBean();
-                            eventBean.setContext(mAct);
-                            eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
-                            dispatchEventManager.getBus().post(eventBean);
-                        }
-                    }
-                });
-                builder.create().show();
             }
 
             @Override
@@ -154,6 +178,31 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             }
         });
         mDebugger.show(mAct);
+    }
+
+    private void debugLayerClick() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7
+                .app.AlertDialog.Builder(mAct);
+        builder.setItems(mDebugOptions, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    Intent intent = new Intent(mAct, DebugActivity.class);
+                    startActivity(intent);
+                } else if (which == 1) {
+                    refresh();
+                } else if (which == 2) {
+                    DispatchEventManager dispatchEventManager = ManagerFactory
+                            .getManagerService(DispatchEventManager.class);
+                    WeexEventBean eventBean = new WeexEventBean();
+                    eventBean.setContext(mAct);
+                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+                    dispatchEventManager.getBus().post(eventBean);
+                }
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -300,21 +349,23 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         return rootView;
     }
 
-    public void showLoadingDialog(String msg){
-        if(loadingDialog == null){
+    public void showLoadingDialog(String msg) {
+        if (loadingDialog == null) {
             loadingDialog = new LoadingDialog();
-            loadingDialog.createLoadingDialog(this,msg);
+            loadingDialog.createLoadingDialog(this, msg);
         }
         loadingDialog.setTipText(msg);
         loadingDialog.show();
+
     }
 
 
-    public void closeDialog(){
-        if(loadingDialog != null){
+    public void closeDialog() {
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
     }
+
     public void setPageUrl(String url) {
         this.mPageUrl = url;
     }
@@ -501,6 +552,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
+        if (!DebugableUtil.isDebug()) return;
+        if (errorDialog == null) {
+            errorDialog = new DebugErrorDialog();
+            errorDialog.createErrorDialog(this);
+        }
+        String errorMsg = "errCode -> " + errCode + " msg -> " + msg;
+        errorDialog.setTextMsg(errorMsg);
+        errorDialog.show();
 
     }
 
@@ -574,23 +633,123 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 handleDecodeInternally(result.getContents());
             }
         }
+        /**
+         * 读取联系人返回
+         */
+        if (resultCode == RESULT_OK && requestCode == Constant.REQUEST_CODE.REQUEST_CODE_CONTRACT) {
+            readContractResult(data);
+        }
+        /**
+         * 照片拍摄上传
+         */
+        if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
+            cameraResult();
+            return;
+        }
 
+        /**
+         * 选择照片 上传
+         */
         switch (resultCode) {
             case ImagePicker.RESULT_CODE_ITEMS:
                 if (data != null && requestCode == Constant.ImageConstants.IMAGE_PICKER) {
                     ArrayList<ImageItem> items = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
-                            .class);
-                    UploadImageBean bean = ManagerFactory.getManagerService
-                            (PersistentManager.class).getCacheData
-                            (Constant.ImageConstants.UPLOAD_IMAGE_BEAN, UploadImageBean.class);
-                    imageManager.UpMultipleImageData(this, items, bean);
+                    UpMultipleImageData(items);
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void readContractResult(Intent data) {
+        String username, usernumber = "";
+        ContentResolver reContentResolverol = getContentResolver();
+        //URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
+        Uri contactData = data.getData();
+        //查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
+        Cursor cursor = managedQuery(contactData, null, null, null, null);
+        cursor.moveToFirst();
+        //获得DATA表中的名字
+        username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+        //条件为联系人ID
+        String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+        // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
+        Cursor phone = reContentResolverol.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                null,
+                null);
+        while (phone.moveToNext()) {
+            usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+        String json = joinContractJson(username, usernumber);
+        AxiosResultBean resultBean = new AxiosResultBean();
+        resultBean.status = 0;
+        resultBean.data = json;
+
+        DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
+                (DispatchEventManager.class);
+        dispatchEventManager.getBus().post(resultBean);
+    }
+
+
+    private String joinContractJson(String name, String poneNumber) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("phone", poneNumber);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param items
+     */
+    private void UpMultipleImageData(ArrayList<ImageItem> items) {
+        ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
+                .class);
+        UploadImageBean bean = ManagerFactory.getManagerService
+                (PersistentManager.class).getCacheData
+                (Constant.ImageConstants.UPLOAD_IMAGE_BEAN, UploadImageBean.class);
+        imageManager.UpMultipleImageData(this, items, bean);
+    }
+
+    /**
+     * 照片拍摄完成读取结果
+     */
+    private void cameraResult() {
+        ImagePicker.galleryAddPic(this, this.imagePicker.getTakeImageFile());
+        String path = this.imagePicker.getTakeImageFile().getAbsolutePath();
+        int degree = BitmapUtil.getBitmapDegree(path);
+        if (degree != 0) {
+            Bitmap bitmap = BitmapUtil.rotateBitmapByDegree(path, degree);
+            if (bitmap != null) {
+                File file = new File(path);
+
+                try {
+                    FileOutputStream bos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                    bos.flush();
+                    bos.close();
+                } catch (IOException var9) {
+                    var9.printStackTrace();
+                }
+            }
+        }
+
+        ImageItem imageItem = new ImageItem();
+        imageItem.path = path;
+        this.imagePicker.clearSelectedImages();
+        this.imagePicker.addSelectedImageItem(0, imageItem, true);
+        UpMultipleImageData(imagePicker.getSelectedImages());
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -622,7 +781,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             } else if (code.contains("_wx_debug")) {
                 uri = Uri.parse(code);
                 String debug_url = uri.getQueryParameter("_wx_debug");
-                WXSDKEngine.switchDebugModel(true, debug_url);
+//                WXSDKEngine.switchDebugModel(true, debug_url);
                 finish();
             } else {
                 CameraResultBean bean = new CameraResultBean();
@@ -653,4 +812,5 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }

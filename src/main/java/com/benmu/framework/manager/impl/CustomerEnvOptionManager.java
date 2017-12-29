@@ -8,6 +8,7 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.model.PlatformConfigBean;
+import com.benmu.framework.utils.AESUtils;
 import com.benmu.framework.utils.AssetsUtil;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.XmlUtil;
@@ -18,8 +19,14 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 /**
  * Created by Carry on 2017/8/7.
@@ -150,6 +157,13 @@ public class CustomerEnvOptionManager extends Manager {
 
     public static PlatformConfigBean initPlatformConfig(Context context) {
         String platform = AssetsUtil.getFromAssets(context, Constant.PLATFORM_CONFIG_NAME);
+        try {
+            AESUtils aesUtils = new AESUtils();
+            platform = aesUtils.decrypt(platform, Constant.AES_KEY, "RjatRGC4W72PJXTE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("PlatformConfigBean","PlatformConfigBean -> "+ platform);
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         return parseManager.parseObject(platform,
                 PlatformConfigBean.class);

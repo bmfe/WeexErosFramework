@@ -41,6 +41,15 @@ public class CameraModule extends WXModule {
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
+    @JSMethod
+    public void cameraUpload(String params, JSCallback jsCallback) {
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_UPLOAD);
+        eventBean.setJsParams(params);
+        eventBean.setJscallback(jsCallback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
+    }
 
 
     @JSMethod(uiThread = true)

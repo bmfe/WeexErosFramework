@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -80,6 +81,13 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 return false;
+            }
+
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                String message = consoleMessage.message();
+                Log.e("onConsoleMessage",">>>>>>"+message);
+                return super.onConsoleMessage(consoleMessage);
             }
         });
         return view;

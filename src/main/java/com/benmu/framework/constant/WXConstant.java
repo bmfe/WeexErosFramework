@@ -61,6 +61,7 @@ public class WXConstant {
         public static final String EVENT_BROWSERIMG = "EVENT_BROWSERIMG";
         public static final String EVENT_CAMERA = "EVENT_CAMERA";
         public static final String EVENT_CAMERA_UPLOADIMAGE = "EVENT_CAMERA_UPLOADIMAGE";
+        public static final String EVENT_CAMERA_UPLOAD = "EVENT_CAMERA_UPLOAD";
         public static final String EVENT_CAMERA_UPLOADSCREENSHOT = "EVENT_CAMERA_UPLOADSCREENSHOT";
         public static final String EVENT_GEOLOCATION_GET = "EVENT_GEOLOCATION_GET";
         public static final String EVENT_MODAL_ALERT = "EVENT_MODAL_ALERT";
@@ -74,5 +75,8 @@ public class WXConstant {
         public static final String EVENT_COPYSTRING = "EVENT_COPYSTRING";
         public static final String EVENT_RELAYTOFRIEND = "EVENT_RELAYTOFRIEND";
         public static final String EVENT_RELAYTOCRICLE = "EVENT_RELAYTOCRICLE";
+        public static final String EVENT_OPENBROWSER="EVENT_OPENBROWSER";
+        public static final String EVENT_COMMUNICATION_SMS = "EVENT_COMMUNICATION_SMS";
+        public static final String EVENT_COMMUNICATION_CONTACTS = "EVENT_COMMUNICATION_CONTACTS";
     }
 }

@@ -129,13 +129,23 @@ public class Constant {
      * -------------------------客制化环境配置-------------------------------
      **/
     public static class CustomOptions {
+        //font
         public static final String CUSTOM_FONTSIZE = "bmFontSize";
+        //reqeust
         public static final String CUSTOM_REQUESTURL = "request";
+        //jsServer
         public static final String CUSTOM_SERVERURL = "jsServer";
+        //deviceId
         public static final String CUSTOM_DEVICEID = "deviceId";
+        //appName
         public static final String CUSTOM_APPNAME = "appName";
+        //状态栏高度
         public static final String CUSTOM_STATUSBARHEIGHT = "statusBarHeight";
         public static final String CUSTOM_REALDEVICEHEIGHT = "realDeviceHeight";
+        //导航栏高度
+        public static final String CUSTOM_NAVBARHEIGHT = "navBarHeight";
+        //内置js版本
+        public static final String CUSTOM_JSVERSION = "jsVersion";
     }
 
 
@@ -195,4 +205,15 @@ public class Constant {
         public static final int SLEEP = 1;
     }
 
+    /**
+     * 解密Key
+     */
+    public static final String AES_KEY = "176e6f1f7e1bbaf723827caa4c56a4b8";
+
+    /**
+     * Request Code 相关
+     */
+    public static final class REQUEST_CODE {
+        public static final int REQUEST_CODE_CONTRACT = 0xf71;
+    }
 }

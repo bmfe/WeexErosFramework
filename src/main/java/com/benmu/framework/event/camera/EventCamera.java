@@ -64,6 +64,16 @@ public class EventCamera {
 
     }
 
+    public void cameraUpload(String json, Context context, JSCallback jsCallback) {
+        mUploadAvatar = jsCallback;
+        mUploadContext = context;
+        UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
+                (json, UploadImageBean.class);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
+        ImageManager imageManager = ManagerFactory.getManagerService(ImageManager.class);
+        imageManager.openCameraUpload(context, bean);
+    }
+
 
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {

@@ -325,7 +325,7 @@ public class SharePreferenceUtil {
             } else if (Long.class == clazz) {
                 return (T) (Long.valueOf(getLongExtra(context, key, 0)));
             } else if (String.class == clazz) {
-                return (T) getStringExtra(context, key, "");
+                return (T) getStringExtra(context, key, null);
             } else {
                 return null;
             }

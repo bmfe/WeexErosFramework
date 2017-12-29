@@ -19,9 +19,11 @@
         var mainDom = document.querySelector('#main')
         
         function setHeight(height) {
-            mainDom.style.height = height || '300px';
+            mainDom.style.height = height + 'px';
         }
-    
+        /*
+
+        */
         function setOption(options) {
             var myChart = echarts.init(mainDom);
             // 使用刚指定的配置项和数据显示图表。

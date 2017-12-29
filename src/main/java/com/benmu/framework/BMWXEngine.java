@@ -2,9 +2,7 @@ package com.benmu.framework;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -12,33 +10,24 @@ import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.extend.adapter.BMTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
-import com.benmu.framework.http.BMPersistentCookieStore;
-import com.benmu.framework.http.okhttp.OkHttpUtils;
-import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
-import com.benmu.framework.http.okhttp.log.LoggerInterceptor;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.manager.impl.GeoManager;
-import com.benmu.framework.service.BroadcastChannelService;
-import com.benmu.framework.update.SynVersionService;
+import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
-import com.taobao.weex.common.Constants;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import me.ele.patch.BsPatch;
-import okhttp3.OkHttpClient;
 
 /**
  * Created by Carry on 2017/8/23.
@@ -156,6 +145,10 @@ public class BMWXEngine {
 
         insideEnv.put(Constant.CustomOptions.CUSTOM_REALDEVICEHEIGHT, "" + BaseCommonUtil.transferDimenToFE(context, BaseCommonUtil.getRealDeviceHeight(context)));
 
+        insideEnv.put(Constant.CustomOptions.CUSTOM_NAVBARHEIGHT, BaseCommonUtil
+                .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 44)) + "");
+        insideEnv.put(Constant.CustomOptions.CUSTOM_JSVERSION, AppUtils.getJsVersion(context));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEID, AppUtils.getDeviceId(context));
         if (Env != null && !Env.isEmpty()) {
             insideEnv.putAll(Env);
         }
