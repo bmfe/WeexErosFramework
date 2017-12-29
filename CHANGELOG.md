@@ -73,6 +73,19 @@
 2. 修改loading 实现，并做了微小修改
 
 # 2.0.6
-1. config.eros 中加入jsVersion deviceId环境参数
+1. config.eros 中加入jsVersion deviceId navBarHeight 环境参数
 2. bmRouter增加openBrowser方法以打开浏览器
 3. 升级WeexSDK到0.17.0
+4. eros.native.json加密
+5. 上传图片module中传入url地址
+6. axios 统一返回格式
+7. bmStorage 去掉外面包装层
+8. 打开通讯录选择联系人电话号码和打开短信发送信息
+9. 所有除了崩溃的报错都弹窗提示
+10. 双击调试按钮刷新
+11. 解决手势冲突（sider 和 itemList）
+
+
+
+
+
