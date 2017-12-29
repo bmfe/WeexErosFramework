@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class AxiosResultBean implements Serializable {
     public int status;
-    public String errorMsg;
+    public String errorMsg = "";
     public String data;
 
     public AxiosResultBean() {

@@ -207,5 +207,12 @@ public class Constant {
     /**
      * 解密Key
      */
-    public static final String AES_KEY = "176e6f1f7e1bbaf723827caa4c56a4b8\n";
+    public static final String AES_KEY = "176e6f1f7e1bbaf723827caa4c56a4b8";
+
+    /**
+     * Request Code 相关
+     */
+    public static final class REQUEST_CODE {
+        public static final int REQUEST_CODE_CONTRACT = 0xf71;
+    }
 }

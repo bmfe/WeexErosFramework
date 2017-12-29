@@ -17,6 +17,7 @@ public class WeexEventBean implements Serializable {
     private ArrayList<JSCallback> callbacks;
     private JSCallback jscallback;
     private Context context = null;
+    private String expand;
 
     public Context getContext() {
         return context;
@@ -56,6 +57,14 @@ public class WeexEventBean implements Serializable {
 
     public void setJsParams(String jsParams) {
         this.jsParams = jsParams;
+    }
+
+    public String getExpand() {
+        return expand;
+    }
+
+    public void setExpand(String expand) {
+        this.expand = expand;
     }
 
     public ArrayList<JSCallback> getCallbacks() {

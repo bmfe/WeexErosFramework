@@ -215,6 +215,12 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_OPENBROWSER:
                 new EventOpenBrowser().openBrowser(context, params, weexEventBean.getJscallback());
                 break;
+            case WXConstant.WXEventCenter.EVENT_COMMUNICATION_SMS:
+                new EventCommunication().sms(weexEventBean.getExpand(), params, context);
+                break;
+            case WXConstant.WXEventCenter.EVENT_COMMUNICATION_CONTACTS:
+                new EventCommunication().contacts(context,weexEventBean.getJscallback());
+                break;
         }
     }
 

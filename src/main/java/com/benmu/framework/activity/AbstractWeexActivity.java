@@ -1,6 +1,7 @@
 package com.benmu.framework.activity;
 
 import com.benmu.framework.BMWXApplication;
+import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -8,8 +9,10 @@ import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,6 +70,9 @@ import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -626,11 +633,23 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 handleDecodeInternally(result.getContents());
             }
         }
-
+        /**
+         * 读取联系人返回
+         */
+        if (resultCode == RESULT_OK && requestCode == Constant.REQUEST_CODE.REQUEST_CODE_CONTRACT) {
+            readContractResult(data);
+        }
+        /**
+         * 照片拍摄上传
+         */
         if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
             cameraResult();
             return;
         }
+
+        /**
+         * 选择照片 上传
+         */
         switch (resultCode) {
             case ImagePicker.RESULT_CODE_ITEMS:
                 if (data != null && requestCode == Constant.ImageConstants.IMAGE_PICKER) {
@@ -643,8 +662,53 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void readContractResult(Intent data) {
+        String username, usernumber = "";
+        ContentResolver reContentResolverol = getContentResolver();
+        //URI,每个ContentProvider定义一个唯一的公开的URI,用于指定到它的数据集
+        Uri contactData = data.getData();
+        //查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
+        Cursor cursor = managedQuery(contactData, null, null, null, null);
+        cursor.moveToFirst();
+        //获得DATA表中的名字
+        username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+        //条件为联系人ID
+        String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+        // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
+        Cursor phone = reContentResolverol.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                null,
+                null);
+        while (phone.moveToNext()) {
+            usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+        String json = joinContractJson(username, usernumber);
+        AxiosResultBean resultBean = new AxiosResultBean();
+        resultBean.status = 0;
+        resultBean.data = json;
+
+        DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
+                (DispatchEventManager.class);
+        dispatchEventManager.getBus().post(resultBean);
+    }
+
+
+    private String joinContractJson(String name, String poneNumber) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("phone", poneNumber);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
     /**
      * 上传图片
+     *
      * @param items
      */
     private void UpMultipleImageData(ArrayList<ImageItem> items) {
@@ -656,6 +720,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         imageManager.UpMultipleImageData(this, items, bean);
     }
 
+    /**
+     * 照片拍摄完成读取结果
+     */
     private void cameraResult() {
         ImagePicker.galleryAddPic(this, this.imagePicker.getTakeImageFile());
         String path = this.imagePicker.getTakeImageFile().getAbsolutePath();

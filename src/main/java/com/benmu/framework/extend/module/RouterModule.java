@@ -98,14 +98,6 @@ public class RouterModule extends WXModule {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
 
-    @JSMethod
-    public void callPhone(String params) {
-        WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_CALL);
-        weexEventBean.setContext(mWXSDKInstance.getContext());
-        weexEventBean.setJsParams(params);
-        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
-    }
 
     @JSMethod(uiThread = true)
     public void openBrowser(String params, JSCallback callback) {
