@@ -199,12 +199,9 @@ public class DefaultRouterAdapter {
 
     public boolean openBrowser(Context context, String params) {
         if (context == null || TextUtils.isEmpty(params)) return false;
-        ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        RouterModel routerModel = parseManager.parseObject(params, RouterModel.class);
-        if (routerModel == null) return false;
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        Uri parse = Uri.parse(routerModel.url);
+        Uri parse = Uri.parse(params);
         intent.setData(parse);
         context.startActivity(intent);
         return true;
