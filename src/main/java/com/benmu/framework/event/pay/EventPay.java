@@ -8,6 +8,7 @@ import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.WeChatPayModel;
 import com.benmu.framework.model.WeChatPayResultModel;
+import com.benmu.framework.utils.JsPoster;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -27,12 +28,13 @@ public class EventPay {
         WeChatPayModel weChatPayModal = parseManager.parseObject(params, WeChatPayModel.class);
         IWXAPI wxapi = WXAPIFactory.createWXAPI(context, weChatPayModal.getAppid(), true);
         if (!wxapi.isWXAppInstalled()) {
-            BaseResultBean result = new BaseResultBean();
-            result.resCode = 9;
-            result.msg = "请先安装微信客户端";
-            if (mCallback != null) {
-                mCallback.invokeAndKeepAlive(result);
-            }
+            JsPoster.postFailed("请先安装微信客户端",mCallback);
+//            BaseResultBean result = new BaseResultBean();
+//            result.setResCode(9);
+//            result.setMsg("请先安装微信客户端");
+//            if (mCallback != null) {
+//                mCallback.invokeAndKeepAlive(result);
+//            }
             return;
         }
         PayReq request = new PayReq();

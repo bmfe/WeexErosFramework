@@ -12,6 +12,7 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.WechatLoginBean;
+import com.benmu.framework.utils.JsPoster;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 import com.umeng.socialize.UMAuthListener;
@@ -39,9 +40,7 @@ public class EventAuth {
             umShareAPI.getPlatformInfo((Activity) context, SHARE_MEDIA.WEIXIN, umAuthListener);
         } catch (Exception e) {
             e.printStackTrace();
-            if (mCallback != null) {
-                mCallback.invoke(new BaseResultBean(9, null));
-            }
+            JsPoster.postFailed(mCallback);
             return;
         }
         mSharing = true;
@@ -51,7 +50,7 @@ public class EventAuth {
 
     private UMAuthListener umAuthListener = new UMAuthListener() {
 
-        WechatLoginBean bean = new WechatLoginBean();//与前端回调Js Bean
+//        WechatLoginBean bean = new WechatLoginBean();//与前端回调Js Bean
 
         @Override
         public void onStart(SHARE_MEDIA platform) {
@@ -64,36 +63,38 @@ public class EventAuth {
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
             if (data == null) {
-                bean.resCode = 9;
-                return;
+                JsPoster.postFailed(mCallback);
             } else {
-                WechatLoginBean.WechatAuth dataBean = new WechatLoginBean().new WechatAuth();
+                WechatLoginBean dataBean = new WechatLoginBean();
                 String uid = data.get("uid");
                 String name = data.get("name");
                 dataBean.setUid(TextUtils.isEmpty(uid) ? "" : uid);
                 dataBean.setName(TextUtils.isEmpty(name) ? "" : name);
-                bean.resCode = 0;
-                bean.msg = "success";
-                bean.setData(dataBean);
+                JsPoster.postSuccess(dataBean, mCallback);
+//                bean.setResCode(0);
+//                bean.setMsg("success");
+//                bean.setData(dataBean);
             }
 
-            invoke(bean);
+//            invoke(bean);
             mProgressDialog.dismiss();
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            bean.resCode = 9;
-            invoke(bean);
+            JsPoster.postFailed(mCallback);
+//            bean.setResCode(9);
+//            invoke(bean);
             mProgressDialog.dismiss();
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            bean.resCode = 9;
-            invoke(bean);
+            JsPoster.postFailed(mCallback);
+//            bean.setResCode(9);
+//            invoke(bean);
             mProgressDialog.dismiss();
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         }
@@ -108,21 +109,11 @@ public class EventAuth {
             if (mProgressDialog != null) {
                 mProgressDialog.dismiss();
             }
-            WechatLoginBean bean = new WechatLoginBean();//与前端回调Js Bean
-            bean.resCode = 9;
-            invoke(bean);
+            JsPoster.postFailed(mCallback);
+
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         }
     }
 
 
-    /**
-     * 返回前端回调地址
-     */
-    private void invoke(WechatLoginBean bean) {
-        mSharing = false;
-        if (mCallback != null) {
-            mCallback.invoke(bean);
-        }
-    }
 }

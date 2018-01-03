@@ -13,7 +13,6 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
 import com.benmu.framework.model.PlatformConfigBean;
-import com.benmu.framework.update.SynSerivceBinder;
 import com.benmu.framework.update.VersionChecker;
 import com.benmu.framework.utils.DebugableUtil;
 import com.taobao.weex.WXSDKInstance;

@@ -4,6 +4,7 @@ import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -86,7 +87,8 @@ import java.util.Map;
  * Created by Carry on 2017/8/16.
  */
 
-public class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener, Handler.Callback,
+public class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener, Handler
+        .Callback,
         RouterTracker.RouterTrackerListener {
     protected RouterModel mRouterParam;
     private WXSDKInstance mWXInstance;
@@ -328,8 +330,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private void createLoadingView() {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         Log.d("SVProgressHUD", "context hasCode -> " + this.hashCode());
-        decorView = (ViewGroup) (this).getWindow().getDecorView().findViewById(android.R.id.content);
-        rootView = (ViewGroup) layoutInflater.inflate(com.benmu.widget.R.layout.layout_svprogresshud, null, false);
+        decorView = (ViewGroup) (this).getWindow().getDecorView().findViewById(android.R.id
+                .content);
+        rootView = (ViewGroup) layoutInflater.inflate(com.benmu.widget.R.layout
+                .layout_svprogresshud, null, false);
         rootView.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         ));
@@ -681,7 +685,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 null,
                 null);
         while (phone.moveToNext()) {
-            usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds
+                    .Phone.NUMBER));
         }
         String json = joinContractJson(username, usernumber);
         AxiosResultBean resultBean = new AxiosResultBean();
@@ -708,8 +713,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     /**
      * 上传图片
-     *
-     * @param items
      */
     private void UpMultipleImageData(ArrayList<ImageItem> items) {
         ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
@@ -786,14 +789,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             } else {
                 CameraResultBean bean = new CameraResultBean();
                 if (!TextUtils.isEmpty(code)) {
-                    bean.msg = "success";
-                    bean.resCode = 0;
-                    CameraResultBean.Result data = new CameraResultBean.Result();
-                    data.text = code;
-                    bean.data = data;
+                    bean.text = code;
                 } else {
-                    bean.msg = "fail";
-                    bean.resCode = 9;
+                    bean.text = "";
                 }
 
                 ManagerFactory.getManagerService(DispatchEventManager.class).getBus

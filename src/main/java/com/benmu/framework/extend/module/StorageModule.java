@@ -72,7 +72,7 @@ public class StorageModule extends WXModule {
     }
 
 
-    //   同步存取
+    //同步存取
     @JSMethod(uiThread = false)
     public Object setDataSync(String key, String value) {
         ArrayList<String> list = new ArrayList();
