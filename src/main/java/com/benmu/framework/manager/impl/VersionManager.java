@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
@@ -71,7 +72,8 @@ public class VersionManager extends Manager {
     }
 
     private static void initMediator(Context context) {
-        context.startService(new Intent(context, BroadcastChannelService.class));
+        MediatorDocker.getInstance().active();
+//        context.startService(new Intent(context, BroadcastChannelService.class));
     }
 
     private void checkBundleDir(Context context) {
@@ -155,7 +157,7 @@ public class VersionManager extends Manager {
         params.put("jsVersion", verisonInfo);
         params.put("isDiff", isDiff ? "1" : "0");
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
-        axiosManager.get(url, params, null, callback, url,0);
+        axiosManager.get(url, params, null, callback, url, 0);
     }
 
     public void downloadBundle(String url, FileCallBack fileCallBack) {
