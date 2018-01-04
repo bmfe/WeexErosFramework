@@ -34,7 +34,7 @@ public class ImageModule extends WXModule {
     }
 
     @JSMethod
-    public void camera(String params, JSCallback jsCallback) {
+    public void camera(String params,JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
         eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_PATH);
@@ -51,8 +51,14 @@ public class ImageModule extends WXModule {
         eventBean.setJsParams(json);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
+
     @JSMethod(uiThread = true)
-    public void pick(String json){
-        preview(json);
+    public void pick(String params, JSCallback jsCallback) {
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_UPLOADIMAGE);
+        eventBean.setJsParams(params);
+        eventBean.setJscallback(jsCallback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
 }

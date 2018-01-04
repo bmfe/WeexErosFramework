@@ -662,7 +662,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             cameraResult();
             return;
         }
-
         /**
          * 选择照片 上传
          */
@@ -672,6 +671,18 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                     ArrayList<ImageItem> items = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     UpMultipleImageData(items);
+                }
+                break;
+        }
+        /**
+         * 选择照片 返回
+         */
+        switch (resultCode) {
+            case ImagePicker.RESULT_CODE_ITEMS:
+                if (data != null && requestCode == Constant.ImageConstants.IMAGE_NOT_UPLOADER_PICKER) {
+                    ArrayList<ImageItem> items = (ArrayList<ImageItem>) data
+                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    pickReturn(items);
                 }
                 break;
         }
@@ -710,7 +721,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         dispatchEventManager.getBus().post(resultBean);
     }
 
-
     private String joinContractJson(String name, String poneNumber) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -721,6 +731,21 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             e.printStackTrace();
         }
         return jsonObject.toString();
+    }
+
+    /**
+     * 选择图片结果返回。
+     *
+     * @param items
+     */
+    private void pickReturn(ArrayList<ImageItem> items) {
+        UploadResultBean bean = new UploadResultBean();
+        List<String> data = new ArrayList<>();
+        for (ImageItem path : items) {
+            data.add(path.path);
+        }
+        bean.data = data;
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(bean);
     }
 
     /**

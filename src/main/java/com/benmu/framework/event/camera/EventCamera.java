@@ -63,9 +63,9 @@ public class EventCamera {
         ImageManager imageManager = ManagerFactory.getManagerService(ImageManager.class);
         if (bean.allowCrop && bean.maxCount == 1) {
             //上传头像
-            imageManager.pickAvatar(context, bean);
+            imageManager.pickAvatar(context, bean, Constant.ImageConstants.IMAGE_PICKER);
         } else if (bean.maxCount > 0) {
-            imageManager.pickPhoto(context, bean);
+            imageManager.pickPhoto(context, bean, Constant.ImageConstants.IMAGE_PICKER);
         }
 
     }

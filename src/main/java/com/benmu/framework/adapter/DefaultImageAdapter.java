@@ -52,7 +52,7 @@ public class DefaultImageAdapter {
         return mInstance;
     }
 
-    public void pickPhoto(final Context context, UploadImageBean bean) {
+    public void pickPhoto(final Context context, UploadImageBean bean,int requestCode) {
         if (!checkPermission(context)) return;
 
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
@@ -64,11 +64,11 @@ public class DefaultImageAdapter {
         PersistentManager persistentManager = ManagerFactory.getManagerService(PersistentManager
                 .class);
         persistentManager.setCacheData(Constant.ImageConstants.UPLOAD_IMAGE_BEAN, bean);
-        ((Activity) context).startActivityForResult(intent, Constant.ImageConstants.IMAGE_PICKER);
+        ((Activity) context).startActivityForResult(intent, requestCode);
 
     }
 
-    public void pickAvatar(final Context context, UploadImageBean bean) {
+    public void pickAvatar(final Context context, UploadImageBean bean,int requestCode) {
         if (!checkPermission(context)) return;
 
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
@@ -84,7 +84,7 @@ public class DefaultImageAdapter {
                 .class);
         persistentManager.setCacheData(Constant.ImageConstants.UPLOAD_IMAGE_BEAN, bean);
 
-        ((Activity) context).startActivityForResult(intent, Constant.ImageConstants.IMAGE_PICKER);
+        ((Activity) context).startActivityForResult(intent, requestCode);
     }
 
     public void openCamera(final Context context, UploadImageBean bean) {

@@ -3,6 +3,7 @@ package com.benmu.framework.manager.impl;
 import android.content.Context;
 
 import com.benmu.framework.adapter.DefaultImageAdapter;
+import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.model.UploadImageBean;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -22,15 +23,15 @@ public class ImageManager extends Manager {
      * @param context 上线文对象
      * @param bean    Js 返回的数据集合
      */
-    public void pickPhoto(final Context context, UploadImageBean bean) {
-        DefaultImageAdapter.getInstance().pickPhoto(context, bean);
+    public void pickPhoto(final Context context, UploadImageBean bean,int requestCode) {
+        DefaultImageAdapter.getInstance().pickPhoto(context, bean,requestCode);
     }
 
     /**
      * 上传单张图片，裁剪
      */
-    public void pickAvatar(final Context context, UploadImageBean bean) {
-        DefaultImageAdapter.getInstance().pickAvatar(context, bean);
+    public void pickAvatar(final Context context, UploadImageBean bean,int requestCode) {
+        DefaultImageAdapter.getInstance().pickAvatar(context, bean,requestCode);
     }
 
 
@@ -48,7 +49,7 @@ public class ImageManager extends Manager {
     }
 
     /**
-     * 打开照相器 拍照上传
+     * 打开照相器 拍照
      */
     public void openCamera(Context context, UploadImageBean
             bean) {

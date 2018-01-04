@@ -156,6 +156,7 @@ public class Constant {
     public static final class ImageConstants {
 
         public static final int IMAGE_PICKER = 100;
+        public static final int IMAGE_NOT_UPLOADER_PICKER = 101;
         //上传图片最大宽度像素
         public static int BIGGESTWIDTH = 828;
 

@@ -7,6 +7,7 @@ import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.event.auth.EventAuth;
 import com.benmu.framework.event.browse.EventBrowse;
 import com.benmu.framework.event.camera.EventCamera;
+import com.benmu.framework.event.camera.EventImage;
 import com.benmu.framework.event.geo.EventGeo;
 import com.benmu.framework.event.http.EventFetch;
 import com.benmu.framework.event.modal.EventAlert;
@@ -224,6 +225,9 @@ public class DispatchEventCenter {
                 break;
             case WXConstant.WXEventCenter.EVENT_SET_HOMEPAGE:
                 new EventSetHomePage().setHomePage(context,params);
+                break;
+            case WXConstant.WXEventCenter.EVENT_IMAGE_PICK:
+                new EventImage().pick(params, context, weexEventBean.getJscallback());
                 break;
         }
     }
