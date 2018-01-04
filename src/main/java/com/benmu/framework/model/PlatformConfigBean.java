@@ -1,5 +1,13 @@
 package com.benmu.framework.model;
 
+import android.text.TextUtils;
+
+import com.benmu.framework.BMWXApplication;
+import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.constant.Constant;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.StorageManager;
+
 import java.io.Serializable;
 
 /**
@@ -95,7 +103,12 @@ public class PlatformConfigBean implements Serializable {
         }
 
         public String getHomePage() {
-            return homePage;
+            StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
+            String page = storageManager.getData(BMWXApplication.getWXApplication(), Constant.SP.SP_HOMEPAGE_URL);
+            if (TextUtils.isEmpty(page)) {
+                page = homePage;
+            }
+            return page;
         }
 
         public void setHomePage(String homePage) {
