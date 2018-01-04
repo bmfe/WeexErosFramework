@@ -7,35 +7,25 @@ import java.io.Serializable;
  * 微信授权登陆回传
  */
 
-public class WechatLoginBean extends BaseResultBean {
-    private WechatAuth data;
+public class WechatLoginBean {
 
-    public class WechatAuth {
-        private String name;
-        private String uid;
+    private String name;
+    private String uid;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getUid() {
-            return uid;
-        }
-
-        public void setUid(String uid) {
-            this.uid = uid;
-        }
+    public String getName() {
+        return name;
     }
 
-    public WechatAuth getData() {
-        return data;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setData(WechatAuth data) {
-        this.data = data;
+    public String getUid() {
+        return uid;
     }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
 }

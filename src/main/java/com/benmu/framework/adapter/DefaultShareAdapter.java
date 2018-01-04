@@ -16,6 +16,7 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.utils.BaseCommonUtil;
+import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.WeChatRelayUtil;
 import com.benmu.widget.view.BMGridDialog;
 import com.taobao.weex.bridge.JSCallback;
@@ -61,7 +62,7 @@ public class DefaultShareAdapter {
         if (shareInfo == null) return;
         if (shareInfo.isPopUp()) {
             if (shareInfo.getPlatforms() == null || shareInfo.getPlatforms().size() > 1) {
-                fail.invoke(new BaseResultBean(9, "请确定分享平台"));
+                JsPoster.postFailed("请确定分享平台",fail);
                 return;
             }
             shareDirectly(shareInfo, shareInfo.getPlatforms().get(0));
@@ -114,10 +115,10 @@ public class DefaultShareAdapter {
                         copyClipboard(shareInfo.getUrl());
                         break;
                     case "WechatSession":
-                        shareDirectly(shareInfo,"WechatSession");
+                        shareDirectly(shareInfo, "WechatSession");
                         break;
                     case "WechatTimeLine":
-                        shareDirectly(shareInfo,"WechatTimeLine");
+                        shareDirectly(shareInfo, "WechatTimeLine");
                         break;
                 }
                 if (dialog != null) {
@@ -136,9 +137,7 @@ public class DefaultShareAdapter {
                 } else if ("VIDEO".equals(shareInfo.getMediaType())) {
 
                 } else {
-                    if (mFailed != null) {
-                        mFailed.invoke(new BaseResultBean(9, "不支持的媒体类型"));
-                    }
+                    JsPoster.postFailed("不支持的媒体类型", mFailed);
                 }
                 break;
             case "WechatTimeLine":
@@ -149,9 +148,7 @@ public class DefaultShareAdapter {
                 } else if ("VIDEO".equals(shareInfo.getMediaType())) {
 
                 } else {
-                    if (mFailed != null) {
-                        mFailed.invoke(new BaseResultBean(9, "不支持的媒体类型"));
-                    }
+                    JsPoster.postFailed("不支持的媒体类型", mFailed);
                 }
 
                 break;
@@ -207,9 +204,12 @@ public class DefaultShareAdapter {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
+
             if (mSuccess != null) {
-                mSuccess.invoke(new BaseResultBean(0, mAct.getResources().getString(R.string
-                        .str_share_success)));
+                JsPoster.postSuccess(null, mAct.getResources().getString(R.string
+                        .str_share_success), mSuccess);
+//                mSuccess.invoke(new BaseResultBean(0, mAct.getResources().getString(R.string
+//                        .str_share_success)));
             } else {
                 ModalManager.BmToast.toast(mAct, mAct.getResources().getString
                         (R.string.str_share_success), Toast.LENGTH_SHORT);
@@ -223,8 +223,8 @@ public class DefaultShareAdapter {
                 mProgressDialog.dismiss();
             }
             if (mFailed != null) {
-                mFailed.invoke(new BaseResultBean(0, mAct.getResources().getString(R.string
-                        .str_share_failed)));
+                JsPoster.postFailed(mAct.getResources().getString
+                        (R.string.str_share_failed), mFailed);
             } else {
                 ModalManager.BmToast.toast(mAct, mAct.getResources().getString
                         (R.string.str_share_failed), Toast.LENGTH_SHORT);

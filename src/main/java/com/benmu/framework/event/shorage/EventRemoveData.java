@@ -5,6 +5,7 @@ import android.content.Context;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.StorageManager;
 import com.benmu.framework.model.BaseResultBean;
+import com.benmu.framework.utils.JsPoster;
 import com.taobao.weex.bridge.JSCallback;
 
 /**
@@ -16,32 +17,18 @@ public class EventRemoveData {
         StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
         boolean result = storageManager.removeData(context);
 
-        BaseResultBean bean = new BaseResultBean();
         if (result) {
-            bean.resCode = 0;
+            JsPoster.postSuccess(null, jscallback);
         } else {
-            bean.resCode = 9;
-            bean.msg = "删除失败";
+            JsPoster.postFailed(jscallback);
         }
 
-        if (jscallback != null) {
-            jscallback.invoke(bean);
-        }
     }
 
     public Object removeDataSync(Context context) {
         StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
         boolean result = storageManager.removeData(context);
-
-        BaseResultBean bean = new BaseResultBean();
-        if (result) {
-            bean.resCode = 0;
-        } else {
-            bean.resCode = 9;
-            bean.msg = "删除失败";
-        }
-
-        return bean;
+        return result ? JsPoster.getSuccess(null) : JsPoster.getFailed();
     }
 }
 

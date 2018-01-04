@@ -4,6 +4,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
@@ -17,6 +18,7 @@ import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.utils.JsPoster;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 
@@ -43,7 +45,11 @@ public class EventCamera {
     @Subscribe
     public void OnScanResult(CameraResultBean bean) {
         if (this.mScanCallback == null || bean == null) return;
-        mScanCallback.invoke(bean);
+        if (TextUtils.isEmpty(bean.text)) {
+            JsPoster.postFailed(mScanCallback);
+        } else {
+            JsPoster.postSuccess(bean.text, mScanCallback);
+        }
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
     }
 
@@ -78,10 +84,10 @@ public class EventCamera {
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {
         if (uploadResultBean != null && mUploadAvatar != null) {
-            mUploadAvatar.invoke(uploadResultBean);
+            JsPoster.postSuccess(uploadResultBean.data,mUploadAvatar);
         }
         if (uploadResultBean != null && mScreenShotCallback != null) {
-            mScreenShotCallback.invoke(uploadResultBean);
+            JsPoster.postSuccess(uploadResultBean.data,mScreenShotCallback);
         }
 
         ModalManager.BmLoading.dismissLoading(mUploadContext);

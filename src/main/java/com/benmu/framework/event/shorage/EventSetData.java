@@ -5,6 +5,7 @@ import android.content.Context;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.StorageManager;
 import com.benmu.framework.model.BaseResultBean;
+import com.benmu.framework.utils.JsPoster;
 import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
@@ -19,15 +20,10 @@ public class EventSetData {
         String key = paramsList.get(0);
         String value = paramsList.get(1);
         boolean result = storageManager.setData(context, key, value);
-        BaseResultBean bean = new BaseResultBean();
         if (result) {
-            bean.resCode = 0;
+            JsPoster.postSuccess(null, jscallback);
         } else {
-            bean.resCode = 9;
-            bean.msg = "存储失败";
-        }
-        if (jscallback != null) {
-            jscallback.invoke(bean);
+            JsPoster.postFailed("存储失败", jscallback);
         }
     }
 
@@ -37,13 +33,6 @@ public class EventSetData {
         String key = paramsList.get(0);
         String value = paramsList.get(1);
         boolean result = storageManager.setData(context, key, value);
-        BaseResultBean bean = new BaseResultBean();
-        if (result) {
-            bean.resCode = 0;
-        } else {
-            bean.resCode = 9;
-            bean.msg = "存储失败";
-        }
-        return bean;
+        return result ? JsPoster.getSuccess() : JsPoster.getFailed("存储失败");
     }
 }

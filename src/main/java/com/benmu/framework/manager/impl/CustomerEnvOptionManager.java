@@ -2,6 +2,7 @@ package com.benmu.framework.manager.impl;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.benmu.framework.BuildConfig;
@@ -152,7 +153,8 @@ public class CustomerEnvOptionManager extends Manager {
 
     public static void registerCustomConfig(HashMap<String, String> configs) {
         for (Map.Entry<String, String> config : configs.entrySet()) {
-            WXSDKEngine.addCustomOptions(config.getKey(), config.getValue());
+            if (!TextUtils.isEmpty(config.getValue()))
+                WXSDKEngine.addCustomOptions(config.getKey(), config.getValue());
         }
     }
 

@@ -16,6 +16,7 @@ import com.benmu.framework.manager.impl.ShareManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.RelayBean;
 import com.benmu.framework.utils.BaseCommonUtil;
+import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.MultipleFileDownloader;
 import com.benmu.framework.utils.ResourceUtil;
 import com.benmu.framework.utils.WeChatRelayUtil;
