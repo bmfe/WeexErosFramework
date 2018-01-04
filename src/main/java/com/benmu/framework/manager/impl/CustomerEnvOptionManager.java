@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.Log;
 
+import com.benmu.framework.BuildConfig;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
@@ -157,13 +158,15 @@ public class CustomerEnvOptionManager extends Manager {
 
     public static PlatformConfigBean initPlatformConfig(Context context) {
         String platform = AssetsUtil.getFromAssets(context, Constant.PLATFORM_CONFIG_NAME);
-        try {
-            AESUtils aesUtils = new AESUtils();
-            platform = aesUtils.decrypt(platform, Constant.AES_KEY, "RjatRGC4W72PJXTE");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!BuildConfig.DEBUG) {
+            try {
+                AESUtils aesUtils = new AESUtils();
+                platform = aesUtils.decrypt(platform, Constant.AES_KEY, "RjatRGC4W72PJXTE");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        Log.d("PlatformConfigBean","PlatformConfigBean -> "+ platform);
+        Log.d("PlatformConfigBean", "PlatformConfigBean -> " + platform);
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         return parseManager.parseObject(platform,
                 PlatformConfigBean.class);

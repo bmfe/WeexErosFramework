@@ -50,8 +50,8 @@ public class ImageManager extends Manager {
     /**
      * 打开照相器 拍照上传
      */
-    public void openCameraUpload(Context context, UploadImageBean
+    public void openCamera(Context context, UploadImageBean
             bean) {
-        DefaultImageAdapter.getInstance().cameraUploade(context, bean);
+        DefaultImageAdapter.getInstance().openCamera(context, bean);
     }
 }

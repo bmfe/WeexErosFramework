@@ -1,7 +1,9 @@
 package com.benmu.framework.activity;
 
 import com.benmu.framework.BMWXApplication;
+import com.benmu.framework.BuildConfig;
 import com.benmu.framework.model.AxiosResultBean;
+import com.benmu.framework.model.UploadResultBean;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -80,6 +82,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -99,7 +102,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private BaseToolBar mNavigationBar;
     private BMFloatingLayer mDebugger;
     protected Activity mAct;
-    public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
+    public String[] mDebugOptions = new String[]{"调试页面", "刷新", "调试"};
     private RelativeLayout rl_error;
     private ViewGroup mRootView;
     private boolean isHomePage;
@@ -193,16 +196,25 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 } else if (which == 1) {
                     refresh();
                 } else if (which == 2) {
-                    DispatchEventManager dispatchEventManager = ManagerFactory
-                            .getManagerService(DispatchEventManager.class);
-                    WeexEventBean eventBean = new WeexEventBean();
-                    eventBean.setContext(mAct);
-                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
-                    dispatchEventManager.getBus().post(eventBean);
+//                    DispatchEventManager dispatchEventManager = ManagerFactory
+//                            .getManagerService(DispatchEventManager.class);
+//                    WeexEventBean eventBean = new WeexEventBean();
+//                    eventBean.setContext(mAct);
+//                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+//                    dispatchEventManager.getBus().post(eventBean);
+                    connectionDebugService(BMWXEnvironment.mPlatformConfig.getUrl().getDebugServer());
+
                 }
             }
         });
         builder.create().show();
+    }
+
+    private void connectionDebugService(String url) {
+        WXEnvironment.sDebugServerConnectable = BuildConfig.DEBUG;
+        WXEnvironment.sRemoteDebugProxyUrl = url;
+        WXSDKEngine.reload();
+        Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -640,7 +652,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             readContractResult(data);
         }
         /**
-         * 照片拍摄上传
+         * 照片拍摄返回
          */
         if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
             cameraResult();
@@ -743,11 +755,13 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             }
         }
 
-        ImageItem imageItem = new ImageItem();
-        imageItem.path = path;
-        this.imagePicker.clearSelectedImages();
-        this.imagePicker.addSelectedImageItem(0, imageItem, true);
-        UpMultipleImageData(imagePicker.getSelectedImages());
+        UploadResultBean uploadResultBean = new UploadResultBean();
+        uploadResultBean.resCode = 0;
+        uploadResultBean.msg = "拍照成功";
+        List<String> dataList = new ArrayList<>();
+        dataList.add(path);
+        uploadResultBean.setData(dataList);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(uploadResultBean);
     }
 
 
@@ -763,6 +777,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     private void handleDecodeInternally(String code) {
         if (!TextUtils.isEmpty(code)) {
+            Log.d("handleDecodeInternally", " String code -> " + code);
             Uri uri = Uri.parse(code);
             if (uri.getQueryParameterNames().contains("bundle")) {
                 WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
@@ -773,9 +788,11 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 finish();
                 return;
             } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-                WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
-                WXSDKEngine.reload();
-                Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
+//                WXEnvironment.sDebugServerConnectable = BuildConfig.DEBUG;
+//                WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+//                WXSDKEngine.reload();
+//                Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
+                connectionDebugService(uri.getQueryParameter("_wx_devtool"));
                 finish();
                 return;
             } else if (code.contains("_wx_debug")) {

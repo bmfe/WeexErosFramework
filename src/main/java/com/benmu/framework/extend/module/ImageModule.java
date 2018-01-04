@@ -1,7 +1,5 @@
 package com.benmu.framework.extend.module;
 
-import android.support.v7.app.AlertDialog;
-
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -11,26 +9,10 @@ import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
 
 /**
- * Created by Carry on 17/2/8.
+ * Created by liuyuanxiao on 18/1/3.
  */
 
-public class CameraModule extends WXModule {
-    private JSCallback mScanCallback;
-    private AlertDialog dialog;
-    private JSCallback mUploadAvatar;
-    private JSCallback mScreenShotCallback;
-    private int size;
-
-
-    @JSMethod(uiThread = true)
-    public void scan(JSCallback callback) {
-        WeexEventBean eventBean = new WeexEventBean();
-        eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
-        eventBean.setJscallback(callback);
-        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
-    }
-
+public class ImageModule extends WXModule {
 
     @JSMethod
     public void uploadImage(String params, JSCallback jsCallback) {
@@ -41,16 +23,6 @@ public class CameraModule extends WXModule {
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
-    @JSMethod
-    public void cameraUpload(String params, JSCallback jsCallback) {
-        WeexEventBean eventBean = new WeexEventBean();
-        eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_PATH);
-        eventBean.setJsParams(params);
-        eventBean.setJscallback(jsCallback);
-        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
-    }
-
 
     @JSMethod(uiThread = true)
     public void uploadScreenshot(JSCallback callback) {
@@ -61,4 +33,26 @@ public class CameraModule extends WXModule {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
 
+    @JSMethod
+    public void camera(String params, JSCallback jsCallback) {
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_PATH);
+        eventBean.setJsParams(params);
+        eventBean.setJscallback(jsCallback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
+    }
+
+    @JSMethod(uiThread = true)
+    public void preview(String json) {
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_BROWSERIMG);
+        eventBean.setJsParams(json);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
+    }
+    @JSMethod(uiThread = true)
+    public void pick(String json){
+        preview(json);
+    }
 }

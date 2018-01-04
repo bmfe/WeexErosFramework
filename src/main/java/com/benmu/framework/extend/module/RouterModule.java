@@ -108,4 +108,12 @@ public class RouterModule extends WXModule {
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
+
+    public void setHomePage(String params) {
+        WeexEventBean weexEventBean = new WeexEventBean();
+        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_SET_HOMEPAGE);
+        weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setJsParams(params);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+    }
 }

@@ -77,6 +77,7 @@ public class Constant {
         public static final String SP_FONTSIZE = "SP_FONTSIZE";
         public static final String SP_APPCHANNEL = "SP_APPCHANNEL";
         public static final String SP_KEY_WH = "SP_KEY_WH";
+        public static final String SP_HOMEPAGE_URL = "SP_HOMEPAGE_URL";
     }
 
     /**

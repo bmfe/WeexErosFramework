@@ -87,7 +87,7 @@ public class DefaultImageAdapter {
         ((Activity) context).startActivityForResult(intent, Constant.ImageConstants.IMAGE_PICKER);
     }
 
-    public void cameraUploade(final Context context, UploadImageBean bean) {
+    public void openCamera(final Context context, UploadImageBean bean) {
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
         imagePicker.setCrop(true);//允许裁剪
         imagePicker.setSaveRectangle(true); //是否按矩形区域保存

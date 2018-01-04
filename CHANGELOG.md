@@ -85,6 +85,13 @@
 10. 双击调试按钮刷新
 11. 解决手势冲突（sider 和 itemList）
 
+# 2.0.7
+1. 新建ImageModle 增加 uploadImage、uploadScreenshot、camera、preview、pick方法。
+2. router添加seHomePage方法。
+3. 将调试扫一扫修改成调试功能。
+
+
+
 
 
 

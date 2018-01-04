@@ -17,7 +17,7 @@
     <module name="bmAxios">com.benmu.framework.extend.module.AxiosModule</module>
     <module name="bmGeolocation">com.benmu.framework.extend.module.GeolocationModule</module>
     <module name="bmModal">com.benmu.framework.extend.module.ModalModule</module>
-    <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
+    <module name="bmImage">com.benmu.framework.extend.module.ImageModule</module>
     <module name="bmPay">com.benmu.framework.extend.module.PayModule</module>
     <module name="bmStorage">com.benmu.framework.extend.module.StorageModule</module>
     <module name="bmShare">com.benmu.framework.extend.module.ShareModule</module>
@@ -27,7 +27,7 @@
     <module name="bmTool">com.benmu.framework.extend.module.ToolModule</module>
     <module name="bmAuth">com.benmu.framework.extend.module.WeChatLoginModule</module>
     <module name="bmCommunication">com.benmu.framework.extend.module.CommunicationModule</module>
-
+    <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
     <!--plug-in-->
     <!--amap-->
     <component name="weex-amap">com.benmu.framework.extend.plug_in.amap.component.WXMapViewComponent

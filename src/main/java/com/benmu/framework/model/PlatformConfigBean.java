@@ -124,6 +124,7 @@ public class PlatformConfigBean implements Serializable {
         private String jsServer;
         private String image;
         private String bundleUpdate;
+        private String debugServer;
 
         public String getRequest() {
             return request;
@@ -155,6 +156,14 @@ public class PlatformConfigBean implements Serializable {
 
         public void setBundleUpdate(String bundleUpdate) {
             this.bundleUpdate = bundleUpdate;
+        }
+
+        public String getDebugServer() {
+            return debugServer;
+        }
+
+        public void setDebugServer(String debugServer) {
+            this.debugServer = debugServer;
         }
     }
 

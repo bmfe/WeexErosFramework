@@ -27,6 +27,7 @@ import com.benmu.framework.event.router.EventGetParams;
 import com.benmu.framework.event.router.EventOpen;
 import com.benmu.framework.event.router.EventOpenBrowser;
 import com.benmu.framework.event.router.EventRefresh;
+import com.benmu.framework.event.router.EventSetHomePage;
 import com.benmu.framework.event.router.EventToMap;
 import com.benmu.framework.event.router.EventWebView;
 import com.benmu.framework.event.share.EventShare;
@@ -159,8 +160,8 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_CAMERA_UPLOADIMAGE:
                 new EventCamera().uploadImage(params, context, weexEventBean.getJscallback());
                 break;
-            case WXConstant.WXEventCenter.EVENT_CAMERA_UPLOAD:
-                new EventCamera().cameraUpload(params, context, weexEventBean.getJscallback());
+            case WXConstant.WXEventCenter.EVENT_CAMERA_PATH:
+                new EventCamera().openCamera(params, context, weexEventBean.getJscallback());
                 break;
 
             case WXConstant.WXEventCenter.EVENT_CAMERA:
@@ -220,6 +221,9 @@ public class DispatchEventCenter {
                 break;
             case WXConstant.WXEventCenter.EVENT_COMMUNICATION_CONTACTS:
                 new EventCommunication().contacts(context,weexEventBean.getJscallback());
+                break;
+            case WXConstant.WXEventCenter.EVENT_SET_HOMEPAGE:
+                new EventSetHomePage().setHomePage(context,params);
                 break;
         }
     }
