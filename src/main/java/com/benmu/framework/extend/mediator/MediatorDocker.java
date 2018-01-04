@@ -1,12 +1,15 @@
 package com.benmu.framework.extend.mediator;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
-import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.utils.InsertEnvUtil;
+import com.squareup.otto.Subscribe;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -35,12 +38,18 @@ public class MediatorDocker implements IWXRenderListener {
     }
 
     private MediatorDocker() {
+
+    }
+
+    public void registe() {
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
     }
 
     /*
      激活中介者
      */
     public void active() {
+        Log.e("MediatorDocker", mInstance+"");
         if (mInstance == null) {
             mInstance = new MediatorInstance(BMWXEnvironment.mApplicationContext);
         }
@@ -63,6 +72,7 @@ public class MediatorDocker implements IWXRenderListener {
     private void destoryInstance() {
         mInstance.destory();
         mInstance = null;
+        Log.e("MediatorDocker", "destoryInstance>>>>>");
     }
 
     private void render() {
@@ -98,7 +108,7 @@ public class MediatorDocker implements IWXRenderListener {
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
         mInstance.setStatus(STATUS_ACTIVE);
-        Log.e("MediatorDocker", "onRenderSuccess>>>>>" +mInstance.getStatus());
+        Log.e("MediatorDocker", "onRenderSuccess>>>>>" + mInstance.getStatus());
     }
 
     @Override
@@ -109,6 +119,19 @@ public class MediatorDocker implements IWXRenderListener {
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
         mInstance.setStatus(STATUS_INACTIVE);
-        Log.e("MediatorDocker", "onException>>>>>" +mInstance.getStatus());
+        Log.e("MediatorDocker", "onException>>>>>" + mInstance.getStatus());
+    }
+
+    @Subscribe
+    public void onEvent(Intent intent) {
+        if (WXConstant.ACTION_WEEX_REFRESH.equals(intent.getAction())) {
+            //refresh check mediator
+            active();
+        } else if (WXConstant.ACTION_INTERCEPTOR_SWTICH.equals(intent.getAction())) {
+            //interceptor swtich
+            mInstance.setStatus(STATUS_DESTORY);
+            active();
+        }
+
     }
 }

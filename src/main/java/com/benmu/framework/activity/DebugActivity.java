@@ -1,6 +1,7 @@
 package com.benmu.framework.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
@@ -10,8 +11,10 @@ import android.widget.TextView;
 
 import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.JsVersionInfoBean;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
@@ -52,6 +55,9 @@ public class DebugActivity extends AbstractWeexActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharePreferenceUtil.setInterceptorActive(mAct, isChecked ? Constant
                         .INTERCEPTOR_ACTIVE : Constant.INTERCEPTOR_DEACTIVE);
+                ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
+                        Intent
+                        (WXConstant.ACTION_INTERCEPTOR_SWTICH));
             }
         });
     }

@@ -24,6 +24,8 @@ public class WXConstant {
     public static final String BACK_PAGE_FAILED = "关闭页面失败";
 
     public static final String ACTION_WEEX_REFRESH = "ACTION_WEEX_REFRESH";
+    //拦截器状态发生变化
+    public static final String ACTION_INTERCEPTOR_SWTICH = "ACTION_INTERCEPTOR_SWTICH";
 
     /**
      * weex消息中心

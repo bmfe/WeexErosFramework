@@ -15,7 +15,6 @@ import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.model.JsVersionInfoBean;
 import com.benmu.framework.model.Md5MapperModel;
-import com.benmu.framework.service.BroadcastChannelService;
 import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.AssetsUtil;
 import com.benmu.framework.utils.BaseCommonUtil;

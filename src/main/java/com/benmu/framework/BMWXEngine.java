@@ -10,6 +10,7 @@ import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.extend.adapter.BMTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
+import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
@@ -87,6 +88,7 @@ public class BMWXEngine {
 
     private static void initDispatchCenter() {
         DispatchEventCenter.getInstance().register();
+        MediatorDocker.getInstance().registe();
     }
 
     private static void initPlatformConfig(Application context) {
@@ -143,7 +145,8 @@ public class BMWXEngine {
         insideEnv.put(Constant.CustomOptions.CUSTOM_STATUSBARHEIGHT, BaseCommonUtil
                 .transferDimenToFE(context, statusBarHeight) + "");
 
-        insideEnv.put(Constant.CustomOptions.CUSTOM_REALDEVICEHEIGHT, "" + BaseCommonUtil.transferDimenToFE(context, BaseCommonUtil.getRealDeviceHeight(context)));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_REALDEVICEHEIGHT, "" + BaseCommonUtil
+                .transferDimenToFE(context, BaseCommonUtil.getRealDeviceHeight(context)));
 
         insideEnv.put(Constant.CustomOptions.CUSTOM_NAVBARHEIGHT, BaseCommonUtil
                 .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 44)) + "");
