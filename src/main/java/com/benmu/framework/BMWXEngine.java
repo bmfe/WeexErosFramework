@@ -10,6 +10,7 @@ import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.extend.adapter.BMTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
+import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
 import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
@@ -122,7 +123,8 @@ public class BMWXEngine {
         WXSDKEngine.initialize(app,
                 new InitConfig.Builder()
                         .setImgAdapter(new DefaultWXImageAdapter()).setHttpAdapter(new
-                        DefaultWXHttpAdapter(app)).setTypefaceAdapter(new BMTypefaceAdapter(app))
+                        DefaultWXHttpAdapter(app)).setWebSocketAdapterFactory(new
+                        LightlyWebSocketFactory()).setTypefaceAdapter(new BMTypefaceAdapter(app))
                         .build()
         );
     }
