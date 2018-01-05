@@ -94,7 +94,7 @@
 6. 优化加载中介者机制，当拦截器变化时重新加载，刷新页面的时候检查是否已经加载成功；
 7. 新增bmWebsocket Module；
 8. bmRouter Module 新增 setHomePage方法: 作用：重新设置app启动加载的首页，js传path过来，native端会将传过来的path存储到本地，app启动的时候优先读取这个参数来显示首页，没有的话读取 native.js 中的配置；
-
+9. navigatorModule支持RGB设置字体颜色
 
 
 
