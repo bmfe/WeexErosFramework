@@ -3,7 +3,9 @@ package com.benmu.framework.event.http;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.benmu.framework.constant.Constant;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.exception.CancelException;
@@ -12,13 +14,24 @@ import com.benmu.framework.http.okhttp.exception.IrregularUrlException;
 import com.benmu.framework.http.okhttp.utils.L;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
+import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.PersistentManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosGet;
 import com.benmu.framework.model.AxiosPost;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.BaseResultBean;
+import com.benmu.framework.model.UploadImageBean;
+import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.utils.JsPoster;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 
@@ -28,6 +41,9 @@ import okhttp3.Call;
  */
 
 public class EventFetch {
+    private JSCallback mUploadAvatar;
+
+
     public void fetch(String params, final Context context, final JSCallback jscallback) {
 
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
@@ -211,4 +227,38 @@ public class EventFetch {
         }
 
     }
+
+    public void uploadImage(String json, String paths, Context context, JSCallback jsCallback) {
+        mUploadAvatar = jsCallback;
+        List<String> pathList = JSON.parseArray(paths, String.class);
+        UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
+                (json, UploadImageBean.class);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
+        ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
+                .class);
+        ArrayList<ImageItem> items = new ArrayList<>();
+        for (String path : pathList) {
+            ImageItem item = new ImageItem();
+            item.path = path;
+            items.add(item);
+        }
+        imageManager.UpMultipleImageData(context, items, bean);
+    }
+
+    /**
+     * 上传完成后 回调
+     * @param uploadResultBean
+     */
+    @Subscribe
+    public void OnUploadResult(UploadResultBean uploadResultBean) {
+        if (uploadResultBean != null && mUploadAvatar != null) {
+            JsPoster.postSuccess(uploadResultBean.data,mUploadAvatar);
+        }
+
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
+        mUploadAvatar = null;
+        ManagerFactory.getManagerService(PersistentManager.class).deleteCacheData(Constant
+                .ImageConstants.UPLOAD_IMAGE_BEAN);
+    }
+
 }
