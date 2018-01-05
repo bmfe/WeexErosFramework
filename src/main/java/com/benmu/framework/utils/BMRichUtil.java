@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.UnderlineSpan;
 
+import com.benmu.widget.utils.ColorUtils;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXAttr;
 import com.taobao.weex.dom.WXCustomStyleSpan;
@@ -19,8 +20,6 @@ import com.taobao.weex.dom.WXLineHeightSpan;
 import com.taobao.weex.dom.WXStyle;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXTextDecoration;
-import com.taobao.weex.utils.WXResourceUtils;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -156,7 +155,7 @@ public class BMRichUtil {
                 mFontStyle = WXStyle.getFontStyle(style);
             }
             if (style.containsKey(Constants.Name.COLOR)) {
-                mColor = WXResourceUtils.getColor(WXStyle.getTextColor(style));
+                mColor = ColorUtils.getColor(WXStyle.getTextColor(style));
                 mIsColorSet = mColor != Integer.MIN_VALUE;
             }
             if (style.containsKey(Constants.Name.TEXT_DECORATION)) {

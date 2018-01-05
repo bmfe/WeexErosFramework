@@ -13,11 +13,9 @@ import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
-import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
-import com.benmu.framework.model.TitleModel;
+import com.benmu.framework.model.NavigatorBarModel;
 import com.benmu.framework.utils.BMHookGlide;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.BaseToolBar;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -34,15 +32,17 @@ public class DefaultNavigationAdapter {
 
     public static void setLeftItem(String params, final JSCallback jscallback) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        TitleModel titleModel = parseManager.parseObject(params, TitleModel.class);
+        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
+                .class);
         BaseToolBar navigationBar = getToolBar();
         if (navigationBar == null) return;
 
-        setTextView(navigationBar.getLeftTextView(), titleModel);
+        setTextView(navigationBar.getLeftTextView(), navigatorBarModel);
 
-        if (!TextUtils.isEmpty(titleModel.getImage())) {
-            setImage(BMWXEnvironment.mApplicationContext, titleModel.getImage(), navigationBar
-                    .getLeftIcon());
+        if (!TextUtils.isEmpty(navigatorBarModel.getImage())) {
+            setImage(BMWXEnvironment.mApplicationContext, navigatorBarModel.getImage(),
+                    navigationBar
+                            .getLeftIcon());
         }
 
         if (jscallback != null) {
@@ -76,37 +76,49 @@ public class DefaultNavigationAdapter {
                 });
     }
 
-    private static void setTextView(TextView textView, TitleModel titleModel) {
+    private static void setTextView(TextView textView, NavigatorBarModel navigatorBarModel) {
         if (textView == null) return;
-        if (!TextUtils.isEmpty(titleModel.getFontSize())) {
-            textView.setTextSize(WXUtils.getInt(titleModel.getFontSize()) / 2);
+        if (!TextUtils.isEmpty(navigatorBarModel.getFontSize())) {
+            textView.setTextSize(WXUtils.getInt(navigatorBarModel.getFontSize()) / 2);
         }
-        if (!TextUtils.isEmpty(titleModel.getFontWeight())) {
+        String fontWeight = navigatorBarModel.getFontWeight();
+        if (!TextUtils.isEmpty(fontWeight) && !"normal".equals(fontWeight)) {
             textView.getPaint().setFakeBoldText(true);
+        }else {
+            textView.getPaint().setFakeBoldText(false);
+        }
+        String text = navigatorBarModel.getText();
+        textView.setText(text);
 
-        }
-        if (!TextUtils.isEmpty(titleModel.getText())) {
-            textView.setText(titleModel.getText());
-        }
-        if (!TextUtils.isEmpty(titleModel.getTextColor())) {
-            textView.setTextColor(ColorUtils.getColor(titleModel
-                    .getTextColor()));
+        String textColor = navigatorBarModel.getTextColor();
+        if (!TextUtils.isEmpty(textColor)) {
+            textView.setTextColor(ColorUtils.getColor(textColor));
+        } else {
+            //传递颜色无效 检查基础配置中的颜色
+            String navItemColor = BMWXEnvironment.mPlatformConfig.getPage().getNavItemColor();
+            if (TextUtils.isEmpty(navItemColor)) {
+                //没有设置基础颜色
+                textView.setTextColor(ColorUtils.getColor("#ffffff"));
+            } else {
+                textView.setTextColor(ColorUtils.getColor(navItemColor));
+            }
         }
         textView.setVisibility(View.VISIBLE);
-
     }
 
     public static void setRightItem(String params, final JSCallback jscallback) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        TitleModel titleModel = parseManager.parseObject(params, TitleModel.class);
+        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
+                .class);
         BaseToolBar navigationBar = getToolBar();
         if (navigationBar == null) return;
 
-        setTextView(navigationBar.getRightText(), titleModel);
+        setTextView(navigationBar.getRightText(), navigatorBarModel);
 
-        if (!TextUtils.isEmpty(titleModel.getImage())) {
-            setImage(BMWXEnvironment.mApplicationContext, titleModel.getImage(), navigationBar
-                    .getRightIcon());
+        if (!TextUtils.isEmpty(navigatorBarModel.getImage())) {
+            setImage(BMWXEnvironment.mApplicationContext, navigatorBarModel.getImage(),
+                    navigationBar
+                            .getRightIcon());
         }
 
         if (jscallback != null) {
@@ -122,10 +134,12 @@ public class DefaultNavigationAdapter {
 
     public static void setNavigationInfo(String params, final JSCallback jscallback) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        TitleModel titleModel = parseManager.parseObject(params, TitleModel.class);
+        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
+                .class);
         BaseToolBar navigationBar = getToolBar();
         if (navigationBar == null) return;
-        navigationBar.setVisibility(titleModel.isNavShow() ? View.VISIBLE : View.GONE);
+        navigationBar.setVisibility(navigatorBarModel.isNavShow() ? View.VISIBLE : View.GONE);
+        if (navigationBar.getVisibility() == View.GONE) return;
         if (jscallback != null)
             navigationBar.setOnTitleListenner(new BaseToolBar.OnTitleClick() {
                 @Override
@@ -137,12 +151,13 @@ public class DefaultNavigationAdapter {
 
     public static void setCenterItem(String params, final JSCallback jscallback) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        TitleModel titleModel = parseManager.parseObject(params, TitleModel.class);
+        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
+                .class);
         BaseToolBar navigationBar = getToolBar();
 
         if (navigationBar == null) return;
 
-        setTextView(navigationBar.getTitleTextView(), titleModel);
+        setTextView(navigationBar.getTitleTextView(), navigatorBarModel);
 
         if (jscallback != null)
             navigationBar.setOnTitleListenner(new BaseToolBar.OnTitleClick() {
