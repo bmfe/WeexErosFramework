@@ -59,6 +59,11 @@ public class RouterModule extends WXModule {
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
+    @JSMethod(uiThread = true)
+    public void finish(String params, JSCallback callback) {
+        finishPage(params,callback);
+    }
+
 
     @JSMethod(uiThread = true)
     public void getBackParams(JSCallback callback) {

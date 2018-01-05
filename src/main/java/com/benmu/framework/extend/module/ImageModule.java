@@ -56,7 +56,7 @@ public class ImageModule extends WXModule {
     public void pick(String params, JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_UPLOADIMAGE);
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_IMAGE_PICK);
         eventBean.setJsParams(params);
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
