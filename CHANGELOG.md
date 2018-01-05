@@ -86,9 +86,14 @@
 11. 解决手势冲突（sider 和 itemList）
 
 # 2.0.7
-1. 新建ImageModle 增加 uploadImage、uploadScreenshot、camera、preview、pick方法。
-2. router添加seHomePage方法。
-3. 将调试扫一扫修改成调试功能。
+1. 添加一键调试，不需要扫一扫即可调用调试，模拟器现在也可以调试了；需要在 eros.native.js 中添加 debugServer，添加方式请看eros.native.js 配置教程;
+2. 新增bmImage Module，将图片相关方法统一放到此Module中，bmCamera及bmBrowserImg Module已经废弃，后续版本中移除；
+3. bmAxios Module 新增 uploadImage 方法，用于上传本地图片；
+4. 扫一扫功能移植到了bmTool Module 中；
+5. 预览图片 preview 方法支持浏览本地图片及 jsbundle 中的图片；
+6. 优化加载中介者机制，当拦截器变化时重新加载，刷新页面的时候检查是否已经加载成功；
+7. 新增bmWebsocket Module；
+8. bmRouter Module 新增 setHomePage方法: 作用：重新设置app启动加载的首页，js传path过来，native端会将传过来的path存储到本地，app启动的时候优先读取这个参数来显示首页，没有的话读取 native.js 中的配置；
 
 
 

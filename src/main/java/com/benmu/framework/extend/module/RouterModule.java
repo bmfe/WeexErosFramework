@@ -51,7 +51,7 @@ public class RouterModule extends WXModule {
     }
 
     @JSMethod(uiThread = true)
-    public void finish(String params, JSCallback callback) {
+    public void finishPage(String params, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_FINISH);
         weexEventBean.setContext(mWXSDKInstance.getContext());
@@ -59,6 +59,11 @@ public class RouterModule extends WXModule {
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
+    @JSMethod(uiThread = true)
+    public void finish(String params, JSCallback callback) {
+        finishPage(params,callback);
+    }
+
 
     @JSMethod(uiThread = true)
     public void getBackParams(JSCallback callback) {

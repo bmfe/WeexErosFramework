@@ -26,5 +26,14 @@ public class AxiosModule extends WXModule {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
                 (eventBean);
     }
+    public void uploadImage(String params, final JSCallback jsCallback) {
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXConstant.WXEventCenter.EVENT_IMAGE_UPLOAD);
+        eventBean.setJsParams(params);
+        eventBean.setJscallback(jsCallback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
+                (eventBean);
+    }
 
 }
