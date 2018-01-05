@@ -32,11 +32,8 @@ import java.util.Date;
 
 public class BMChart extends WXComponent implements IWebView.OnPageListener {
 
-    private float mWidth;
-    private float mHeight;
     private WXWebView mWebView;
     private WebView mWeb;
-    private String mChartJs;
     private String mCharInfo;
     private Date s;
 
@@ -63,7 +60,6 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
 
     private void init() {
         mWebView = new WXWebView(getContext());
-        mChartJs = AssetsUtil.getFromAssets(getContext(), "echarts.min.js");
     }
 
     @Override
@@ -97,19 +93,6 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     @Override
     protected void onFinishLayout() {
         super.onFinishLayout();
-        WXStyle styles = getDomObject().getStyles();
-        if (styles != null) {
-            Object width = styles.get(Constants.Name.WIDTH);
-            if (width != null) {
-                mWidth = WXUtils.getFloat(width);
-            }
-
-            Object height = styles.get(Constants.Name.HEIGHT);
-            if (height != null) {
-                mHeight = WXUtils.getFloat(height);
-            }
-
-        }
     }
 
     @Override
@@ -135,7 +118,6 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     public void onPageFinish(String url, boolean canGoBack, boolean canGoForward) {
         Date e = new Date();
         Log.e("bmChart", "finsh" + e.getTime() + "耗时" + (e.getTime() - s.getTime()));
-        mWeb.loadUrl("javascript:setHeight(" + mHeight + ")");
         mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
         fireEvent("finish");
     }
