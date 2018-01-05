@@ -204,7 +204,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 //                    eventBean.setContext(mAct);
 //                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
 //                    dispatchEventManager.getBus().post(eventBean);
-                    connectionDebugService(BMWXEnvironment.mPlatformConfig.getUrl().getDebugServer());
+                    connectionDebugService(BMWXEnvironment.mPlatformConfig.getUrl()
+                            .getDebugServer());
 
                 }
             }
@@ -333,7 +334,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public void refresh() {
         DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
                 (DispatchEventManager.class);
-        dispatchEventManager.getBus().post(new Intent(WXConstant.ACTION_WEEX_REFRESH));
+        Intent intent = new Intent(WXConstant.ACTION_WEEX_REFRESH);
+        intent.putExtra("instanceId", mWXInstance.getInstanceId());
+        dispatchEventManager.getBus().post(intent);
         createWXInstance();
         renderPage();
     }
@@ -679,7 +682,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
          */
         switch (resultCode) {
             case ImagePicker.RESULT_CODE_ITEMS:
-                if (data != null && requestCode == Constant.ImageConstants.IMAGE_NOT_UPLOADER_PICKER) {
+                if (data != null && requestCode == Constant.ImageConstants
+                        .IMAGE_NOT_UPLOADER_PICKER) {
                     ArrayList<ImageItem> items = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     pickReturn(items);
@@ -735,8 +739,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     /**
      * 选择图片结果返回。
-     *
-     * @param items
      */
     private void pickReturn(ArrayList<ImageItem> items) {
         UploadResultBean bean = new UploadResultBean();
@@ -789,7 +791,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         List<String> dataList = new ArrayList<>();
         dataList.add(path);
         uploadResultBean.setData(dataList);
-        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(uploadResultBean);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
+                (uploadResultBean);
     }
 
 
