@@ -228,16 +228,15 @@ public class EventFetch {
 
     }
 
-    public void uploadImage(String json, String paths, Context context, JSCallback jsCallback) {
+    public void uploadImage(String json, Context context, JSCallback jsCallback) {
         mUploadAvatar = jsCallback;
-        List<String> pathList = JSON.parseArray(paths, String.class);
         UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
                 (json, UploadImageBean.class);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
         ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
                 .class);
         ArrayList<ImageItem> items = new ArrayList<>();
-        for (String path : pathList) {
+        for (String path : bean.images) {
             ImageItem item = new ImageItem();
             item.path = path;
             items.add(item);
@@ -247,12 +246,13 @@ public class EventFetch {
 
     /**
      * 上传完成后 回调
+     *
      * @param uploadResultBean
      */
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {
         if (uploadResultBean != null && mUploadAvatar != null) {
-            JsPoster.postSuccess(uploadResultBean.data,mUploadAvatar);
+            JsPoster.postSuccess(uploadResultBean.data, mUploadAvatar);
         }
 
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);

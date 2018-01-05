@@ -230,7 +230,7 @@ public class DispatchEventCenter {
                 new EventImage().pick(params, context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_IMAGE_UPLOAD:
-                new EventFetch().uploadImage(params, weexEventBean.getExpand(),context, weexEventBean.getJscallback());
+                new EventFetch().uploadImage(params,context, weexEventBean.getJscallback());
                 break;
         }
     }
