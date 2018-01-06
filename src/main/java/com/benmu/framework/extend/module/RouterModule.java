@@ -113,7 +113,7 @@ public class RouterModule extends WXModule {
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
-
+    @JSMethod
     public void setHomePage(String params) {
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_SET_HOMEPAGE);
