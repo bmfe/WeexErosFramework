@@ -717,7 +717,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         }
         String json = joinContractJson(username, usernumber);
         AxiosResultBean resultBean = new AxiosResultBean();
-        resultBean.status = 0;
+        resultBean.status = 0+"";
         resultBean.data = json;
 
         DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService

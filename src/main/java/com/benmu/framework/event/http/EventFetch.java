@@ -193,11 +193,11 @@ public class EventFetch {
         AxiosResultBean bean = new AxiosResultBean();
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
-            bean.status = httpException.getmErrorCode();
+            bean.status = httpException.getmErrorCode()+"";
             bean.errorMsg = httpException.getmErrorMessage();
         } else if (e instanceof IrregularUrlException) {
             IrregularUrlException irregularUrlException = (IrregularUrlException) e;
-            bean.status = 9;
+            bean.status = "9";
             bean.errorMsg = irregularUrlException.getmErrosMeeage();
         }
 
@@ -210,16 +210,16 @@ public class EventFetch {
         try {
             AxiosResultBean bean = new AxiosResultBean();
             if (callBack != null && !TextUtils.isEmpty(response)) {
-                bean.status = code;
+                bean.status = code+"";
                 bean.errorMsg = "";
-                bean.data = response;
+                bean.data = JSON.parse(response);
                 callBack.invoke(bean);
             }
         } catch (Exception e) {
             e.printStackTrace();
             L.e("json 解析错误");
             AxiosResultBean bean = new AxiosResultBean();
-            bean.status = -1;
+            bean.status = "-1";
             bean.errorMsg = "json 解析错误";
             if (callBack != null) {
                 callBack.invoke(bean);
