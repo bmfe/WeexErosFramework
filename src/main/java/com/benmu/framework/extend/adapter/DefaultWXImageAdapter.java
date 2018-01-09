@@ -164,6 +164,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import com.benmu.framework.R;
@@ -205,6 +206,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     public void setImage(String url, final ImageView view,
                          WXImageQuality quality, final WXImageStrategy strategy) {
         if (view == null || !(view instanceof WXImageView)) return;
+        Log.e("url>>>>>>","url>>>>>"+url);
         WXImageView wxImageView = (WXImageView) view;
         wxImageView.setImageBitmap(null);
         if (TextUtils.isEmpty(url)) {

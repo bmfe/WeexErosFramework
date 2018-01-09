@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class UniversalResultModule implements Serializable {
     private String errorMsg;
-    private int status;
+    private Object status;
     private Object data;
 
 
@@ -42,7 +42,7 @@ public class UniversalResultModule implements Serializable {
         this.errorMsg = errorMsg;
     }
 
-    public int getStatus() {
+    public Object getStatus() {
         return status;
     }
 

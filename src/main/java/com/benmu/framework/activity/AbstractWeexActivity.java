@@ -418,6 +418,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 options,
                 null,
                 WXRenderStrategy.APPEND_ASYNC);
+        Uri parse = Uri.parse("/www.baidu.com");
+        Log.e("testUri",">>>>>>>"+parse.isRelative());
     }
 
 
@@ -744,7 +746,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         UploadResultBean bean = new UploadResultBean();
         List<String> data = new ArrayList<>();
         for (ImageItem path : items) {
-            data.add(path.path);
+            data.add("file://"+path.path);
         }
         bean.data = data;
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(bean);

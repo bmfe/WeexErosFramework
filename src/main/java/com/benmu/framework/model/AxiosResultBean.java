@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Axios 数据返回类
  */
 public class AxiosResultBean implements Serializable {
-    public int status;
+    public Object status;
     public String errorMsg = "";
     public Object data;
 
