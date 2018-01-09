@@ -218,19 +218,19 @@ public class DispatchEventCenter {
                 new EventOpenBrowser().openBrowser(context, params, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_COMMUNICATION_SMS:
-                new EventCommunication().sms(weexEventBean.getExpand(), params, context);
+                new EventCommunication().sms(params, context);
                 break;
             case WXConstant.WXEventCenter.EVENT_COMMUNICATION_CONTACTS:
-                new EventCommunication().contacts(context,weexEventBean.getJscallback());
+                new EventCommunication().contacts(context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_SET_HOMEPAGE:
-                new EventSetHomePage().setHomePage(context,params);
+                new EventSetHomePage().setHomePage(context, params);
                 break;
             case WXConstant.WXEventCenter.EVENT_IMAGE_PICK:
                 new EventImage().pick(params, context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_IMAGE_UPLOAD:
-                new EventFetch().uploadImage(params,context, weexEventBean.getJscallback());
+                new EventFetch().uploadImage(params, context, weexEventBean.getJscallback());
                 break;
         }
     }
