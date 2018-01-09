@@ -129,29 +129,29 @@ public class DefaultRouterAdapter {
 
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        String phone = null;
-        int nowCall = 0;
+        int phone ;
+        boolean nowCall = true;
         try {
-            phone = (String) parseManager.parseObject(params).get("phone");
-            if (parseManager.parseObject(params).get("nowCall") != null) {
-                nowCall = (int) parseManager.parseObject(params).get("nowCall");
+            phone = (int) parseManager.parseObject(params).get("to");
+            if (parseManager.parseObject(params).get("tip") != null) {
+                nowCall = (boolean) parseManager.parseObject(params).get("tip");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            phone = "110";
+            phone = 110;
         }
-        if (TextUtils.isEmpty(phone) || context == null) return;
+        if (phone ==0|| context == null) return;
 
-        final String finalPhone = phone;
+        final int finalPhone = phone;
 
-        if (nowCall == 1) {
-            callPhone(finalPhone, context);
+        if (!nowCall) {
+            callPhone(String.valueOf(finalPhone), context);
         } else {
-            ModalManager.BmAlert.showAlert(context, null, phone, "呼叫", new DialogInterface
+            ModalManager.BmAlert.showAlert(context, null, String.valueOf(phone), "呼叫", new DialogInterface
                     .OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    callPhone(finalPhone, context);
+                    callPhone(String.valueOf(finalPhone), context);
                     dialog.dismiss();
                 }
             }, "取消", null, null, null);
