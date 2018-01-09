@@ -86,7 +86,8 @@ public class EventFetch {
 
     private void patch(final Context context, AxiosManager axiosManager, AxiosPost axiosPatch,
                        final JSCallback jscallback) {
-        axiosManager.patch(axiosPatch.url, axiosPatch.data, axiosPatch.header, new StringCallback() {
+        axiosManager.patch(axiosPatch.url, axiosPatch.data, axiosPatch.header, new StringCallback
+                () {
             @Override
             public void onError(Call call, Exception e, int id) {
                 parseError(context, e, jscallback);
@@ -193,11 +194,11 @@ public class EventFetch {
         AxiosResultBean bean = new AxiosResultBean();
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
-            bean.status = httpException.getmErrorCode()+"";
+            bean.status = httpException.getmErrorCode();
             bean.errorMsg = httpException.getmErrorMessage();
         } else if (e instanceof IrregularUrlException) {
             IrregularUrlException irregularUrlException = (IrregularUrlException) e;
-            bean.status = "9";
+            bean.status = 9;
             bean.errorMsg = irregularUrlException.getmErrosMeeage();
         }
 
@@ -210,7 +211,7 @@ public class EventFetch {
         try {
             AxiosResultBean bean = new AxiosResultBean();
             if (callBack != null && !TextUtils.isEmpty(response)) {
-                bean.status = code+"";
+                bean.status = code;
                 bean.errorMsg = "";
                 bean.data = JSON.parse(response);
                 callBack.invoke(bean);
@@ -219,7 +220,7 @@ public class EventFetch {
             e.printStackTrace();
             L.e("json 解析错误");
             AxiosResultBean bean = new AxiosResultBean();
-            bean.status = "-1";
+            bean.status = -1;
             bean.errorMsg = "json 解析错误";
             if (callBack != null) {
                 callBack.invoke(bean);
@@ -246,8 +247,6 @@ public class EventFetch {
 
     /**
      * 上传完成后 回调
-     *
-     * @param uploadResultBean
      */
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {
