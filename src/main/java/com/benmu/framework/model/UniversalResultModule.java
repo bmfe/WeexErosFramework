@@ -10,11 +10,11 @@ import java.io.Serializable;
 
 public class UniversalResultModule implements Serializable {
     private String errorMsg;
-    private String status;
+    private Object status;
     private Object data;
 
 
-    public UniversalResultModule(String errorMsg, String status, Object data) {
+    public UniversalResultModule(String errorMsg, int status, Object data) {
         this.errorMsg = errorMsg;
         this.status = status;
         this.data = data;
@@ -26,11 +26,12 @@ public class UniversalResultModule implements Serializable {
     }
 
     public static UniversalResultModule obtainSuccess(Object object) {
-        return new UniversalResultModule(null, "0", object);
+        return new UniversalResultModule(null, 0
+                , object);
     }
 
     public static UniversalResultModule obtainFailed(String errorMsg) {
-        return new UniversalResultModule(errorMsg, "9", null);
+        return new UniversalResultModule(errorMsg, 9, null);
     }
 
     public String getErrorMsg() {
@@ -41,11 +42,11 @@ public class UniversalResultModule implements Serializable {
         this.errorMsg = errorMsg;
     }
 
-    public String getStatus() {
+    public Object getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

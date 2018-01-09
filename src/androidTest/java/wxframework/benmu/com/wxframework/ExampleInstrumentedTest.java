@@ -1,8 +1,10 @@
 package wxframework.benmu.com.wxframework;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,4 +25,5 @@ public class ExampleInstrumentedTest {
 
         assertEquals("wxframework.benmu.com.wxframework.test", appContext.getPackageName());
     }
+
 }
