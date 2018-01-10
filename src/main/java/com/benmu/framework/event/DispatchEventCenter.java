@@ -25,6 +25,7 @@ import com.benmu.framework.event.router.EventCall;
 import com.benmu.framework.event.router.EventFinish;
 import com.benmu.framework.event.router.EventGetBackParams;
 import com.benmu.framework.event.router.EventGetParams;
+import com.benmu.framework.event.router.EventNav;
 import com.benmu.framework.event.router.EventOpen;
 import com.benmu.framework.event.router.EventOpenBrowser;
 import com.benmu.framework.event.router.EventRefresh;
@@ -232,6 +233,10 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_IMAGE_UPLOAD:
                 new EventFetch().uploadImage(params, context, weexEventBean.getJscallback());
                 break;
+            case WXConstant.WXEventCenter.EVENT_NAV:
+                new EventNav().nav(params,context);
+                break;
+
         }
     }
 

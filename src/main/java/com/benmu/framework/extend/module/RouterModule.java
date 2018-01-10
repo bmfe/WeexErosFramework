@@ -121,4 +121,12 @@ public class RouterModule extends WXModule {
         weexEventBean.setJsParams(params);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
+    @JSMethod(uiThread = true)
+    public void nav(String params){
+        WeexEventBean weexEventBean = new WeexEventBean();
+        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_NAV);
+        weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setJsParams(params);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
+    }
 }
