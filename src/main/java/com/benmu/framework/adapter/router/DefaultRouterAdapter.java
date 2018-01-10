@@ -14,6 +14,7 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.model.CallPhoneBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.TitleModel;
 import com.benmu.framework.model.WebViewParamBean;
@@ -127,27 +128,28 @@ public class DefaultRouterAdapter {
         return false;
     }
 
+    public static class  Model {
+        public String to;
+        public boolean tip;
+    }
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        int phone ;
-        boolean nowCall = true;
+        CallPhoneBean callPhone = null ;
         try {
-            phone = (int) parseManager.parseObject(params).get("to");
-            if (parseManager.parseObject(params).get("tip") != null) {
-                nowCall = (boolean) parseManager.parseObject(params).get("tip");
-            }
+            callPhone =  parseManager.parseObject(params,CallPhoneBean.class);
         } catch (Exception e) {
             e.printStackTrace();
-            phone = 110;
+            callPhone = new CallPhoneBean();
+            callPhone.to = "110";
         }
-        if (phone ==0|| context == null) return;
+        if (TextUtils.isEmpty(callPhone.to) || context == null) return;
 
-        final int finalPhone = phone;
+        final String finalPhone = callPhone.to;
 
-        if (!nowCall) {
+        if (!callPhone.tip) {
             callPhone(String.valueOf(finalPhone), context);
         } else {
-            ModalManager.BmAlert.showAlert(context, null, String.valueOf(phone), "呼叫", new DialogInterface
+            ModalManager.BmAlert.showAlert(context, null, String.valueOf(finalPhone), "呼叫", new DialogInterface
                     .OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
