@@ -84,5 +84,6 @@ public class WXConstant {
         public static final String EVENT_SET_HOMEPAGE = "EVENT_SET_HOMEPAGE";
         public static final String EVENT_IMAGE_PICK = "EVENT_IMAGE_PICK";
         public static final String EVENT_IMAGE_UPLOAD = "EVENT_IMAGE_UPLOAD";
+        public static final String EVENT_NAV="EVENT_NAV";
     }
 }
