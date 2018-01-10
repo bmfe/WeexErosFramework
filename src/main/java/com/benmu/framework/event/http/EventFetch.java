@@ -42,7 +42,7 @@ import okhttp3.Call;
 
 public class EventFetch {
     private JSCallback mUploadAvatar;
-
+    private Context mUploadContext;
 
     public void fetch(String params, final Context context, final JSCallback jscallback) {
 
@@ -231,6 +231,7 @@ public class EventFetch {
 
     public void uploadImage(String json, Context context, JSCallback jsCallback) {
         mUploadAvatar = jsCallback;
+        mUploadContext = context;
         UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
                 (json, UploadImageBean.class);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
@@ -253,7 +254,7 @@ public class EventFetch {
         if (uploadResultBean != null && mUploadAvatar != null) {
             JsPoster.postSuccess(uploadResultBean.data, mUploadAvatar);
         }
-
+        ModalManager.BmLoading.dismissLoading(mUploadContext);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         mUploadAvatar = null;
         ManagerFactory.getManagerService(PersistentManager.class).deleteCacheData(Constant
