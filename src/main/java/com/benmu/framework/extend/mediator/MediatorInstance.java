@@ -26,6 +26,7 @@ public class MediatorInstance {
         this.status = STATUS_DESTORY;
     }
 
+
     public WXSDKInstance getmInstance() {
         return mInstance;
     }

@@ -1,8 +1,11 @@
 package com.benmu.framework.event;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
+import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.event.auth.EventAuth;
 import com.benmu.framework.event.browse.EventBrowse;
@@ -70,11 +73,17 @@ public class DispatchEventCenter {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
     }
 
+    private Context safeContext(Context context) {
+        if (!(context instanceof Activity)) {
+            context = RouterTracker.peekActivity();
+        }
+        return context;
+    }
 
     @Subscribe
     public void onWeexEvent(WeexEventBean weexEventBean) {
         if (weexEventBean == null) return;
-        Context context = weexEventBean.getContext();
+        Context context = safeContext(weexEventBean.getContext());
         if (context == null) return;
         String params = weexEventBean.getJsParams();
         switch (weexEventBean.getKey()) {
@@ -234,7 +243,7 @@ public class DispatchEventCenter {
                 new EventFetch().uploadImage(params, context, weexEventBean.getJscallback());
                 break;
             case WXConstant.WXEventCenter.EVENT_NAV:
-                new EventNav().nav(params,context);
+                new EventNav().nav(params, context);
                 break;
 
         }

@@ -128,17 +128,16 @@ public class DefaultRouterAdapter {
         return false;
     }
 
-    public static class  Model {
+    public static class Model {
         public String to;
         public boolean tip;
     }
+
     public void dialing(final Context context, String params) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        CallPhoneBean callPhone = null ;
-        try {
-            callPhone =  parseManager.parseObject(params,CallPhoneBean.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+        CallPhoneBean callPhone = null;
+        callPhone = parseManager.parseObject(params, CallPhoneBean.class);
+        if (callPhone == null) {
             callPhone = new CallPhoneBean();
             callPhone.to = "110";
         }
@@ -149,14 +148,15 @@ public class DefaultRouterAdapter {
         if (!callPhone.tip) {
             callPhone(String.valueOf(finalPhone), context);
         } else {
-            ModalManager.BmAlert.showAlert(context, null, String.valueOf(finalPhone), "呼叫", new DialogInterface
-                    .OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    callPhone(String.valueOf(finalPhone), context);
-                    dialog.dismiss();
-                }
-            }, "取消", null, null, null);
+            ModalManager.BmAlert.showAlert(context, null, String.valueOf(finalPhone), "呼叫", new
+                    DialogInterface
+                            .OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            callPhone(String.valueOf(finalPhone), context);
+                            dialog.dismiss();
+                        }
+                    }, "取消", null, null, null);
         }
     }
 
