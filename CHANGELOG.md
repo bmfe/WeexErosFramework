@@ -105,7 +105,8 @@
 6. 修复预览本地图片问题。
 7. 修改返回格式status问题
 
-
+# 2.0.9
+1. 动态修改activity category  无需在启动activity时进行选择
 
 
 

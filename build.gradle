@@ -5,6 +5,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
+        buildConfigField "String","PAGE_PREFIX" , "\"${APPLICATION_ID}\""
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
