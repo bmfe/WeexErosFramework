@@ -238,7 +238,7 @@ public class EventFetch {
         ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
                 .class);
         ArrayList<ImageItem> items = new ArrayList<>();
-        for (String path : bean.images) {
+        for (String path : bean.source) {
             ImageItem item = new ImageItem();
             item.path = path;
             items.add(item);
