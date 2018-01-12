@@ -12,9 +12,12 @@ import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -28,6 +31,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -117,6 +121,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private Handler mHandler = new Handler(this);
     private long mLastTime, mCurTime; // 调试按钮点击时间
     private ImagePicker imagePicker;
+    private BroadcastReceiver mReloadReceiver;
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -147,6 +152,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initDebug();
         initPush();
         imagePicker = ImagePicker.getInstance();
+        mReloadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                renderPage();
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
+                IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
     }
 
     private void initPush() {
@@ -337,7 +350,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         Intent intent = new Intent(WXConstant.ACTION_WEEX_REFRESH);
         intent.putExtra("instanceId", mWXInstance.getInstanceId());
         dispatchEventManager.getBus().post(intent);
-        createWXInstance();
         renderPage();
     }
 
@@ -418,8 +430,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 options,
                 null,
                 WXRenderStrategy.APPEND_ASYNC);
-        Uri parse = Uri.parse("/www.baidu.com");
-        Log.e("testUri",">>>>>>>"+parse.isRelative());
     }
 
 
@@ -746,7 +756,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         UploadResultBean bean = new UploadResultBean();
         List<String> data = new ArrayList<>();
         for (ImageItem path : items) {
-            data.add("file://"+path.path);
+            data.add("file://" + path.path);
         }
         bean.data = data;
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(bean);
