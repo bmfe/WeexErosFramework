@@ -83,7 +83,7 @@ public class EventAuth {
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            JsPoster.postFailed(mCallback);
+            JsPoster.postFailed(t.getMessage(),mCallback);
 //            bean.setResCode(9);
 //            invoke(bean);
             mProgressDialog.dismiss();
