@@ -746,7 +746,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         UploadResultBean bean = new UploadResultBean();
         List<String> data = new ArrayList<>();
         for (ImageItem path : items) {
-            data.add("file://"+path.path);
+            data.add(path.path);
         }
         bean.data = data;
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(bean);
