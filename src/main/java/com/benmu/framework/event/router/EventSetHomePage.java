@@ -29,11 +29,12 @@ public class EventSetHomePage {
         RouterModel router = new RouterModel(homePage, Constant.ACTIVITIES_ANIMATION
                 .ANIMATION_PUSH, null, null, false, null);
         Intent intent = performStartActivity(router, Constant.BMPAGE_CATEGORY);
-        PendingIntent restartIntent = PendingIntent.getActivity(
-                context.getApplicationContext(), 0, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
-                restartIntent);
+        context.startActivity(intent);
+//        PendingIntent restartIntent = PendingIntent.getActivity(
+//                context.getApplicationContext(), 0, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
+//                restartIntent);
     }
 
     private Intent performStartActivity(RouterModel routerModel, String bmpageCategory) {
@@ -48,7 +49,7 @@ public class EventSetHomePage {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.putExtra(Constant.ROUTERPARAMS, routerModel);
         intent.setData(pathUri);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(bmpageCategory);
         return intent;
     }

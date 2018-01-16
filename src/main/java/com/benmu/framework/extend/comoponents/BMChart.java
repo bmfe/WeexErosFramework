@@ -108,7 +108,8 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     @WXComponentProp(name = "chartInfo")
     public void setChartInfo(String info) {
         if (!TextUtils.isEmpty(mCharInfo) && !mCharInfo.equals(info)) {
-            mWeb.reload();
+//            mWeb.reload();
+            mWeb.loadUrl("javascript:setOption(" + info + ")");
         }
         this.mCharInfo = info;
     }
