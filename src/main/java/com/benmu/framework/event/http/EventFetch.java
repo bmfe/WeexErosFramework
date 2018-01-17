@@ -2,6 +2,7 @@ package com.benmu.framework.event.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -239,7 +240,11 @@ public class EventFetch {
         ImageManager imageManager = ManagerFactory.getManagerService(ImageManager
                 .class);
         ArrayList<ImageItem> items = new ArrayList<>();
-        for (String path : bean.source) {
+        if (bean.images == null || bean.images.size() == 0) {
+            Toast.makeText(context, "没传递上传的图片~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        for (String path : bean.images) {
             ImageItem item = new ImageItem();
             item.path = path;
             items.add(item);

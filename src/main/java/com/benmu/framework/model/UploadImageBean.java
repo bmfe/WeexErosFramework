@@ -13,5 +13,5 @@ public class UploadImageBean implements Serializable {
     public boolean allowCrop;//是否需要剪切为圆形
     public String params; //上传附带参数 json
     public String header;
-    public List<String> source; // 上传图片本地地址列表
+    public List<String> images; // 上传图片本地地址列表
 }
