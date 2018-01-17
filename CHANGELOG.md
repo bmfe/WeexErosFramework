@@ -109,6 +109,8 @@
 1. 动态修改activity category  无需在启动activity时进行选择
 2. 修复debug invalidate instance报错
 3. 集成weex性能分析（摇一摇开启）
+4. 修改setHomePage 返回无效问题
+5. 修改上传图片返回字符串改为对象
 
 
 
