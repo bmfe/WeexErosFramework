@@ -107,6 +107,8 @@
 
 # 2.0.9
 1. 动态修改activity category  无需在启动activity时进行选择
+2. 修复debug invalidate instance报错
+3. 集成weex性能分析（摇一摇开启）
 
 
 

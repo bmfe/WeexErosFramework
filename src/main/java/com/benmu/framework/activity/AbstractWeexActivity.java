@@ -4,6 +4,7 @@ import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 
@@ -122,6 +123,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private long mLastTime, mCurTime; // 调试按钮点击时间
     private ImagePicker imagePicker;
     private BroadcastReceiver mReloadReceiver;
+    protected WXAnalyzerDelegate mWxAnalyzerDelegate;
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -160,6 +162,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
                 IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
+        mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
+        mWxAnalyzerDelegate.onCreate();
     }
 
     private void initPush() {
@@ -494,6 +498,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onResume();
+        }
+
         MobclickAgent.onResume(this);
 
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
@@ -511,6 +519,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
         }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onStart();
+        }
     }
 
     @Override
@@ -522,6 +534,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillDisappear(mWXInstance, mRouterType);
+        }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onPause();
         }
         MobclickAgent.onPause(this);
     }
@@ -536,6 +552,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
         }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onStop();
+        }
     }
 
     @Override
@@ -547,6 +567,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mDebugger != null) {
             mDebugger.close();
         }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onDestroy();
+        }
         if (isHomePage) {
             BMWXApplication.getWXApplication().isRecordHomeActivity = false;
             isHomePage = false;
@@ -555,6 +579,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
+        View wrappedView = null;
+        if (mWxAnalyzerDelegate != null) {
+            wrappedView = mWxAnalyzerDelegate.onWeexViewCreated(mWXInstance, view);
+        }
+
+        if (wrappedView != null) {
+            view = wrappedView;
+        }
         if (view != null && view.getParent() == null) {
             mContainer.addView(view);
         }
@@ -574,6 +606,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
         //do some report
         GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onWeexRenderSuccess(instance);
+        }
     }
 
     @Override
@@ -592,6 +628,17 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         errorDialog.setTextMsg(errorMsg);
         errorDialog.show();
 
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onException(instance, errCode, msg);
+        }
+
+    }
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return (mWxAnalyzerDelegate != null && mWxAnalyzerDelegate.onKeyUp(keyCode, event)) ||
+                super.onKeyUp(keyCode, event);
     }
 
     @Override

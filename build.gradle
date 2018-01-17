@@ -78,4 +78,7 @@ dependencies {
 
     //bs patch
     compile 'me.ele:bspatch:1.0.6'
+
+    //weex analyzer
+    debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
 }
