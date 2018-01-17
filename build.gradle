@@ -5,6 +5,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
+        buildConfigField "String","PAGE_PREFIX" , "\"${APPLICATION_ID}\""
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
@@ -77,4 +78,7 @@ dependencies {
 
     //bs patch
     compile 'me.ele:bspatch:1.0.6'
+
+    //weex analyzer
+    debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
 }

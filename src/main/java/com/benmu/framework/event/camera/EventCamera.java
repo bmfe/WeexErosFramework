@@ -1,5 +1,6 @@
 package com.benmu.framework.event.camera;
 
+import com.benmu.framework.utils.TextUtil;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import android.app.Activity;
@@ -21,6 +22,7 @@ import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.JsPoster;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
+
 
 /**
  * Created by Carry on 2017/8/16.
@@ -84,10 +86,10 @@ public class EventCamera {
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {
         if (uploadResultBean != null && mUploadAvatar != null) {
-            JsPoster.postSuccess(uploadResultBean.data,mUploadAvatar);
+            JsPoster.postSuccess(TextUtil.conversionObject(uploadResultBean.data), mUploadAvatar);
         }
         if (uploadResultBean != null && mScreenShotCallback != null) {
-            JsPoster.postSuccess(uploadResultBean.data,mScreenShotCallback);
+            JsPoster.postSuccess(uploadResultBean.data, mScreenShotCallback);
         }
 
         ModalManager.BmLoading.dismissLoading(mUploadContext);
@@ -97,4 +99,5 @@ public class EventCamera {
         ManagerFactory.getManagerService(PersistentManager.class).deleteCacheData(Constant
                 .ImageConstants.UPLOAD_IMAGE_BEAN);
     }
+
 }

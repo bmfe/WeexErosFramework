@@ -26,6 +26,7 @@ import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.JsPoster;
+import com.benmu.framework.utils.TextUtil;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
@@ -252,7 +253,7 @@ public class EventFetch {
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {
         if (uploadResultBean != null && mUploadAvatar != null) {
-            JsPoster.postSuccess(uploadResultBean.data, mUploadAvatar);
+            JsPoster.postSuccess(TextUtil.conversionObject(uploadResultBean.data), mUploadAvatar);
         }
         ModalManager.BmLoading.dismissLoading(mUploadContext);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);

@@ -4,6 +4,7 @@ import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 
@@ -12,9 +13,12 @@ import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -28,6 +32,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -117,6 +122,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private Handler mHandler = new Handler(this);
     private long mLastTime, mCurTime; // 调试按钮点击时间
     private ImagePicker imagePicker;
+    private BroadcastReceiver mReloadReceiver;
+    protected WXAnalyzerDelegate mWxAnalyzerDelegate;
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -136,10 +143,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         super.onCreate(savedInstanceState);
         mAct = this;
         mRouterType = GlobalEventManager.TYPE_OPEN;
-        if (!BMWXApplication.getWXApplication().isRecordHomeActivity) {
-            BMWXApplication.getWXApplication().isRecordHomeActivity = true;
-            isHomePage = true;
-        }
         Intent data = getIntent();
         initRouterParams(data);
         initUrl(data);
@@ -147,6 +150,16 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initDebug();
         initPush();
         imagePicker = ImagePicker.getInstance();
+        mReloadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                renderPage();
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
+                IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
+        mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
+        mWxAnalyzerDelegate.onCreate();
     }
 
     private void initPush() {
@@ -418,8 +431,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 options,
                 null,
                 WXRenderStrategy.APPEND_ASYNC);
-        Uri parse = Uri.parse("/www.baidu.com");
-        Log.e("testUri",">>>>>>>"+parse.isRelative());
     }
 
 
@@ -484,6 +495,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onResume();
+        }
+
         MobclickAgent.onResume(this);
 
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
@@ -501,6 +516,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
         }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onStart();
+        }
     }
 
     @Override
@@ -512,6 +531,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillDisappear(mWXInstance, mRouterType);
+        }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onPause();
         }
         MobclickAgent.onPause(this);
     }
@@ -526,6 +549,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
         }
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onStop();
+        }
     }
 
     @Override
@@ -537,14 +564,22 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mDebugger != null) {
             mDebugger.close();
         }
-        if (isHomePage) {
-            BMWXApplication.getWXApplication().isRecordHomeActivity = false;
-            isHomePage = false;
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onDestroy();
         }
     }
 
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
+        View wrappedView = null;
+        if (mWxAnalyzerDelegate != null) {
+            wrappedView = mWxAnalyzerDelegate.onWeexViewCreated(mWXInstance, view);
+        }
+
+        if (wrappedView != null) {
+            view = wrappedView;
+        }
         if (view != null && view.getParent() == null) {
             mContainer.addView(view);
         }
@@ -564,6 +599,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
         //do some report
         GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
+
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onWeexRenderSuccess(instance);
+        }
     }
 
     @Override
@@ -582,6 +621,17 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         errorDialog.setTextMsg(errorMsg);
         errorDialog.show();
 
+        if (mWxAnalyzerDelegate != null) {
+            mWxAnalyzerDelegate.onException(instance, errCode, msg);
+        }
+
+    }
+
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return (mWxAnalyzerDelegate != null && mWxAnalyzerDelegate.onKeyUp(keyCode, event)) ||
+                super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -746,7 +796,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         UploadResultBean bean = new UploadResultBean();
         List<String> data = new ArrayList<>();
         for (ImageItem path : items) {
-            data.add("file://"+path.path);
+            data.add(path.path);
         }
         bean.data = data;
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(bean);
@@ -850,7 +900,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (isHomePage && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
+            if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
                 GlobalEventManager.homeBack(getWXSDkInstance());
                 return true;
             }
@@ -858,4 +908,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         return super.onKeyDown(keyCode, event);
     }
 
+    private boolean isHomePage() {
+        String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage();
+        homePage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
+                "/dist/js" + homePage;
+        return homePage.equals(this.mPageUrl);
+    }
 }

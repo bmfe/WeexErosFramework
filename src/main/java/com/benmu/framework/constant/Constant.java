@@ -1,5 +1,7 @@
 package com.benmu.framework.constant;
 
+import com.benmu.framework.BuildConfig;
+
 /**
  * Created by Carry on 2017/8/7.
  */
@@ -181,11 +183,11 @@ public class Constant {
     }
 
 
-    public static final String BMPAGE_CATEGORY = "com.benmu.weex.example.categoty.page";
+    public static final String BMPAGE_CATEGORY = BuildConfig.PAGE_PREFIX + ".categoty.page";
 
-    public static final String BMWEBVIEW_CATEGORY = "com.benmu.weex.example.category.web";
+    public static final String BMWEBVIEW_CATEGORY = BuildConfig.PAGE_PREFIX + ".category.web";
 
-    public static final String BMDEBUG_CATEGORY = "com.benmu.weex.example.category.debug";
+    public static final String BMDEBUG_CATEGORY = BuildConfig.PAGE_PREFIX + ".category.debug";
 
 
     public static final class ACTIVITIES_ANIMATION {
