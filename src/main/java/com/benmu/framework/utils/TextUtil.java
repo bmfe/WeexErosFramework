@@ -13,7 +13,11 @@ public class TextUtil {
     public static List<Object> conversionObject(List<String> data) {
         List<Object> mData = new ArrayList<>();
         for (String d : data) {
-            mData.add(JSON.parse(d));
+            try {
+                mData.add(JSON.parse(d));
+            } catch (Exception e) {
+                mData.add(d);
+            }
         }
         return mData;
 

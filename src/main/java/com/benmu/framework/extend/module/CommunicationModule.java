@@ -33,12 +33,13 @@ public class CommunicationModule extends WXModule {
     }
 
     @JSMethod
-    public void sms( String params, JSCallback callback) {
+    public void sms(String recipients, String params, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_COMMUNICATION_SMS);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJsParams(params);
         weexEventBean.setJscallback(callback);
+        weexEventBean.setExpand(recipients);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
 
