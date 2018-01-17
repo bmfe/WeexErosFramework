@@ -143,10 +143,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         super.onCreate(savedInstanceState);
         mAct = this;
         mRouterType = GlobalEventManager.TYPE_OPEN;
-        if (!BMWXApplication.getWXApplication().isRecordHomeActivity) {
-            BMWXApplication.getWXApplication().isRecordHomeActivity = true;
-            isHomePage = true;
-        }
         Intent data = getIntent();
         initRouterParams(data);
         initUrl(data);
@@ -354,6 +350,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         Intent intent = new Intent(WXConstant.ACTION_WEEX_REFRESH);
         intent.putExtra("instanceId", mWXInstance.getInstanceId());
         dispatchEventManager.getBus().post(intent);
+        createWXInstance();
         renderPage();
     }
 
@@ -570,10 +567,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
         if (mWxAnalyzerDelegate != null) {
             mWxAnalyzerDelegate.onDestroy();
-        }
-        if (isHomePage) {
-            BMWXApplication.getWXApplication().isRecordHomeActivity = false;
-            isHomePage = false;
         }
     }
 
@@ -907,7 +900,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (isHomePage && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
+            if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
                 GlobalEventManager.homeBack(getWXSDkInstance());
                 return true;
             }
@@ -915,4 +908,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         return super.onKeyDown(keyCode, event);
     }
 
+    private boolean isHomePage() {
+        String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage();
+        homePage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
+                "/dist/js" + homePage;
+        return homePage.equals(this.mPageUrl);
+    }
 }
