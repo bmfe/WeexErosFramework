@@ -318,7 +318,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
         BMRadiusTransfer radiusTransfer = new BMRadiusTransfer(WXEnvironment.getApplication(),
                 view);
         BitmapPool bitmapPool = Glide.get(WXEnvironment.getApplication()).getBitmapPool();
-        Glide.with(WXEnvironment.getApplication()).load(url).asGif().transform(new
+        BMHookGlide.load(WXEnvironment.getApplication(),url).asGif().transform(new
                 GifDrawableTransformation(radiusTransfer, bitmapPool)).into(view);
 
         if (mStrategy != null && mStrategy.getImageListener() != null) {
