@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
@@ -122,9 +123,11 @@ public class BMWXEngine {
     private static void engineStart(Application app) {
         WXSDKEngine.initialize(app,
                 new InitConfig.Builder()
-                        .setImgAdapter(new DefaultWXImageAdapter()).setHttpAdapter(new
-                        DefaultWXHttpAdapter(app)).setWebSocketAdapterFactory(new
-                        LightlyWebSocketFactory()).setTypefaceAdapter(new BMTypefaceAdapter(app))
+                        .setImgAdapter(new DefaultWXImageAdapter())
+                        .setHttpAdapter(new DefaultWXHttpAdapter(app))
+                        .setWebSocketAdapterFactory(new LightlyWebSocketFactory())
+                        .setTypefaceAdapter(new BMTypefaceAdapter(app))
+                        .setURIAdapter(new BMDefaultUriAdapter())
                         .build()
         );
     }

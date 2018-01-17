@@ -245,7 +245,9 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_NAV:
                 new EventNav().nav(params, context);
                 break;
+            default:
 
+                break;
         }
     }
 
