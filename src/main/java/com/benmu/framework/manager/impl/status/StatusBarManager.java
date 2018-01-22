@@ -91,6 +91,7 @@ public class StatusBarManager extends Manager {
     public static void setOffset(Context context, View v, boolean puls) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) v
                 .getLayoutParams();
+        if (layoutParams == null) return;
         int statusBarHeight = getStatusBarHeight(context);
         if (puls) {
             layoutParams.setMargins(0, statusBarHeight, 0, 0);
