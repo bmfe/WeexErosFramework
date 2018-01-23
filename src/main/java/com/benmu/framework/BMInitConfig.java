@@ -1,6 +1,7 @@
 package com.benmu.framework;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Carry on 2017/8/23.
@@ -8,17 +9,17 @@ import java.util.HashMap;
 
 public class BMInitConfig {
 
-    private HashMap<String, String> mEnvs;
+    private Map<String, String> mEnvs;
     private String mActice;
 
     private BMInitConfig() {
     }
 
-    public HashMap<String, String> getmEnvs() {
+    public Map<String, String> getmEnvs() {
         return mEnvs;
     }
 
-    public void setmEnvs(HashMap<String, String> mEnvs) {
+    public void setmEnvs(Map<String, String> mEnvs) {
         this.mEnvs = mEnvs;
     }
 

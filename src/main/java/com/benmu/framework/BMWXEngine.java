@@ -22,6 +22,7 @@ import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.dom.RichTextDomObject;
@@ -32,6 +33,7 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import me.ele.patch.BsPatch;
 
@@ -148,10 +150,11 @@ public class BMWXEngine {
 
     private static void initConing(Application context, BMInitConfig initConfig) {
         if (initConfig == null) return;
+        initConfig.setmEnvs(WXEnvironment.getConfig());
         initEnv(initConfig.getmEnvs(), context);
     }
 
-    private static void initEnv(HashMap<String, String> Env, Context context) {
+    private static void initEnv(Map<String, String> Env, Context context) {
         HashMap<String, String> insideEnv = new HashMap<>();
         insideEnv.put(Constant.CustomOptions.CUSTOM_APPNAME, BMWXEnvironment.mPlatformConfig
                 .getAppName());
@@ -171,6 +174,11 @@ public class BMWXEngine {
                 .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 44)) + "");
         insideEnv.put(Constant.CustomOptions.CUSTOM_JSVERSION, AppUtils.getJsVersion(context));
         insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEID, AppUtils.getDeviceId(context));
+        String fontSize = SharePreferenceUtil.getAppFontSizeOption(context);
+        insideEnv.put(Constant.CustomOptions.CUSTOM_FONTSIZE, fontSize);
+        insideEnv.put(Constant.CustomOptions.CUSTOM_FONTSCALE, BaseCommonUtil.getScaleByFontsize
+                (fontSize) + "");
+
         if (Env != null && !Env.isEmpty()) {
             insideEnv.putAll(Env);
         }

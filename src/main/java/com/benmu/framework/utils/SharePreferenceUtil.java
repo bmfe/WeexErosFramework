@@ -108,7 +108,7 @@ public class SharePreferenceUtil {
         if (context != null) {
             SharedPreferences sharedPreferences = context.getSharedPreferences(Constant
                     .SP.SP_NATIVE_NAME, Context.MODE_PRIVATE);
-            return sharedPreferences.getString(Constant.SP.SP_FONTSIZE, null);
+            return sharedPreferences.getString(Constant.SP.SP_FONTSIZE, "NORM");
         }
         return null;
     }
