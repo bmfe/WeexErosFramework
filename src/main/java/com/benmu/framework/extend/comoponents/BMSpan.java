@@ -7,6 +7,7 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXVContainer;

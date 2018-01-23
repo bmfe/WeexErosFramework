@@ -20,6 +20,7 @@ import com.taobao.weex.dom.WXLineHeightSpan;
 import com.taobao.weex.dom.WXStyle;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXTextDecoration;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -145,9 +146,7 @@ public class BMRichUtil {
 
     private void updateStyleImp(Map<String, Object> style) {
         if (style != null) {
-            if (style.containsKey(Constants.Name.FONT_SIZE)) {
-                mFontSize = WXStyle.getFontSize(style, mViewPortWidth);
-            }
+            mFontSize = WXStyle.getFontSize(style, mViewPortWidth);
             if (style.containsKey(Constants.Name.FONT_WEIGHT)) {
                 mFontWeight = WXStyle.getFontWeight(style);
             }
