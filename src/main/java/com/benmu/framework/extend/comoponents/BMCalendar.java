@@ -72,7 +72,7 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
         materialCalendarView.setPastButtonTextColor(Color.parseColor("#000000"));
         materialCalendarView.setFutureButtonTextColor(Color.parseColor("#000000"));
         materialCalendarView.setTitleTextColor(Color.parseColor("#000000"));
-        materialCalendarView.setSelectionColor(ColorUtils.getColor("#07ae9c"));
+        materialCalendarView.setSelectionColor(ColorUtils.getColor("#aa07ae9c"));
         materialCalendarView.setTitleAnimationOrientation(MaterialCalendarView.HORIZONTAL);
         materialCalendarView.setOnDateChangedListener(this);
         mBuilder = materialCalendarView.newState();
@@ -223,7 +223,7 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
         if (!TextUtils.isEmpty(selectColor)) {
             c = selectColor;
         }
-        materialCalendarView.setSelectionColor(ColorUtils.getColor(c));
+        materialCalendarView.setCheckColor(c);
     }
 
     @Override
@@ -295,6 +295,7 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
         if (TYPE_SINGLE.equals(mSeclectType)) {
             Map<String, String> params = new HashMap<>();
             params.put("startDate", DateFormatUtil.dateToStr(date.getDate(), mDateFormat));
+            params.put("endDate", DateFormatUtil.dateToStr(date.getDate(), mDateFormat));
             fireSelectFinish(params);
         }
     }
