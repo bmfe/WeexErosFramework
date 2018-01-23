@@ -23,6 +23,9 @@ import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.common.WXException;
+import com.taobao.weex.dom.RichTextDomObject;
+import com.taobao.weex.dom.WXTextDomObject;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
@@ -118,7 +121,18 @@ public class BMWXEngine {
         CustomerEnvOptionManager.init(context);
         CustomerEnvOptionManager.registerComponents(CustomerEnvOptionManager.getComponents());
         CustomerEnvOptionManager.registerModules(CustomerEnvOptionManager.getModules());
+        try {
+            registerCustomDomObject();
+        } catch (WXException e) {
+            e.printStackTrace();
+        }
     }
+    private static void registerCustomDomObject() throws WXException {
+        WXSDKEngine.registerDomObject("bmtext", WXTextDomObject.class);
+        WXSDKEngine.registerDomObject("bmspan", WXTextDomObject.class);
+        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
+    }
+
 
     private static void engineStart(Application app) {
         WXSDKEngine.initialize(app,

@@ -38,6 +38,7 @@ import java.util.List;
  */
 
 public class BMRich extends WXVContainer<LinearLayout> {
+
     private BMWXTextView richText;
     private SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
     private List<RichTextDomObject.BMRichSpan> mSpans = new ArrayList<>();
@@ -249,5 +250,4 @@ public class BMRich extends WXVContainer<LinearLayout> {
             mSubCount = WXUtils.getInt(subCount);
         }
     }
-
 }

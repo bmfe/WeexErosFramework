@@ -21,7 +21,7 @@
     <module name="bmPay">com.benmu.framework.extend.module.PayModule</module>
     <module name="bmStorage">com.benmu.framework.extend.module.StorageModule</module>
     <module name="bmShare">com.benmu.framework.extend.module.ShareModule</module>
-    <module name="bmAppConfig">com.benmu.framework.extend.module.AppConfigModule</module>
+    <module name="bmFont">com.benmu.framework.extend.module.AppConfigModule</module>
     <module name="bmEvents">com.benmu.framework.extend.module.EventModule</module>
     <module name="bmBrowserImg">com.benmu.framework.extend.module.BrowserImgModule</module>
     <module name="bmTool">com.benmu.framework.extend.module.ToolModule</module>

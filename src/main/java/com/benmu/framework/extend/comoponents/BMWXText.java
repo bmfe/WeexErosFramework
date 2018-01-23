@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Created by Carry on 17/3/27.
  */
-
 public class BMWXText extends WXComponent<BMWXTextView> {
     public BMWXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
         super(instance, dom, parent);
@@ -260,3 +259,5 @@ public class BMWXText extends WXComponent<BMWXTextView> {
     }
 
 }
+
+

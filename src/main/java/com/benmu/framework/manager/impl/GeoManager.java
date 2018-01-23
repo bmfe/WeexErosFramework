@@ -142,8 +142,8 @@ public class GeoManager extends Manager implements AMapLocationListener {
                     .str_locate_success);
             bean.resCode = 0;
             GeoResultBean.Geo geo = new GeoResultBean().new Geo();
-            geo.setLat(aMapLocation.getLatitude());
-            geo.setLng(aMapLocation.getLongitude());
+            geo.setLocationLat(aMapLocation.getLatitude());
+            geo.setLocationLng(aMapLocation.getLongitude());
             bean.setData(geo);
         } else {
             //locate failed
