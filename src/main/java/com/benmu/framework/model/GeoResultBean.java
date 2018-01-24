@@ -11,20 +11,20 @@ public class GeoResultBean extends BaseResultBean {
         private double locationLat;
         private double locationLng;
 
-        public double getLat() {
+        public double getLocationLat() {
             return locationLat;
         }
 
-        public void setLat(double lat) {
-            this.locationLat = lat;
+        public void setLocationLat(double locationLat) {
+            this.locationLat = locationLat;
         }
 
-        public double getLng() {
+        public double getLocationLng() {
             return locationLng;
         }
 
-        public void setLng(double lng) {
-            this.locationLng = lng;
+        public void setLocationLng(double locationLng) {
+            this.locationLng = locationLng;
         }
     }
 

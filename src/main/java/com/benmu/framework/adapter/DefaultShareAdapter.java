@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ModalManager;
@@ -62,7 +63,7 @@ public class DefaultShareAdapter {
         if (shareInfo == null) return;
         if (shareInfo.isPopUp()) {
             if (shareInfo.getPlatforms() == null || shareInfo.getPlatforms().size() > 1) {
-                JsPoster.postFailed("请确定分享平台",fail);
+                JsPoster.postFailed("请确定分享平台", fail);
                 return;
             }
             shareDirectly(shareInfo, shareInfo.getPlatforms().get(0));
@@ -167,6 +168,10 @@ public class DefaultShareAdapter {
 
     private void startUmweb(ShareInfoBean shareInfo, SHARE_MEDIA mPlatform, UMShareListener
             shareListener) {
+        if (!BMWXEnvironment.mPlatformConfig.getUmeng().isUmengAvailable()) {
+            shareListener.onError(mPlatform, new Exception("未设置umeng三方appKey"));
+            return;
+        }
         mUMWeb = new UMWeb(shareInfo.getUrl());
         mUMWeb.setTitle(shareInfo.getTitle());
         mUMWeb.setDescription(shareInfo.getContent());

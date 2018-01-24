@@ -74,7 +74,6 @@ public class BMSpan extends WXComponent<View> {
             ds.setUnderlineText(false);    //去除超链接的下划线
         }
     }
-
 }
 
 

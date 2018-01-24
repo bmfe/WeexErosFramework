@@ -6,7 +6,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import com.benmu.framework.utils.DateFormatUtil;
+import com.benmu.framework.utils.TextUtil;
+import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.calendar.CalendarDay;
 import com.benmu.widget.view.calendar.MaterialCalendarView;
 import com.benmu.widget.view.calendar.OnDateSelectedListener;
@@ -18,6 +21,7 @@ import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.utils.WXUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,9 +72,9 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
         materialCalendarView.setPastButtonTextColor(Color.parseColor("#000000"));
         materialCalendarView.setFutureButtonTextColor(Color.parseColor("#000000"));
         materialCalendarView.setTitleTextColor(Color.parseColor("#000000"));
+        materialCalendarView.setSelectionColor(ColorUtils.getColor("#aa07ae9c"));
         materialCalendarView.setTitleAnimationOrientation(MaterialCalendarView.HORIZONTAL);
         materialCalendarView.setOnDateChangedListener(this);
-        materialCalendarView.setSelectionColor(Color.parseColor("#aa07ae9c"));
         mBuilder = materialCalendarView.newState();
     }
 
@@ -181,11 +185,76 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
     protected boolean setProperty(String key, Object param) {
         switch (key) {
             case "monthColor":
+                //月份颜色
                 String monthColor = WXUtils.getString(param, null);
-                Log.e("monthColor", "monthColor>>" + monthColor);
+                setMonthColor(monthColor);
                 return true;
+            case "weekColor":
+                //周几颜色
+                String weekColor = WXUtils.getString(param, null);
+                setWeekColor(weekColor);
+                return true;
+
+            case "weekBgColor":
+                //星期背景颜色
+                String weekBgColor = WXUtils.getString(param, null);
+                setWeekBackground(weekBgColor);
+                return true;
+
+            case "weekdayColor":
+                String weekdayColor = WXUtils.getString(param, null);
+                materialCalendarView.setWeekdayTextColor(weekdayColor);
+                return true;
+            case "weekendColor":
+                String weekendColor = WXUtils.getString(param, null);
+                materialCalendarView.setWeekendTextColor(weekendColor);
+                return true;
+            case "selectColor":
+                String selectColor = WXUtils.getString(param, null);
+                setSelectColor(selectColor);
+                return true;
+
         }
         return super.setProperty(key, param);
+    }
+
+    private void setSelectColor(String selectColor) {
+        String c = "#07ae9c";
+        if (!TextUtils.isEmpty(selectColor)) {
+            c = selectColor;
+        }
+        materialCalendarView.setCheckColor(c);
+    }
+
+    @Override
+    protected Object convertEmptyProperty(String propName, Object originalValue) {
+        switch (propName) {
+            case "weekdayColor":
+            case "weekendColor":
+                materialCalendarView.setWeekdayTextColor("#000000");
+                return "#000000";
+            case "selectColor":
+                break;
+
+        }
+        return super.convertEmptyProperty(propName, originalValue);
+    }
+
+    private void setWeekBackground(String weekBgColor) {
+        if (TextUtils.isEmpty(weekBgColor)) return;
+        materialCalendarView.setWeekViewBackground(ColorUtils.getColor(weekBgColor));
+    }
+
+    private void setMonthColor(String monthColor) {
+        Log.e("monthColor", "monthColor>>" + monthColor);
+        if (TextUtils.isEmpty(monthColor)) return;
+        materialCalendarView.setTitleTextColor(ColorUtils.getColor(monthColor));
+
+    }
+
+    private void setWeekColor(String weekColor) {
+        if (TextUtils.isEmpty(weekColor)) return;
+        materialCalendarView.setWeekViewColor(ColorUtils.getColor(weekColor));
     }
 
     @JSMethod
@@ -226,6 +295,7 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
         if (TYPE_SINGLE.equals(mSeclectType)) {
             Map<String, String> params = new HashMap<>();
             params.put("startDate", DateFormatUtil.dateToStr(date.getDate(), mDateFormat));
+            params.put("endDate", DateFormatUtil.dateToStr(date.getDate(), mDateFormat));
             fireSelectFinish(params);
         }
     }

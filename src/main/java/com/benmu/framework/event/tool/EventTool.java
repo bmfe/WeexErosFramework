@@ -27,7 +27,7 @@ public class EventTool {
         boolean weChatInstall = BaseCommonUtil.isWeChatInstall(context);
 
         if (weChatInstall) {
-            JsPoster.postSuccess(null, jsCallback);
+            JsPoster.postSuccess(true, jsCallback);
         } else {
             JsPoster.postFailed(jsCallback);
         }

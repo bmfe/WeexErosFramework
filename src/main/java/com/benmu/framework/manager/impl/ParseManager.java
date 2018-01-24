@@ -31,4 +31,14 @@ public class ParseManager extends Manager {
         return null;
     }
 
+    public Object parse(String s) {
+        try {
+            return JSON.parse(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return s;
+    }
+
 }

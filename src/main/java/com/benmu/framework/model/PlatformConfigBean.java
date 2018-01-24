@@ -104,7 +104,8 @@ public class PlatformConfigBean implements Serializable {
 
         public String getHomePage() {
             StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
-            String page = storageManager.getData(BMWXApplication.getWXApplication(), Constant.SP.SP_HOMEPAGE_URL);
+            String page = storageManager.getData(BMWXApplication.getWXApplication(), Constant.SP
+                    .SP_HOMEPAGE_URL);
             if (TextUtils.isEmpty(page)) {
                 page = homePage;
             }
@@ -209,6 +210,10 @@ public class PlatformConfigBean implements Serializable {
         public void setAppSecret(String appSecret) {
             this.appSecret = appSecret;
         }
+
+        public boolean isWechatAvailable() {
+            return enabled && !TextUtils.isEmpty(appId) && !TextUtils.isEmpty(appSecret);
+        }
     }
 
     public class Umeng {
@@ -230,6 +235,10 @@ public class PlatformConfigBean implements Serializable {
         public void setAndroidAppKey(String androidAppKey) {
             this.androidAppKey = androidAppKey;
         }
+
+        public boolean isUmengAvailable() {
+            return enabled && !TextUtils.isEmpty(androidAppKey);
+        }
     }
 
     public class Amap {
@@ -250,6 +259,10 @@ public class PlatformConfigBean implements Serializable {
 
         public void setAndroidAppKey(String androidAppKey) {
             this.androidAppKey = androidAppKey;
+        }
+
+        public boolean isAmapAvailable() {
+            return enabled && !TextUtils.isEmpty(androidAppKey);
         }
     }
 

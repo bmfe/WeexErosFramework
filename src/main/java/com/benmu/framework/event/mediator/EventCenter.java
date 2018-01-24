@@ -70,6 +70,7 @@ public class EventCenter {
                     Event event = iterator.next();
                     if (event.getJsCallback() != null && mWxInstances.contains(event
                             .getInstanceId())) {
+                        Log.e("test", "emit>>>>>>>" + emit.getParams());
                         event.getJsCallback().invokeAndKeepAlive(emit.getParams());
                         if (event.isOnce()) {
                             iterator.remove();
@@ -175,9 +176,9 @@ public class EventCenter {
 
     public static class Emit implements Serializable {
         private String type;
-        private JSONObject params;
+        private Object params;
 
-        public Emit(String type, JSONObject params) {
+        public Emit(String type, Object params) {
             this.type = type;
             this.params = params;
         }
@@ -190,11 +191,11 @@ public class EventCenter {
             this.type = type;
         }
 
-        public JSONObject getParams() {
+        public Object getParams() {
             return params;
         }
 
-        public void setParams(JSONObject params) {
+        public void setParams(Object params) {
             this.params = params;
         }
     }
