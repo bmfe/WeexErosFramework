@@ -113,4 +113,8 @@
 5. 修改上传图片返回字符串改为对象
 6. 修改storage储存逻辑
 
+#2.1.0
+1. 修复bmCalendar样式不生效问题
+2. 拓展weex.config.eros变量
+
 

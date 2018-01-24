@@ -16,8 +16,8 @@ public class EventGetParams {
     public void getParams(Context context, JSCallback jscallback) {
         RouterManager routerManager = ManagerFactory.getManagerService(RouterManager.class);
         RouterModel routerModel = routerManager.getParams(context);
-        if (routerModel != null && jscallback != null) {
-            jscallback.invoke(routerModel.params);
+        if (jscallback != null) {
+            jscallback.invoke(routerModel == null ? "" : routerModel.params);
         }
     }
 }
