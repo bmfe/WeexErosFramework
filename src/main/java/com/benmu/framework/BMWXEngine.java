@@ -129,6 +129,7 @@ public class BMWXEngine {
             e.printStackTrace();
         }
     }
+
     private static void registerCustomDomObject() throws WXException {
         WXSDKEngine.registerDomObject("bmtext", WXTextDomObject.class);
         WXSDKEngine.registerDomObject("bmspan", WXTextDomObject.class);
@@ -180,7 +181,12 @@ public class BMWXEngine {
                 (fontSize) + "");
 
         if (Env != null && !Env.isEmpty()) {
-            insideEnv.putAll(Env);
+            for (Map.Entry<String, String> entry : Env.entrySet()) {
+                if (!TextUtils.isEmpty(entry.getValue())) {
+                    insideEnv.put(entry.getKey(), entry.getValue());
+                }
+            }
+
         }
         BMWXEnvironment.mCustomer = insideEnv;
         CustomerEnvOptionManager.registerCustomConfig(insideEnv);
