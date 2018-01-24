@@ -116,5 +116,6 @@
 #2.1.0
 1. 修复bmCalendar样式不生效问题
 2. 拓展weex.config.eros变量
+3. 修复滑动事件影响bmRefresh消失问题
 
 
