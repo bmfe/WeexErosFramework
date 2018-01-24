@@ -114,8 +114,11 @@
 6. 修改storage储存逻辑
 
 #2.1.0
-1. 修复bmCalendar样式不生效问题
-2. 拓展weex.config.eros变量
-3. 修复滑动事件影响bmRefresh消失问题
-
+1. 拓展weex.config.eros变量
+2. 修复ToolsMoudle 是否安装微信方法
+3. 修复iconfont不显示问题。
+4. 修改富文本默认字体
+5. 修复一些已知bug
+6. 修复bmCalendar样式不生效问题
+7. 修复滑动事件影响bmRefresh消失问题
 

@@ -64,10 +64,6 @@ public class BMRich extends WXVContainer<LinearLayout> {
 
     @Override
     public void addChild(WXComponent child, int index) {
-        mChildCount++;
-        if (mChildCount == count) {
-            update();
-        }
     }
 
 
@@ -76,13 +72,9 @@ public class BMRich extends WXVContainer<LinearLayout> {
         organizeChild(wxDomObject);
     }
 
-    private int count;
-    private int mChildCount;
 
     private void organizeChild(WXDomObject object) {
         if (object instanceof WXTextDomObject) {
-            count++;
-            Log.e("rich>>>>>>>", "count>>>>" + count);
             WXTextDomObject textDomObject = (WXTextDomObject) object;
             BMRichUtil util = new BMRichUtil();
             Spanned test = util.createSpan(textDomObject.getAttrs(), textDomObject.getStyles
@@ -106,8 +98,49 @@ public class BMRich extends WXVContainer<LinearLayout> {
             spannableStringBuilder.append(spannableString);
         }
 
+        update();
     }
 
+
+    private void aggregateChild(WXComponent child) {
+        if (child != null) {
+            ImmutableDomObject domObject = child.getDomObject();
+            if (domObject instanceof WXTextDomObject) {
+                WXTextDomObject textDomObject = (WXTextDomObject) domObject;
+//                Layout extra = textDomObject.getExtra();
+//                Log.e("extra", "extra>>>>>>" + extra + "count>>>>" + mSubCount);
+                BMRichUtil util = new BMRichUtil();
+                Spanned test = util.createSpan(textDomObject.getAttrs(), textDomObject.getStyles
+                        ());
+
+//                if (extra instanceof StaticLayout) {
+//                    CharSequence text = ((StaticLayout) extra).getText();
+                SpannableString spannableString = ((SpannableString) test);
+                Object[] spans = spannableString.getSpans(0, spannableString.length()
+                        , Object.class);
+                for (Object span : spans) {
+                    mSpans.add(new RichTextDomObject.BMRichSpan(span, mText.length(),
+                            spannableString.length()
+                                    + mText.length()
+                    ));
+                }
+                //设置span的事件
+                WXEvent events = domObject.getEvents();
+                for (String event : events) {
+                    appendChildEvent(event, spannableString, textDomObject);
+                }
+                mText.append(spannableString.toString());
+                spannableStringBuilder.append(spannableString);
+//                }
+            }
+        }
+        mSubCount--;
+//        if (mSubCount == 0) {
+        //子控件添加完毕 更新
+        update();
+//        }
+
+    }
 
     private void appendChildEvent(String event, SpannableString spannableString, final
     WXTextDomObject
@@ -160,8 +193,6 @@ public class BMRich extends WXVContainer<LinearLayout> {
     public void updateExtra(Object extra) {
         Log.e("extra", "updateExtra" + richText + "extra" + extra);
         if (richText != null && extra != null) {
-            CharSequence text = ((StaticLayout) extra).getText();
-            Log.e("updateExtra","updateExtra>>>>>"+text);
             richText.setTextLayout((StaticLayout) extra);
         }
     }
