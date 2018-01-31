@@ -34,7 +34,7 @@ public class ImageModule extends WXModule {
     }
 
     @JSMethod
-    public void camera(String params,JSCallback jsCallback) {
+    public void camera(String params, JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
         eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_PATH);
@@ -61,4 +61,5 @@ public class ImageModule extends WXModule {
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
+
 }

@@ -1,8 +1,10 @@
 package com.benmu.framework.event.camera;
 
+import com.benmu.framework.utils.PermissionUtils;
 import com.benmu.framework.utils.TextUtil;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -57,6 +59,9 @@ public class EventCamera {
 
 
     public void uploadImage(String json, Context context, JSCallback jsCallback) {
+        if (!PermissionUtils.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            return;
+        }
         mUploadAvatar = jsCallback;
         mUploadContext = context;
         UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
@@ -73,6 +78,9 @@ public class EventCamera {
     }
 
     public void openCamera(String json, Context context, JSCallback jsCallback) {
+        if (!PermissionUtils.checkPermission(context, Manifest.permission.CAMERA)) {
+            return;
+        }
         mUploadAvatar = jsCallback;
         mUploadContext = context;
         UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject

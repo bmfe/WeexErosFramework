@@ -14,6 +14,7 @@ import android.webkit.WebView;
 
 import com.benmu.framework.utils.AssetsUtil;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXStyle;
@@ -36,6 +37,7 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     private WebView mWeb;
     private String mCharInfo;
     private Date s;
+    private boolean mLoadFinish;
 
     public BMChart(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, int type) {
         super(instance, dom, parent, type);
@@ -82,7 +84,7 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
                 String message = consoleMessage.message();
-                Log.e("onConsoleMessage",">>>>>>"+message);
+                Log.e("onConsoleMessage", ">>>>>>" + message);
                 return super.onConsoleMessage(consoleMessage);
             }
         });
@@ -105,13 +107,16 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
 
     }
 
-    @WXComponentProp(name = "chartInfo")
+    @WXComponentProp(name = "options")
     public void setChartInfo(String info) {
-        if (!TextUtils.isEmpty(mCharInfo) && !mCharInfo.equals(info)) {
-//            mWeb.reload();
-            mWeb.loadUrl("javascript:setOption(" + info + ")");
-        }
         this.mCharInfo = info;
+        executeSetOptions();
+    }
+
+    @JSMethod
+    public void setOptions(String info) {
+        this.mCharInfo = info;
+        executeSetOptions();
     }
 
 
@@ -119,8 +124,18 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     public void onPageFinish(String url, boolean canGoBack, boolean canGoForward) {
         Date e = new Date();
         Log.e("bmChart", "finsh" + e.getTime() + "耗时" + (e.getTime() - s.getTime()));
-        mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
-        fireEvent("finish");
+        mLoadFinish = true;
+        executeSetOptions();
+    }
+
+
+    public void executeSetOptions() {
+        if (!mLoadFinish) return;
+        if (!TextUtils.isEmpty(mCharInfo)) {
+            Log.e("options",">>>>>>>>"+mCharInfo);
+            mWeb.loadUrl("javascript:setOption(" + mCharInfo + ")");
+            fireEvent("finish");
+        }
     }
 
 }

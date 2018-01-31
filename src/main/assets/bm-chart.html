@@ -15,7 +15,7 @@
     <div id="main" style="height:260px;width: 100%;"></div>
     <!-- ECharts单文件引入 -->
     <script type="text/javascript">
-        
+
         var mainDom = document.querySelector('#main')
         mainDom.style.height=window.innerHeight+'px';
 
@@ -26,9 +26,20 @@
 
         */
         function setOption(options) {
+            var formatOptions = JSON.parse(options,function(k,v){
+
+              if(v.indexOf&&v.indexOf('function')>-1){
+
+                 return eval("(function(){return "+v+" })()")
+
+              }
+
+              return v;
+
+            });
             var myChart = echarts.init(mainDom);
             // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(options);
+            myChart.setOption(formatOptions);
 
         }
     </script>

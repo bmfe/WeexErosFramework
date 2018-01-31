@@ -43,17 +43,23 @@ public class DefaultWebSocketAdapter {
         public void onOpen(WebSocket webSocket, Response response) {
             mWebSocket = webSocket;
             CURRENT_STATUS = CONNECTED;
-            mEventListener.onOpen();
+            if (mEventListener != null) {
+                mEventListener.onOpen();
+            }
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            mEventListener.onMessage(text);
+            if (mEventListener != null) {
+                mEventListener.onMessage(text);
+            }
         }
 
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
-            mEventListener.onMessage(bytes.toString());
+            if (mEventListener != null) {
+                mEventListener.onMessage(bytes.toString());
+            }
         }
 
         @Override
@@ -64,13 +70,17 @@ public class DefaultWebSocketAdapter {
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
             CURRENT_STATUS = DISCONNECTED;
-            mEventListener.onClose(code, reason, true);
+            if (mEventListener != null) {
+                mEventListener.onClose(code, reason, true);
+            }
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             CURRENT_STATUS = DISCONNECTED;
-            mEventListener.onError(response == null ? "" : response.message());
+            if (mEventListener != null) {
+                mEventListener.onError(response == null ? "" : response.message());
+            }
         }
     };
 

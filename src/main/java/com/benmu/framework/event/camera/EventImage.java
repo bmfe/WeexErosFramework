@@ -1,5 +1,6 @@
 package com.benmu.framework.event.camera;
 
+import android.Manifest;
 import android.content.Context;
 
 import com.benmu.framework.constant.Constant;
@@ -11,6 +12,7 @@ import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.JsPoster;
+import com.benmu.framework.utils.PermissionUtils;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 
@@ -22,6 +24,10 @@ public class EventImage {
     private JSCallback mPickCallback;
 
     public void pick(String json, Context context, JSCallback jsCallback) {
+        //Manifest.permission.READ_EXTERNAL_STORAGE 权限申请
+        if (!PermissionUtils.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            return;
+        }
         mPickCallback = jsCallback;
         UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
                 (json, UploadImageBean.class);
@@ -38,7 +44,7 @@ public class EventImage {
     @Subscribe
     public void OnUploadResult(UploadResultBean uploadResultBean) {
         if (uploadResultBean != null && mPickCallback != null) {
-            JsPoster.postSuccess(uploadResultBean.data,mPickCallback);
+            JsPoster.postSuccess(uploadResultBean.data, mPickCallback);
         }
 
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
