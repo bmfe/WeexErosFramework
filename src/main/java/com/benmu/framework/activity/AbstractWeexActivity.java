@@ -109,7 +109,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private BaseToolBar mNavigationBar;
     private BMFloatingLayer mDebugger;
     protected Activity mAct;
-    public String[] mDebugOptions = new String[]{"调试页面", "刷新", "调试"};
+    public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
     private RelativeLayout rl_error;
     private ViewGroup mRootView;
     private boolean isHomePage;
@@ -211,14 +211,14 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 } else if (which == 1) {
                     refresh();
                 } else if (which == 2) {
-//                    DispatchEventManager dispatchEventManager = ManagerFactory
-//                            .getManagerService(DispatchEventManager.class);
-//                    WeexEventBean eventBean = new WeexEventBean();
-//                    eventBean.setContext(mAct);
-//                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
-//                    dispatchEventManager.getBus().post(eventBean);
-                    connectionDebugService(BMWXEnvironment.mPlatformConfig.getUrl()
-                            .getDebugServer());
+                    DispatchEventManager dispatchEventManager = ManagerFactory
+                            .getManagerService(DispatchEventManager.class);
+                    WeexEventBean eventBean = new WeexEventBean();
+                    eventBean.setContext(mAct);
+                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+                    dispatchEventManager.getBus().post(eventBean);
+//                    connectionDebugService(BMWXEnvironment.mPlatformConfig.getUrl()
+//                            .getDebugServer());
 
                 }
             }
@@ -871,12 +871,12 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 finish();
                 return;
             } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-//                WXEnvironment.sDebugServerConnectable = BuildConfig.DEBUG;
-//                WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
-//                WXSDKEngine.reload();
-//                Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
+                WXEnvironment.sDebugServerConnectable = BuildConfig.DEBUG;
+                WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+                WXSDKEngine.reload();
+                Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
                 connectionDebugService(uri.getQueryParameter("_wx_devtool"));
-                finish();
+//                finish();
                 return;
             } else if (code.contains("_wx_debug")) {
                 uri = Uri.parse(code);
