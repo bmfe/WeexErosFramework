@@ -16,7 +16,6 @@ public class EventTool {
     public void resignKeyboard(Context context, JSCallback jscallback) {
         if (BaseCommonUtil.getKeyBoardState(context)) {
             JsPoster.postSuccess(null, jscallback);
-            ;
         } else {
             JsPoster.postFailed(jscallback);
         }
