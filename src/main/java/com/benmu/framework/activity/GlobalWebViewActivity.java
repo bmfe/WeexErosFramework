@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
@@ -81,7 +80,6 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         if (!TextUtils.isEmpty(mUrl)) {
             mWeb.loadUrl(mUrl);
         }
-
         ModalManager.BmLoading.showLoading(this, "", true);
     }
 
@@ -134,8 +132,8 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
                 getNavigationBar().setTitle(title);
             }
         }
-
         @Override
+
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
             Log.e("onConsoleMessage", "onConsoleMessage>>>>>" + consoleMessage.message());
             return super.onConsoleMessage(consoleMessage);

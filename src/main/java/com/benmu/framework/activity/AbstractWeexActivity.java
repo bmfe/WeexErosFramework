@@ -743,7 +743,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 }
                 break;
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
