@@ -1,6 +1,5 @@
 package com.benmu.framework.activity;
 
-import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
@@ -12,7 +11,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,7 +21,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -360,7 +357,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         Log.d("SVProgressHUD", "context hasCode -> " + this.hashCode());
         decorView = (ViewGroup) (this).getWindow().getDecorView().findViewById(android.R.id
                 .content);
-        rootView = (ViewGroup) layoutInflater.inflate(com.benmu.widget.R.layout
+        rootView = (ViewGroup) layoutInflater.inflate(com.benmu.R.layout
                 .layout_svprogresshud, null, false);
         rootView.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT

@@ -55,21 +55,18 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     compile 'com.alibaba:fastjson:1.2.31'
-    compile files('libs/otto-1.3.5.jar')
     compile project(':sdk')
     compile(name: 'bm_imagepicker', ext: 'aar')
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile project(':bmwidget')
+    compile project(':nexus')
     //高德地图
     compile 'com.amap.api:location:latest.integration'
     compile 'com.amap.api:3dmap:latest.integration'
 
     //友盟数据分析
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile files('libs/libammsdk.jar')
-    compile files('libs/SocialSDK_WeChat_Simplify.jar')
     compile files('libs/umeng_social_net.jar')
     compile files('libs/umeng_social_api.jar')
     compile files('libs/umeng_social_tool.jar')
