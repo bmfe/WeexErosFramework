@@ -73,9 +73,7 @@ public class BMWXApplication extends Application {
         super.attachBaseContext(base);
     }
 
-    private void checkVersion() {
 
-    }
 
     private void registerLifecycle() {
         LifecycleManager lifecycleManager = ManagerFactory.getManagerService(LifecycleManager
