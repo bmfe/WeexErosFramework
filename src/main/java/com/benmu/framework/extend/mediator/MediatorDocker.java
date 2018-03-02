@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -49,7 +51,7 @@ public class MediatorDocker implements IWXRenderListener {
      激活中介者
      */
     public void active() {
-        Log.e("MediatorDocker", mInstance+"");
+        Log.e("MediatorDocker", mInstance + "");
         if (mInstance == null) {
             mInstance = new MediatorInstance(BMWXEnvironment.mApplicationContext);
         }
@@ -130,6 +132,9 @@ public class MediatorDocker implements IWXRenderListener {
         } else if (WXConstant.ACTION_INTERCEPTOR_SWTICH.equals(intent.getAction())) {
             //interceptor swtich
             mInstance.setStatus(STATUS_DESTORY);
+            active();
+        } else if (WXConstant.MEDIATOR_INIT.equals(intent.getAction())) {
+            //init
             active();
         }
 

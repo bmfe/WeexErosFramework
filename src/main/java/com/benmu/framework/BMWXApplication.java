@@ -92,7 +92,7 @@ public class BMWXApplication extends Application {
                             .getWXSDkInstance());
                 }
                 //app resume  try check verison
-                if (mVersionChecker != null) {
+                if (mVersionChecker != null){
                     mVersionChecker.checkVersion();
                 }
             }

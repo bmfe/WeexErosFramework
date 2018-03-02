@@ -27,6 +27,8 @@ public class WXConstant {
     //拦截器状态发生变化
     public static final String ACTION_INTERCEPTOR_SWTICH = "ACTION_INTERCEPTOR_SWTICH";
 
+    public static final String MEDIATOR_INIT = "MEDIATOR_INIT";
+
     /**
      * weex消息中心
      */
