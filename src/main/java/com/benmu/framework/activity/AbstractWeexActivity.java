@@ -558,6 +558,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RouterTracker.removeActivity(this);
         if (mWXInstance != null) {
             mWXInstance.onActivityDestroy();
         }
@@ -876,7 +877,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 WXSDKEngine.reload();
                 Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
                 connectionDebugService(uri.getQueryParameter("_wx_devtool"));
-//                finish();
                 return;
             } else if (code.contains("_wx_debug")) {
                 uri = Uri.parse(code);

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -17,8 +18,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import com.benmu.framework.R;
+import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.model.ShareInfoBean;
@@ -79,14 +80,6 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         if (!TextUtils.isEmpty(mUrl)) {
             mWeb.loadUrl(mUrl);
         }
-//        setOnWebClosedListenner(new BaseToolBar.OnWebViewClosed() {
-//            @Override
-//            public void onClick(View v) {
-//                BMRouterManager.finish(GlobalWebViewActivity.this);
-//            }
-//        });
-
-
         ModalManager.BmLoading.showLoading(this, "", true);
     }
 
@@ -139,7 +132,12 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
                 getNavigationBar().setTitle(title);
             }
         }
+        @Override
 
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            Log.e("onConsoleMessage", "onConsoleMessage>>>>>" + consoleMessage.message());
+            return super.onConsoleMessage(consoleMessage);
+        }
     }
 
     private void showRefreshView() {
@@ -172,6 +170,8 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
 
         @JavascriptInterface
         public void closePage() {
+            //关闭当前页面
+            RouterTracker.popActivity();
         }
     }
 }
