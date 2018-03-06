@@ -2,7 +2,9 @@ package com.benmu.framework;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
@@ -179,6 +181,12 @@ public class BMWXEngine {
         insideEnv.put(Constant.CustomOptions.CUSTOM_FONTSIZE, fontSize);
         insideEnv.put(Constant.CustomOptions.CUSTOM_FONTSCALE, BaseCommonUtil.getScaleByFontsize
                 (fontSize) + "");
+
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+
+        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEHEIGHT,String.valueOf( dm.heightPixels));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEWIDTH, String.valueOf( dm.widthPixels));
 
         if (Env != null && !Env.isEmpty()) {
             for (Map.Entry<String, String> entry : Env.entrySet()) {

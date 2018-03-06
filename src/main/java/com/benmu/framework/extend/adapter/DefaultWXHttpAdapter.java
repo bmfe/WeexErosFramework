@@ -80,8 +80,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             @Override
             public void run() {
                 if (!(Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
-                        (mContext))) || !isInterceptor(request
-                        .url)) {
+                        (mContext))) || !isInterceptor(request.url)) {
                     fetchUrl(request, listener);
                 } else {
                     doInterceptor(request, listener);
@@ -256,10 +255,13 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             if (responseCode >= 200 && responseCode <= 299) {
                 InputStream rawStream = connection.getInputStream();
                 if (isInterceptor(request.url)) {
-                    appendBaseJs(readInputStreamAsBytes(rawStream,
-                            listener), response, listener);
-//                    response.originalData = appendBaseJs(readInputStreamAsBytes(rawStream,
-//                            listener));
+//                    appendBaseJs(readInputStreamAsBytes(rawStream,
+//                            listener), response, listener);
+                    response.originalData = readInputStreamAsBytes(rawStream,
+                            listener);
+                    if(listener !=null){
+                        listener.onHttpFinish(response);
+                    }
                 } else {
                     //iconFont
                     response.originalData = readInputStreamAsBytes(rawStream, listener);

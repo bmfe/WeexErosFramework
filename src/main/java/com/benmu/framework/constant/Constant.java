@@ -152,6 +152,10 @@ public class Constant {
         public static final String CUSTOM_NAVBARHEIGHT = "navBarHeight";
         //内置js版本
         public static final String CUSTOM_JSVERSION = "jsVersion";
+        //deviceHeight
+        public static final String CUSTOM_DEVICEHEIGHT = "deviceHeight";
+        //deviceWidth
+        public static final String CUSTOM_DEVICEWIDTH = "deviceWidth";
 
         //appName
         public static final String CUSTOM_APPNAME = "appName";

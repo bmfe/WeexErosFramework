@@ -1,6 +1,5 @@
 package com.benmu.framework.activity;
 
-import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
@@ -12,7 +11,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,7 +21,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,7 +37,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -872,11 +868,11 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 finish();
                 return;
             } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-                WXEnvironment.sDebugServerConnectable = BuildConfig.DEBUG;
                 WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+                WXEnvironment.sDebugServerConnectable = true;
                 WXSDKEngine.reload();
                 Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
-                connectionDebugService(uri.getQueryParameter("_wx_devtool"));
+//                connectionDebugService(uri.getQueryParameter("_wx_devtool"));
                 return;
             } else if (code.contains("_wx_debug")) {
                 uri = Uri.parse(code);
