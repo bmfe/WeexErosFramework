@@ -52,7 +52,7 @@ public class VersionManager extends Manager {
                     FileManager.unZip(zip, FileManager.getBundleDir(context));
                     SharePreferenceUtil.setVersion(context, SharePreferenceUtil
                             .getDownLoadVersion(context));
-                    SharePreferenceUtil.setDownLoadVersion(context, null);
+//                    SharePreferenceUtil.setDownLoadVersion(context, null);
                 }
             }
         }
@@ -157,6 +157,9 @@ public class VersionManager extends Manager {
             } else {
                 versionInfo = jsVersionInfoBean.getJsVersion();
             }
+        }
+        if (TextUtils.isEmpty(versionInfo)) {
+            return;
         }
         params.put("jsVersion", versionInfo);
         params.put("isDiff", isDiff ? "1" : "0");
