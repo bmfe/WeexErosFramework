@@ -554,6 +554,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RouterTracker.removeActivity(this);
         if (mWXInstance != null) {
             mWXInstance.onActivityDestroy();
         }
@@ -867,12 +868,11 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 finish();
                 return;
             } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-                WXEnvironment.sDebugServerConnectable = BuildConfig.DEBUG;
                 WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+                WXEnvironment.sDebugServerConnectable = true;
                 WXSDKEngine.reload();
                 Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
-                connectionDebugService(uri.getQueryParameter("_wx_devtool"));
-//                finish();
+//                connectionDebugService(uri.getQueryParameter("_wx_devtool"));
                 return;
             } else if (code.contains("_wx_debug")) {
                 uri = Uri.parse(code);

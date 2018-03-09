@@ -50,7 +50,7 @@ public class MediatorDocker implements IWXRenderListener {
      激活中介者
      */
     public void active() {
-        Log.e("MediatorDocker", mInstance+"");
+        Log.e("MediatorDocker", mInstance + "");
         if (mInstance == null) {
             mInstance = new MediatorInstance(BMWXEnvironment.mApplicationContext);
         }
@@ -131,6 +131,9 @@ public class MediatorDocker implements IWXRenderListener {
         } else if (WXConstant.ACTION_INTERCEPTOR_SWTICH.equals(intent.getAction())) {
             //interceptor swtich
             mInstance.setStatus(STATUS_DESTORY);
+            active();
+        } else if (WXConstant.MEDIATOR_INIT.equals(intent.getAction())) {
+            //init
             active();
         }
 

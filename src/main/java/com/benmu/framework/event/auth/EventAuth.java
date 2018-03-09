@@ -107,8 +107,6 @@ public class EventAuth {
             if (mProgressDialog != null) {
                 mProgressDialog.dismiss();
             }
-//            JsPoster.postFailed(mCallback);
-
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
         }
     }

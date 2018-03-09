@@ -74,9 +74,7 @@ public class BMWXApplication extends Application {
         super.attachBaseContext(base);
     }
 
-    private void checkVersion() {
 
-    }
 
     private void registerLifecycle() {
         LifecycleManager lifecycleManager = ManagerFactory.getManagerService(LifecycleManager
@@ -93,7 +91,7 @@ public class BMWXApplication extends Application {
                             .getWXSDkInstance());
                 }
                 //app resume  try check verison
-                if (mVersionChecker != null) {
+                if (mVersionChecker != null){
                     mVersionChecker.checkVersion();
                 }
             }

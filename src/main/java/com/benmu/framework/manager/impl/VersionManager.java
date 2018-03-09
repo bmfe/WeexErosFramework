@@ -1,14 +1,17 @@
 package com.benmu.framework.manager.impl;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.JsVersionInfoBean;
 import com.benmu.framework.model.Md5MapperModel;
 import com.benmu.framework.utils.AppUtils;
@@ -16,6 +19,7 @@ import com.benmu.framework.utils.AssetsUtil;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
 import com.benmu.wxbase.BMWXEnvironment;
+import com.benmu.framework.utils.TextUtil;
 
 import java.io.File;
 import java.util.Date;
@@ -45,11 +49,10 @@ public class VersionManager extends Manager {
                     FileManager.unZip(zip, FileManager.getBundleDir(context));
                     SharePreferenceUtil.setVersion(context, SharePreferenceUtil
                             .getDownLoadVersion(context));
-                    SharePreferenceUtil.setDownLoadVersion(context, null);
+//                    SharePreferenceUtil.setDownLoadVersion(context, null);
                 }
             }
         }
-
         initMapper(context);
         initMediator(context);
         return new Date().getTime() - startTime;
@@ -67,8 +70,8 @@ public class VersionManager extends Manager {
     }
 
     private static void initMediator(Context context) {
-        MediatorDocker.getInstance().active();
-//        context.startService(new Intent(context, BroadcastChannelService.class));
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new Intent
+                (WXConstant.MEDIATOR_INIT));
     }
 
     private void checkBundleDir(Context context) {
@@ -136,20 +139,26 @@ public class VersionManager extends Manager {
         HashMap<String, String> params = new HashMap<>();
         params.put("appName", BMWXEnvironment.mPlatformConfig.getAppName());
         params.put("android", BaseCommonUtil.getVersionName(context));
-        String verisonInfo = SharePreferenceUtil.getVersion(context);
-        if (TextUtils.isEmpty(verisonInfo)) {
-            verisonInfo = "";
+        String versionInfo = SharePreferenceUtil.getDownLoadVersion(context);
+        if (TextUtils.isEmpty(versionInfo)) {
+            versionInfo = SharePreferenceUtil.getVersion(context);
+        }
+        if (TextUtils.isEmpty(versionInfo)) {
+            versionInfo = "";
         } else {
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-            JsVersionInfoBean jsVersionInfoBean = parseManager.parseObject(verisonInfo,
+            JsVersionInfoBean jsVersionInfoBean = parseManager.parseObject(versionInfo,
                     JsVersionInfoBean.class);
             if (jsVersionInfoBean == null) {
-                verisonInfo = "";
+                versionInfo = "";
             } else {
-                verisonInfo = jsVersionInfoBean.getJsVersion();
+                versionInfo = jsVersionInfoBean.getJsVersion();
             }
         }
-        params.put("jsVersion", verisonInfo);
+        if (TextUtils.isEmpty(versionInfo)) {
+            return;
+        }
+        params.put("jsVersion", versionInfo);
         params.put("isDiff", isDiff ? "1" : "0");
         AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
         axiosManager.get(url, params, null, callback, url, 0);
