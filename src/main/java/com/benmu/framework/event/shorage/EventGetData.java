@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.benmu.framework.manager.ManagerFactory;
-import com.benmu.framework.manager.impl.StorageManager;
+import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.utils.JsPoster;
 import com.taobao.weex.bridge.JSCallback;
 

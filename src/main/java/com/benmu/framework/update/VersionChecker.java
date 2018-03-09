@@ -3,7 +3,7 @@ package com.benmu.framework.update;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import com.benmu.framework.BMWXEnvironment;
+
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
@@ -17,6 +17,7 @@ import com.benmu.framework.model.VersionBean;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.wxbase.BMWXEnvironment;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -36,7 +37,7 @@ public class VersionChecker {
     private JsVersionInfoBean newVersion;
     private String mUpdateUrl;
     private Context mContext;
-    private int mCurrentStatus=Constant.Version.SLEEP;
+    private int mCurrentStatus= Constant.Version.SLEEP;
 
     public VersionChecker(Context context) {
         this.mContext = context;

@@ -3,24 +3,12 @@ package com.benmu.framework.manager.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.text.TextUtils;
 
-import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.DefaultRouterAdapter;
-import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
-import com.benmu.framework.model.MedicalMapModel;
 import com.benmu.framework.model.RouterModel;
-import com.benmu.framework.model.TitleModel;
-import com.benmu.framework.model.WebViewParamBean;
-import com.benmu.framework.utils.RouterUtil;
 import com.taobao.weex.bridge.JSCallback;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Carry on 2017/8/7. manage router

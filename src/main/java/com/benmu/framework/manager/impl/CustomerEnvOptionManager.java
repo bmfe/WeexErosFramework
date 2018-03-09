@@ -5,7 +5,6 @@ import android.content.res.XmlResourceParser;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.benmu.framework.BuildConfig;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
@@ -21,14 +20,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
 
 /**
  * Created by Carry on 2017/8/7.

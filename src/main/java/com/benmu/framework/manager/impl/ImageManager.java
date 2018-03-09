@@ -3,7 +3,6 @@ package com.benmu.framework.manager.impl;
 import android.content.Context;
 
 import com.benmu.framework.adapter.DefaultImageAdapter;
-import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.model.UploadImageBean;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
  * Created by Carry on 2017/8/7.
  */
 
-public class ImageManager extends Manager {
+public class ImageManager extends Manager  {
 
 
     /**

@@ -5,7 +5,6 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        buildConfigField "String","PAGE_PREFIX" , "\"${APPLICATION_ID}\""
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
@@ -61,9 +60,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile project(':nexus')
-    //高德地图
-    compile 'com.amap.api:location:latest.integration'
-    compile 'com.amap.api:3dmap:latest.integration'
 
     //友盟数据分析
     compile 'com.umeng.analytics:analytics:latest.integration'
@@ -78,4 +74,7 @@ dependencies {
 
     //weex analyzer
     debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
+
+    //plugin Moudle
+    compile project(':plugamap')
 }

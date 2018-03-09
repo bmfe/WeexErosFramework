@@ -7,7 +7,6 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.CommunicationManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosResultBean;
-import com.benmu.framework.model.UploadResultBean;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 

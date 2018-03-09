@@ -2,10 +2,10 @@ package com.benmu.framework.extend.adapter;
 
 import android.content.Context;
 
-import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.adapter.IWXTypefaceAdapter;
 
 import java.io.File;

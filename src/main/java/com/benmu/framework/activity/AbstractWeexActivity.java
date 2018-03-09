@@ -1,12 +1,18 @@
 package com.benmu.framework.activity;
 
 import com.benmu.framework.BuildConfig;
+import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.PermissionManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 
+import com.benmu.wxbase.BMWXEnvironment;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -37,22 +43,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
-import com.benmu.framework.constant.Constant;
-import com.benmu.framework.constant.WXConstant;
-import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
-import com.benmu.framework.manager.impl.PermissionManager;
 import com.benmu.framework.manager.impl.PersistentManager;
-import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
@@ -906,7 +905,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     private boolean isHomePage() {
-        String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage();
+        String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage(this);
         homePage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
                 "/dist/js" + homePage;
         return homePage.equals(this.mPageUrl);

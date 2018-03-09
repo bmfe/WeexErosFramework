@@ -2,7 +2,6 @@ package com.benmu.framework.event;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -11,7 +10,6 @@ import com.benmu.framework.event.auth.EventAuth;
 import com.benmu.framework.event.browse.EventBrowse;
 import com.benmu.framework.event.camera.EventCamera;
 import com.benmu.framework.event.camera.EventImage;
-import com.benmu.framework.event.geo.EventGeo;
 import com.benmu.framework.event.http.EventFetch;
 import com.benmu.framework.event.modal.EventAlert;
 import com.benmu.framework.event.modal.EventConfirm;
@@ -44,7 +42,7 @@ import com.benmu.framework.event.tool.EventTool;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
-import com.squareup.otto.Bus;
+import com.plugamap.EventGeo;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 

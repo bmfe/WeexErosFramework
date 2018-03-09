@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.benmu.framework.R;
-import com.benmu.framework.http.Api;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.http.Api;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.FileManager;

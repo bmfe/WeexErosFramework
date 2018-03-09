@@ -1,20 +1,17 @@
 package com.benmu.framework.utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.PermissionManager;
-import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.taobao.weex.bridge.JSCallback;
 

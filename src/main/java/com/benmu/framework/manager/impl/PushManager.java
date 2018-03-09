@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.benmu.framework.R;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.activity.ResultActivity;
 import com.benmu.framework.adapter.router.RouterTracker;

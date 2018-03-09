@@ -2,15 +2,10 @@ package com.benmu.framework.extend.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.benmu.framework.BMWXEnvironment;
-import com.benmu.framework.BuildConfig;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
@@ -25,11 +20,10 @@ import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
-import com.taobao.weex.WXEnvironment;
+import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
-import com.taobao.weex.utils.FontDO;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

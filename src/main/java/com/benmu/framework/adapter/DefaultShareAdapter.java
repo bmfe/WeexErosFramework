@@ -3,13 +3,10 @@ package com.benmu.framework.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.net.Uri;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ModalManager;
@@ -18,8 +15,8 @@ import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.JsPoster;
-import com.benmu.framework.utils.WeChatRelayUtil;
 import com.benmu.widget.view.BMGridDialog;
+import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.bridge.JSCallback;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -27,7 +24,6 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

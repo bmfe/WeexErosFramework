@@ -1,5 +1,7 @@
 package com.benmu.framework.manager.impl;
 
+import com.benmu.framework.constant.Constant;
+import com.benmu.framework.manager.Manager;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import android.app.Activity;
@@ -7,9 +9,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-
-import com.benmu.framework.constant.Constant;
-import com.benmu.framework.manager.Manager;
 
 import java.util.Collection;
 

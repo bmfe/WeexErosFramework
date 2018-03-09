@@ -1,6 +1,5 @@
 package com.benmu.framework.event.router;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.benmu.framework.manager.ManagerFactory;

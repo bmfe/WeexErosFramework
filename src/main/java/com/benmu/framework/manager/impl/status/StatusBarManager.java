@@ -12,17 +12,16 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
-import com.benmu.framework.manager.Manager;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.utils.BaseCommonUtil;
+import com.benmu.wxbase.BMWXEnvironment;
 
 /**
  * Created by Carry on 2017/9/14.
  */
 
-public class StatusBarManager extends Manager {
+public class StatusBarManager {
 
     public static boolean isSupportTranslucent(Activity activity) {
 

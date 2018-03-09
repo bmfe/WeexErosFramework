@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.http.Api;
 import com.benmu.framework.http.BMPersistentCookieStore;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
@@ -22,6 +21,7 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.AppUtils;
+import com.benmu.wxbase.BMWXEnvironment;
 
 import java.io.File;
 import java.util.ArrayList;

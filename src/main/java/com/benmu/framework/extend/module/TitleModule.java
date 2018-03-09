@@ -1,16 +1,12 @@
 package com.benmu.framework.extend.module;
 
-import android.app.Activity;
-import android.util.Log;
-
-import com.benmu.framework.constant.WXConstant;
-import com.benmu.framework.manager.ManagerFactory;
-import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
-
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.constant.WXConstant;
 /**
  * Created by Carry on 17/1/12.
  */

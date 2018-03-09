@@ -2,7 +2,6 @@ package com.benmu.framework.event.router;
 
 import android.content.Context;
 
-import com.benmu.framework.extend.module.RouterModule;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.RouterManager;
 import com.benmu.framework.model.RouterModel;
