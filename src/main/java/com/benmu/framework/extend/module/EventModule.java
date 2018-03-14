@@ -45,7 +45,7 @@ public class EventModule extends WXModule {
             Intent emit = new Intent(WXConstant.WXEventCenter.EVENT_JS_EMIT);
             emit.putExtra("data", new EventCenter.Emit(type, params == null ? null :
                     ManagerFactory.getManagerService(ParseManager.class)
-                            .parse(params)));
+                            .parse(params,String.class)));
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(emit);
         }
     }

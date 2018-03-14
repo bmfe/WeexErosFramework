@@ -10,41 +10,40 @@
     <title>ECharts</title>
 </head>
 
-<body>
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="height:260px;width: 100%;"></div>
-    <!-- ECharts单文件引入 -->
-    <script type="text/javascript">
+<body style="margin:0; padding:0;">
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="height:260px;width: 100%;"></div>
+<!-- ECharts单文件引入 -->
+<script type="text/javascript">
 
-        var mainDom = document.querySelector('#main')
-        mainDom.style.height=window.innerHeight+'px';
+            var mainDom = document.querySelector('#main')
+            mainDom.style.height=window.innerHeight+'px';
 
-        function setHeight(height) {
-            mainDom.style.height = height + 'px';
-        }
+            function setHeight(height) {
+                mainDom.style.height = height + 'px';
+            }
         /*
 
-        */
+         */
         function setOption(options) {
             var formatOptions = JSON.parse(options,function(k,v){
 
-              if(v.indexOf&&v.indexOf('function')>-1){
+                                           if(v.indexOf&&v.indexOf('function')>-1){
 
-                 return eval("(function(){return "+v+" })()")
+                                           return eval("(function(){return "+v+" })()")
 
-              }
+                                           }
 
-              return v;
+                                           return v;
 
-            });
-            var myChart = echarts.init(mainDom);
-            // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(formatOptions);
+                                           });
+                                           var myChart = echarts.init(mainDom);
+                                           // 使用刚指定的配置项和数据显示图表。
+                                           myChart.setOption(formatOptions);
 
         }
-    </script>
-    <script type="text/javascript" src="echarts.min.js"></script>
+        </script>
+<script type="text/javascript" src="echarts.min.js"></script>
 
 </body>
 
-</html>
