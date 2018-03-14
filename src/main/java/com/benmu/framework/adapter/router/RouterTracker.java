@@ -99,7 +99,7 @@ public class RouterTracker {
             for (Activity item : activities) {
                 if (item == activity) {
                     findFrame = frame;
-                    notifyActivityRemove(activity);
+                    notifyActivityRemove(activity,true);
                     break outer;
                 }
             }
@@ -108,7 +108,26 @@ public class RouterTracker {
             removeActivitySinglely(activity, findFrame);
         }
     }
-
+    /**
+     * 生命周期自变化导致移除某个activity
+     */
+    public static void autoRemoveActivity(Activity activity) {
+        ActivityStackFrame findFrame = null;
+        outer:
+        for (ActivityStackFrame frame : mTotal) {
+            Stack<Activity> activities = frame.getActivities();
+            for (Activity item : activities) {
+                if (item == activity) {
+                    findFrame = frame;
+                    notifyActivityRemove(activity,false);
+                    break outer;
+                }
+            }
+        }
+        if (findFrame != null) {
+            removeActivitySinglely(activity, findFrame);
+        }
+    }
     /**
      * 根据名字移除栈帧
      */
@@ -187,7 +206,7 @@ public class RouterTracker {
         Stack<Activity> activities = frame.getActivities();
         if (null == activities || activities.isEmpty()) return null;
         Activity activity = activities.pop();
-        notifyActivityRemove(activity);
+        notifyActivityRemove(activity,true);
         if (activities.isEmpty()) {
             //当前栈帧中activity全部弹出，弹出当前栈帧
             if (mTotal.size() > 1) {
@@ -223,17 +242,17 @@ public class RouterTracker {
     private static void removeFrameEntirely(ActivityStackFrame frame) {
         Stack<Activity> activities = frame.activities;
         for (Activity activity : activities) {
-            notifyActivityRemove(activity);
+            notifyActivityRemove(activity,true);
         }
         activities.clear();
         mTotal.remove(frame);
     }
 
 
-    private static void notifyActivityRemove(Activity act) {
+    private static void notifyActivityRemove(Activity act,boolean force) {
         if (act instanceof RouterTrackerListener) {
             RouterTrackerListener routerTrackerListener = (RouterTrackerListener) act;
-            routerTrackerListener.onDetach(act);
+            routerTrackerListener.onDetach(act,force);
         } else {
             Log.e(TAG, act.getClass().getName() + "is unTrack");
         }
@@ -279,7 +298,7 @@ public class RouterTracker {
 
         void onAttach(Activity activity, String activityName);
 
-        void onDetach(Activity activity);
+        void onDetach(Activity activity,boolean force);
 
         void onDetach(Activity activity, String activityName);
     }
