@@ -80,5 +80,5 @@ dependencies {
     implementation 'com.alibaba.android:bindingx_weex_plugin:1.0.1'
 
     //plugin Moudle
-    compile project(':BMPlugAmap')
+    compile project(':ErosPluginAmap')
 }
