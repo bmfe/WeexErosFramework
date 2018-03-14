@@ -1,6 +1,7 @@
 package com.benmu.framework.extend.comoponents;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -68,6 +69,7 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     protected View initComponentHostView(@NonNull Context context) {
         View view = mWebView.getView();
         mWeb = mWebView.getWebView();
+        view.setBackgroundColor(Color.TRANSPARENT);
         WebSettings settings = mWeb.getSettings();
         settings.setJavaScriptEnabled(true);
         mWebView.setOnPageListener(this);
