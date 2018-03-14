@@ -5,11 +5,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.utils.InsertEnvUtil;
-import com.benmu.wxbase.BMWXEnvironment;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;

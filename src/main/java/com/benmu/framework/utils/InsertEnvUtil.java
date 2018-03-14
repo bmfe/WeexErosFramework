@@ -1,6 +1,6 @@
 package com.benmu.framework.utils;
 
-import com.benmu.wxbase.BMWXEnvironment;
+import com.benmu.framework.BMWXEnvironment;
 
 import java.util.HashMap;
 import java.util.Map;

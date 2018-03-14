@@ -15,7 +15,6 @@ import com.benmu.framework.manager.impl.LifecycleManager;
 import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.update.VersionChecker;
 import com.benmu.framework.utils.DebugableUtil;
-import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;

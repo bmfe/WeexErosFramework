@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
-import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.Manager;
@@ -18,8 +18,6 @@ import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.AssetsUtil;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
-import com.benmu.wxbase.BMWXEnvironment;
-import com.benmu.framework.utils.TextUtil;
 
 import java.io.File;
 import java.util.Date;

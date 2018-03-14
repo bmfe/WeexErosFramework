@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ModalManager;
@@ -16,7 +17,6 @@ import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.JsPoster;
 import com.benmu.widget.view.BMGridDialog;
-import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.bridge.JSCallback;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;

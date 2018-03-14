@@ -1,5 +1,6 @@
 package com.benmu.framework.activity;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
@@ -12,7 +13,6 @@ import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 
-import com.benmu.wxbase.BMWXEnvironment;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 

@@ -24,7 +24,6 @@ import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
-import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;

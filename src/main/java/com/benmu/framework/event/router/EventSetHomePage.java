@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.model.RouterModel;
-import com.benmu.wxbase.BMWXEnvironment;
 
 /**
  * Created by liuyuanxiao on 18/1/4.

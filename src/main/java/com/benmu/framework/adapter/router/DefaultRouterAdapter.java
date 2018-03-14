@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.constant.Constant;
@@ -16,7 +17,6 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.CallPhoneBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WebViewParamBean;
-import com.benmu.wxbase.BMWXEnvironment;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.SimpleJSCallback;
 
