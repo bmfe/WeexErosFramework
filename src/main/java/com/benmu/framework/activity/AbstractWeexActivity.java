@@ -554,7 +554,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RouterTracker.removeActivity(this);
+        RouterTracker.autoRemoveActivity(this);
         if (mWXInstance != null) {
             mWXInstance.onActivityDestroy();
         }
@@ -642,9 +642,10 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     @Override
-    public void onDetach(Activity activity) {
+    public void onDetach(Activity activity,boolean force) {
         if (activity == this) {
-            finish();
+            if(force)
+                finish();
             if (mRouterParam != null) {
                 String type = mRouterParam.type;
                 if (Constant.ACTIVITIES_ANIMATION.ANIMATION_PUSH.equals(type)) {
