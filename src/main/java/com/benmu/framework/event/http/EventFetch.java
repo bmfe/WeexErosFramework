@@ -23,7 +23,6 @@ import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosGet;
 import com.benmu.framework.model.AxiosPost;
 import com.benmu.framework.model.AxiosResultBean;
-import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.JsPoster;
@@ -33,7 +32,6 @@ import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 

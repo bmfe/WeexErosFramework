@@ -2,7 +2,6 @@ package com.benmu.framework.event;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -11,7 +10,6 @@ import com.benmu.framework.event.auth.EventAuth;
 import com.benmu.framework.event.browse.EventBrowse;
 import com.benmu.framework.event.camera.EventCamera;
 import com.benmu.framework.event.camera.EventImage;
-import com.benmu.framework.event.geo.EventGeo;
 import com.benmu.framework.event.http.EventFetch;
 import com.benmu.framework.event.modal.EventAlert;
 import com.benmu.framework.event.modal.EventConfirm;
@@ -44,7 +42,9 @@ import com.benmu.framework.event.tool.EventTool;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
-import com.squareup.otto.Bus;
+import com.benmu.framework.utils.JsPoster;
+import com.benmu.wxbase.EventGate;
+import com.benmu.wxbase.EventGateFactory;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 
@@ -218,9 +218,6 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_RELAYTOCRICLE:
                 new EventShare().relayToCricle(context, params, weexEventBean.getCallbacks());
                 break;
-            case WXConstant.WXEventCenter.EVENT_GEOLOCATION_GET:
-                new EventGeo().getLocation(context, weexEventBean.getJscallback());
-                break;
             case WXConstant.WXEventCenter.EVENT_WECHATLOGIN:
                 new EventAuth().wechat(context, params, weexEventBean.getJscallback());
                 break;
@@ -245,11 +242,36 @@ public class DispatchEventCenter {
             case WXConstant.WXEventCenter.EVENT_NAV:
                 new EventNav().nav(params, context);
                 break;
+            case WXConstant.WXEventCenter.EVENT_GEOLOCATION_GET:
+                reflectionClazzPerform("com.plugamap.EventGeo"
+                        , context
+                        , params
+                        , weexEventBean.getJscallback()
+                        , "");
+                break;
             default:
 
                 break;
         }
     }
 
+
+    private void reflectionClazzPerform(String clazzName, Context context, String params, JSCallback jscallback, String errosMsg) {
+        EventGate event = EventGateFactory.getEventGate(clazzName);
+        if (null != event) {
+            if (TextUtils.isEmpty(params)) {
+                event.perform(context, jscallback);
+            } else {
+                event.perform(context, params, jscallback);
+            }
+        } else {
+            if (TextUtils.isEmpty(params)) {
+                JsPoster.postFailed(jscallback);
+            } else {
+                JsPoster.postFailed(errosMsg, jscallback);
+            }
+
+        }
+    }
 
 }

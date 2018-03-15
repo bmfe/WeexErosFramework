@@ -5,12 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
-import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.WechatLoginBean;
 import com.benmu.framework.utils.JsPoster;
 import com.squareup.otto.Subscribe;

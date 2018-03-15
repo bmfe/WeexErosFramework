@@ -40,5 +40,13 @@ public class ParseManager extends Manager {
 
         return s;
     }
+    public Object parse(String s,Class clazz) {
+        try {
+            return JSON.parseObject(s,clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        return s;
+    }
 }

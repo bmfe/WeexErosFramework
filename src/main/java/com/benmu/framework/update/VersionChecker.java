@@ -3,6 +3,7 @@ package com.benmu.framework.update;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
@@ -36,7 +37,7 @@ public class VersionChecker {
     private JsVersionInfoBean newVersion;
     private String mUpdateUrl;
     private Context mContext;
-    private int mCurrentStatus=Constant.Version.SLEEP;
+    private int mCurrentStatus= Constant.Version.SLEEP;
 
     public VersionChecker(Context context) {
         this.mContext = context;

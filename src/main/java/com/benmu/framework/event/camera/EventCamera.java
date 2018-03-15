@@ -1,5 +1,9 @@
 package com.benmu.framework.event.camera;
 
+import com.benmu.framework.constant.Constant;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.PermissionUtils;
 import com.benmu.framework.utils.TextUtil;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -10,18 +14,14 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.benmu.framework.R;
-import com.benmu.framework.constant.Constant;
-import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.CameraManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.PersistentManager;
-import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.UploadResultBean;
-import com.benmu.framework.utils.JsPoster;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 

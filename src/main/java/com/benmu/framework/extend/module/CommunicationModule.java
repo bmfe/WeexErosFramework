@@ -1,11 +1,5 @@
 package com.benmu.framework.extend.module;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.provider.ContactsContract;
-import android.util.Log;
-
-import com.alibaba.fastjson.JSON;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -13,10 +7,6 @@ import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
-
-import org.json.JSONArray;
-
-import java.util.List;
 
 /**
  * Created by liuyuanxiao on 17/12/29.

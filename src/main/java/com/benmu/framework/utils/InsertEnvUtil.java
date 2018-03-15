@@ -1,8 +1,6 @@
 package com.benmu.framework.utils;
 
 import com.benmu.framework.BMWXEnvironment;
-import com.benmu.framework.model.WeexEnvironment;
-import com.taobao.weex.WXSDKInstance;
 
 import java.util.HashMap;
 import java.util.Map;

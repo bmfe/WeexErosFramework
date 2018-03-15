@@ -1,21 +1,14 @@
 package com.benmu.framework.extend.module;
 
 
-import com.alibaba.fastjson.JSON;
-import com.benmu.framework.constant.WXConstant;
-import com.benmu.framework.manager.ManagerFactory;
-import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEnvironment;
 import com.benmu.framework.model.WeexEventBean;
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
-import com.taobao.weex.bridge.WXParams;
 import com.taobao.weex.common.WXModule;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.constant.WXConstant;
 /**
  * Js交互键盘退出
  */

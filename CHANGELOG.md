@@ -129,3 +129,11 @@
 4. 修复一些已知bug
 5. bmchart支持传递方法
 
+#2.1.2
+1. 修复增量更新可能失败问题。
+2. 集成升级SDK 0.18版本.
+3. 集成升级 weex-debugger 0.13.4版本.
+4. 修改拦截器关闭时不拼接app borad.
+5. 增加全局属性 deviceHeight、deviceWidth
+6. 删除不需要的ndk 架构。
+

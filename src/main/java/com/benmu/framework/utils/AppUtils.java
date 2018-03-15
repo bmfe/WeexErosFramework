@@ -3,7 +3,6 @@ package com.benmu.framework.utils;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.benmu.framework.manager.ManagerFactory;

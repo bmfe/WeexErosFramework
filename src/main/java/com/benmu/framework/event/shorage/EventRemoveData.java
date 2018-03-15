@@ -3,8 +3,7 @@ package com.benmu.framework.event.shorage;
 import android.content.Context;
 
 import com.benmu.framework.manager.ManagerFactory;
-import com.benmu.framework.manager.impl.StorageManager;
-import com.benmu.framework.model.BaseResultBean;
+import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.utils.JsPoster;
 import com.taobao.weex.bridge.JSCallback;
 

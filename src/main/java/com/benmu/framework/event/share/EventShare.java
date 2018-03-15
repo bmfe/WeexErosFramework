@@ -3,9 +3,7 @@ package com.benmu.framework.event.share;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.benmu.framework.manager.ManagerFactory;
@@ -16,13 +14,11 @@ import com.benmu.framework.manager.impl.ShareManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.RelayBean;
 import com.benmu.framework.utils.BaseCommonUtil;
-import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.MultipleFileDownloader;
 import com.benmu.framework.utils.ResourceUtil;
 import com.benmu.framework.utils.WeChatRelayUtil;
 import com.taobao.weex.bridge.JSCallback;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -29,26 +29,17 @@
     <module name="bmCommunication">com.benmu.framework.extend.module.CommunicationModule</module>
     <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
     <module name="bmWebSocket">com.benmu.framework.extend.module.WebSocketModule</module>
+
     <!--plug-in-->
     <!--amap-->
-    <component name="weex-amap">com.benmu.framework.extend.plug_in.amap.component.WXMapViewComponent
+    <component name="weex-amap">com.plugamap.component.WXMapViewComponent
     </component>
-    <component name="weex-amap-marker">
-        com.benmu.framework.extend.plug_in.amap.component.WXMapMarkerComponent
-    </component>
-    <component name="weex-amap-info-window">
-        com.benmu.framework.extend.plug_in.amap.component.WXMapInfoWindowComponent
-    </component>
-    <component name="weex-amap-circle">
-        com.benmu.framework.extend.plug_in.amap.component.WXMapCircleComponent
-    </component>
-    <component name="weex-amap-polyline">
-        com.benmu.framework.extend.plug_in.amap.component.WXMapPolyLineComponent
-    </component>
-    <component name="weex-amap-polygon">
-        com.benmu.framework.extend.plug_in.amap.component.WXMapPolygonComponent
-    </component>
-    <module name="amap">com.benmu.framework.extend.plug_in.amap.module.WXMapModule</module>
+    <component name="weex-amap-marker">com.plugamap.component.WXMapMarkerComponent</component>
+    <component name="weex-amap-info-window">com.plugamap.component.WXMapInfoWindowComponent</component>
+    <component name="weex-amap-circle">com.plugamap.component.WXMapCircleComponent</component>
+    <component name="weex-amap-polyline">com.plugamap.component.WXMapPolyLineComponent</component>
+    <component name="weex-amap-polygon">com.plugamap.component.WXMapPolygonComponent</component>
+    <module name="amap">com.plugamap.module.WXMapModule</module>
     <!--amap-->
 
     <!--plug-in-->

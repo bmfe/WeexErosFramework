@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.benmu.framework.BMWXEnvironment;
-import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;

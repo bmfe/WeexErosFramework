@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.RouterManager;
-import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.utils.JsPoster;
 import com.taobao.weex.bridge.JSCallback;
 

@@ -10,11 +10,9 @@ import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.ManagerFactory;
-import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.squareup.otto.Subscribe;
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.common.WXResponse;
 
 import java.io.File;

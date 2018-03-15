@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -18,7 +20,6 @@ import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
-import com.benmu.framework.manager.impl.GeoManager;
 import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
@@ -57,17 +58,22 @@ public class BMWXEngine {
         initWeChat(context);
         initUmeng(context);
         EventCenter.getInstance().init();
-        initMap();
+//        initMap();
+        PlugManager.initPlug();
+        initBindingx();
     }
 
+    private static void initBindingx() {
+        // register bindingx module manually
+        try {
+            BindingX.register();
+        } catch (WXException e) {
+            Log.e("BMWXEngine", "initBindingx error -> " + e.getMessage());
+        }
+    }
 
     private static void initPatch(Application context) {
         BsPatch.init(context);
-    }
-
-    private static void initMap() {
-        GeoManager geoManager = ManagerFactory.getManagerService(GeoManager.class);
-        geoManager.init();
     }
 
 
@@ -185,8 +191,8 @@ public class BMWXEngine {
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
 
-        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEHEIGHT,String.valueOf( dm.heightPixels));
-        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEWIDTH, String.valueOf( dm.widthPixels));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEHEIGHT, String.valueOf(dm.heightPixels));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEWIDTH, String.valueOf(dm.widthPixels));
 
         if (Env != null && !Env.isEmpty()) {
             for (Map.Entry<String, String> entry : Env.entrySet()) {
