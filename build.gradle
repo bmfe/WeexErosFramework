@@ -33,6 +33,9 @@ android {
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories"
+    }
     flatDir {
 
         dirs 'libs'
@@ -50,6 +53,8 @@ dependencies {
     /**
      * debug调试要用到的
      */
+    compile 'com.taobao.android.weex_inspection:protocol:1.1.4.1'
+    compile 'com.taobao.android:weex_inspector:0.13.4'
     compile 'com.taobao.android:weex_inspector:0.13.4'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
