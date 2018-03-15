@@ -51,6 +51,7 @@ public class AxiosManager extends Manager {
                 (context));
         return new OkHttpClient.Builder()
                 .addInterceptor(new LoggerInterceptor("TAG"))
+                .addNetworkInterceptor(new WeexOkhttp3Interceptor())
                 //接口超时时间  默认3000毫秒
                 .connectTimeout(timeout == 0 ? 3000L : timeout, TimeUnit.MILLISECONDS)
                 .readTimeout(timeout == 0 ? 30000L : timeout, TimeUnit.MILLISECONDS).cookieJar

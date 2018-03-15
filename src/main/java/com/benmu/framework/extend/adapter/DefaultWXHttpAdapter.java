@@ -25,11 +25,9 @@ import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
-import com.taobao.weex.utils.FontDO;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -40,11 +38,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Cache;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.internal.http.HttpMethod;
 
 /**
  * Created by Carry on 2017/8/7. interceptor for js resource
@@ -56,6 +66,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private String[] mFileFilter = {".js", ".css", ".html"};
     private String mBaseJs;
     private BaseJsInjector mInjector;
+    private OkHttpClient client;
 
     private void execute(Runnable runnable) {
         if (mExecutorService == null) {
@@ -68,6 +79,9 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     public DefaultWXHttpAdapter(Context context) {
         this.mContext = context;
         mInjector = BaseJsInjector.getInstance();
+        client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new WeexOkhttp3Interceptor())
+                .build();
     }
 
     @Override
@@ -76,18 +90,19 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             listener.onHttpStart();
         }
 
-        execute(new Runnable() {
-            @Override
-            public void run() {
-                if (!(Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
-                        (mContext))) || !isInterceptor(request.url)) {
-                    fetchUrl(request, listener);
-                } else {
+        if (!(Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
+                (mContext))) || !isInterceptor(request.url)) {
+            fetchUrl(request, listener);
+        } else {
+            execute(new Runnable() {
+                @Override
+                public void run() {
                     doInterceptor(request, listener);
-                }
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
 
@@ -147,7 +162,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 response.statusCode = 200 + "";
                 if (isInterceptor(request.url)) {
 //                    response.originalData = appendBaseJs(bytes);
-                    appendBaseJs(bytes, response, listener);
+                    response.originalData = bytes;
+                    appendBaseJs(response, listener);
                 } else {
                     //iconFont
                     response.originalData = bytes;
@@ -213,9 +229,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         return "";
     }
 
-    private void appendBaseJs(byte[] origin, final WXResponse response, final OnHttpListener
+    private void appendBaseJs(final WXResponse response, final OnHttpListener
             listener) {
-        response.originalData = origin;
         mInjector.injectBaseJs(mContext, response, new BaseJsInjector.InjectJsListener() {
             @Override
             public void onInjectStart(String origin) {
@@ -242,52 +257,127 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
 
     private void fetchUrl(final WXRequest request, final OnHttpListener listener) {
-        WXResponse response = new WXResponse();
-        try {
-            HttpURLConnection connection = openConnection(request, listener);
-            Map<String, List<String>> headers = connection.getHeaderFields();
-            int responseCode = connection.getResponseCode();
-            if (listener != null) {
-                listener.onHeadersReceived(responseCode, headers);
-            }
+        final WXResponse wxResponse = new WXResponse();
+        String method = request.method == null ? "GET" : request.method.toUpperCase();
+        String requestBodyString = request.body == null ? "{}" : request.body;
 
-            response.statusCode = String.valueOf(responseCode);
-            if (responseCode >= 200 && responseCode <= 299) {
-                InputStream rawStream = connection.getInputStream();
-                if (isInterceptor(request.url)) {
-//                    appendBaseJs(readInputStreamAsBytes(rawStream,
-//                            listener), response, listener);
-                    response.originalData = readInputStreamAsBytes(rawStream,
-                            listener);
-                    if(listener !=null){
-                        listener.onHttpFinish(response);
-                    }
-                } else {
-                    //iconFont
-                    response.originalData = readInputStreamAsBytes(rawStream, listener);
-                    if (listener != null) {
-                        listener.onHttpFinish(response);
-                    }
-                }
-
-            } else {
-                response.errorMsg = readInputStream(connection.getErrorStream(), listener);
-                if (listener != null) {
-                    listener.onHttpFinish(response);
-                }
-            }
-
-        } catch (IOException | IllegalArgumentException e) {
-            e.printStackTrace();
-            response.statusCode = "-1";
-            response.errorCode = "-1";
-            response.errorMsg = e.getMessage();
-            if (listener != null) {
-                listener.onHttpFinish(response);
-            }
-            if (e instanceof IOException) {
+        RequestBody body = null;
+        if (request.paramMap != null && request.paramMap.containsKey("Content-Type")) {
+            body = HttpMethod.requiresRequestBody(method)
+                    ? RequestBody.create(MediaType.parse(request.paramMap.get("Content-Type")), requestBodyString) : null;
+        } else {
+            body = HttpMethod.requiresRequestBody(method)
+                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), requestBodyString) : null;
+        }
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(request.url)
+                .method(method, body);
+        if (request.paramMap != null) {
+            for (Map.Entry<String, String> param : request.paramMap.entrySet()) {
+                requestBuilder.addHeader(param.getKey(), param.getValue());
             }
         }
+
+        client.newCall(requestBuilder.build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                wxResponse.errorMsg = e.getMessage();
+                wxResponse.errorCode = "-1";
+                wxResponse.statusCode = "-1";
+                if (listener != null) {
+                    listener.onHttpFinish(wxResponse);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                byte[] responseBody = new byte[0];
+                try {
+                    responseBody = response.body().bytes();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    wxResponse.errorMsg = e.getMessage();
+                    wxResponse.errorCode = "-1";
+                    wxResponse.statusCode = "-1";
+                    if (listener != null) {
+                        listener.onHttpFinish(wxResponse);
+                    }
+                }
+                wxResponse.data = new String(responseBody);
+                wxResponse.statusCode = String.valueOf(response.code());
+                wxResponse.originalData = responseBody;
+                wxResponse.extendParams = new HashMap<>();
+                for (Map.Entry<String, List<String>> entry : response.headers().toMultimap().entrySet()) {
+                    wxResponse.extendParams.put(entry.getKey(), entry.getValue());
+                }
+
+                if (response.code() < 200 || response.code() > 299) {
+                    wxResponse.errorMsg = response.message();
+                    if (listener != null) {
+                        listener.onHttpFinish(wxResponse);
+                    }
+                } else {
+                    if (isInterceptor(request.url)) {
+                        appendBaseJs(wxResponse, listener);
+//                    response.originalData = readInputStreamAsBytes(rawStream,
+//                            listener);
+                        if (listener != null) {
+                            listener.onHttpFinish(wxResponse);
+                        }
+                    } else {
+                        //iconFont
+                        if (listener != null) {
+                            listener.onHttpFinish(wxResponse);
+                        }
+                    }
+                }
+            }
+        });
+//        try {
+//            HttpURLConnection connection = openConnection(request, listener);
+//            Map<String, List<String>> headers = connection.getHeaderFields();
+//            int responseCode = connection.getResponseCode();
+//            if (listener != null) {
+//                listener.onHeadersReceived(responseCode, headers);
+//            }
+//
+//            response.statusCode = String.valueOf(responseCode);
+//            if (responseCode >= 200 && responseCode <= 299) {
+//                InputStream rawStream = connection.getInputStream();
+//                if (isInterceptor(request.url)) {
+////                    appendBaseJs(readInputStreamAsBytes(rawStream,
+////                            listener), response, listener);
+//                    response.originalData = readInputStreamAsBytes(rawStream,
+//                            listener);
+//                    if (listener != null) {
+//                        listener.onHttpFinish(response);
+//                    }
+//                } else {
+//                    //iconFont
+//                    response.originalData = readInputStreamAsBytes(rawStream, listener);
+//                    if (listener != null) {
+//                        listener.onHttpFinish(response);
+//                    }
+//                }
+//
+//            } else {
+//                response.errorMsg = readInputStream(connection.getErrorStream(), listener);
+//                if (listener != null) {
+//                    listener.onHttpFinish(response);
+//                }
+//            }
+//
+//        } catch (IOException | IllegalArgumentException e) {
+//            e.printStackTrace();
+//            response.statusCode = "-1";
+//            response.errorCode = "-1";
+//            response.errorMsg = e.getMessage();
+//            if (listener != null) {
+//                listener.onHttpFinish(response);
+//            }
+//            if (e instanceof IOException) {
+//            }
+//        }
     }
 
 
