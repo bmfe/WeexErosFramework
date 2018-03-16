@@ -1,10 +1,12 @@
 package com.benmu.framework.manager.impl;
 
+import android.app.Notification;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.extend.adapter.WeexOkhttp3Interceptor;
 import com.benmu.framework.http.Api;
 import com.benmu.framework.http.BMPersistentCookieStore;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
