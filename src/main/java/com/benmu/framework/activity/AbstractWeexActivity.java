@@ -341,13 +341,19 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     public void refresh() {
-        DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
-                (DispatchEventManager.class);
-        Intent intent = new Intent(WXConstant.ACTION_WEEX_REFRESH);
-        intent.putExtra("instanceId", mWXInstance.getInstanceId());
-        dispatchEventManager.getBus().post(intent);
-        createWXInstance();
-        renderPage();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
+                        (DispatchEventManager.class);
+                Intent intent = new Intent(WXConstant.ACTION_WEEX_REFRESH);
+                intent.putExtra("instanceId", mWXInstance.getInstanceId());
+                dispatchEventManager.getBus().post(intent);
+                createWXInstance();
+                renderPage();
+            }
+        });
+
     }
 
     //改造SVProgressHUD loadingView
