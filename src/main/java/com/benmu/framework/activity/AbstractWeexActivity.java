@@ -642,9 +642,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     @Override
-    public void onDetach(Activity activity,boolean force) {
+    public void onDetach(Activity activity, boolean force) {
         if (activity == this) {
-            if(force)
+            if (force)
                 finish();
             if (mRouterParam != null) {
                 String type = mRouterParam.type;
@@ -860,39 +860,49 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (!TextUtils.isEmpty(code)) {
             Log.d("handleDecodeInternally", " String code -> " + code);
             Uri uri = Uri.parse(code);
-            if (uri.getQueryParameterNames().contains("bundle")) {
-                WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
-                WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
-                String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" : "Has " +
-                        "switched to Normal Mode";
-                Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
-                finish();
-                return;
-            } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-                WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
-                WXEnvironment.sDebugServerConnectable = true;
-                WXSDKEngine.reload();
-                Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
+            try {
+                if (uri.getQueryParameterNames().contains("bundle")) {
+                    WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
+                    WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
+                    String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" : "Has " +
+                            "switched to Normal Mode";
+                    Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
+                    WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+                    WXEnvironment.sDebugServerConnectable = true;
+                    WXSDKEngine.reload();
+                    Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
 //                connectionDebugService(uri.getQueryParameter("_wx_devtool"));
-                return;
-            } else if (code.contains("_wx_debug")) {
-                uri = Uri.parse(code);
-                String debug_url = uri.getQueryParameter("_wx_debug");
+                    return;
+                } else if (code.contains("_wx_debug")) {
+                    uri = Uri.parse(code);
+                    String debug_url = uri.getQueryParameter("_wx_debug");
 //                WXSDKEngine.switchDebugModel(true, debug_url);
-                finish();
-            } else {
-                CameraResultBean bean = new CameraResultBean();
-                if (!TextUtils.isEmpty(code)) {
-                    bean.text = code;
+                    finish();
                 } else {
-                    bean.text = "";
+                    postBusScanCode(code);
                 }
-
-                ManagerFactory.getManagerService(DispatchEventManager.class).getBus
-                        ().post(bean);
+            }catch (Exception e){
+                Log.e(TAG," handleDecodeInternally Exception -> " + e.getMessage());
+                postBusScanCode(code);
             }
         }
     }
+
+    private void postBusScanCode(String code) {
+        CameraResultBean bean = new CameraResultBean();
+        if (!TextUtils.isEmpty(code)) {
+            bean.text = code;
+        } else {
+            bean.text = "";
+        }
+
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus
+                ().post(bean);
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
