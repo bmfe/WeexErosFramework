@@ -40,12 +40,10 @@ public class EventModule extends WXModule {
     }
 
     @JSMethod
-    public void emit(String type, String params) {
+    public void emit(String type, Object params) {
         if (!TextUtils.isEmpty(type)) {
             Intent emit = new Intent(WXConstant.WXEventCenter.EVENT_JS_EMIT);
-            emit.putExtra("data", new EventCenter.Emit(type, params == null ? null :
-                    ManagerFactory.getManagerService(ParseManager.class)
-                            .parse(params,String.class)));
+            emit.putExtra("data", new EventCenter.Emit(type, params));
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(emit);
         }
     }
@@ -63,6 +61,6 @@ public class EventModule extends WXModule {
     public void offall() {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new Intent
                 (WXConstant.WXEventCenter
-                .EVENT_JS_OFFALL));
+                        .EVENT_JS_OFFALL));
     }
 }

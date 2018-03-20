@@ -13,6 +13,7 @@ import com.benmu.framework.utils.AESUtils;
 import com.benmu.framework.utils.AssetsUtil;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.XmlUtil;
+import com.benmu.wxbase.PluginComponentsAndModules;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 
@@ -35,6 +36,9 @@ public class CustomerEnvOptionManager extends Manager {
 
     public static void init(Context context) {
         loadAppSettings(context);
+        PluginComponentsAndModules plugin = new PluginComponentsAndModules();
+        sComponents.putAll(plugin.getPluginCommponents());
+        sModules.putAll(plugin.getPluginModules());
     }
 
     private static void loadAppSettings(Context context) {
