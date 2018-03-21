@@ -59,6 +59,12 @@ public class DebugActivity extends AbstractWeexActivity {
                 ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
                         Intent
                         (WXConstant.ACTION_INTERCEPTOR_SWTICH));
+                if (isChecked) {
+                    cb_hotrefresh.setEnabled(false);
+                    cb_hotrefresh.setChecked(false);
+                } else {
+                    cb_hotrefresh.setEnabled(true);
+                }
 
             }
         });
@@ -68,7 +74,7 @@ public class DebugActivity extends AbstractWeexActivity {
         cb_hotrefresh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.e("DebugActivity","onCheckedChanged -> "+isChecked);
+                Log.e("DebugActivity", "onCheckedChanged -> " + isChecked);
                 SharePreferenceUtil.setHotRefreshSwitch(mAct, isChecked);
                 ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
                         Intent

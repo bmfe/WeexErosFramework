@@ -114,7 +114,10 @@ public class DebuggerWebSocket {
 
     private void reconnect() {
         if (!mActice) return;
-        if (!checkIsOpenHotRefresh()) return;
+        if (!checkIsOpenHotRefresh()) {
+            close();
+            return;
+        }
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -130,7 +133,10 @@ public class DebuggerWebSocket {
     public void onEvent(Intent intent) {
         if (WXConstant.ACTION_INTERCEPTOR_SWTICH.equals(intent.getAction())) {
             //interceptor swtich
-            if (!checkIsOpenHotRefresh()) return;
+            if (!checkIsOpenHotRefresh()) {
+                close();
+                return;
+            }
             if (TextUtils.isEmpty(BMWXEnvironment.mPlatformConfig.getUrl().getSocketServer()))
                 return;
             connect(BMWXEnvironment.mPlatformConfig.getUrl().getSocketServer());
@@ -147,5 +153,9 @@ public class DebuggerWebSocket {
         //是否是debug模式
         if (!DebugableUtil.isDebug()) return false;
         return true;
+    }
+
+    public void close() {
+        webSocketInstance.close(WebSocketCloseCodes.CLOSE_NORMAL.getCode(), "close");
     }
 }
