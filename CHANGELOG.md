@@ -137,3 +137,9 @@
 5. 增加全局属性 deviceHeight、deviceWidth
 6. 删除不需要的ndk 架构。
 
+#2.1.3
+1. 增加热刷新功能。
+2. 修改Input 默认字体为黑色
+3. 修复扫码遇到Json串可能崩溃问题。
+4. 修改Image标签的 默认加载动画菊花 由 placeholder 属性控制，默认不展示。
+5. 修改Emit 可能数据不对的问题

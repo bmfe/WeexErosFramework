@@ -31,6 +31,7 @@ public class BMWXApplication extends Application {
     private static BMWXApplication mInstance;
     private WXSDKInstance mMediator;
     private VersionChecker mVersionChecker;
+    private DebuggerWebSocket debugSocket;
 
     @Override
     public void onCreate() {
@@ -41,8 +42,13 @@ public class BMWXApplication extends Application {
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
             initShare();
-            new DebuggerWebSocket().init();
+            initDebugSocket();
         }
+    }
+
+    private void initDebugSocket() {
+        debugSocket = new DebuggerWebSocket(this);
+        debugSocket.init();
     }
 
     private void initShare() {

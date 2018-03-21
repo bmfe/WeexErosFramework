@@ -134,13 +134,30 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/c_666666"
                     android:textSize="15sp"
-                    android:text="切换状态重启应用才能生效"
+                    android:text="Interceptor"
                     android:layout_toRightOf="@+id/cb_inter"
                     android:layout_alignBaseline="@+id/cb_inter"
                     android:layout_marginLeft="10dp"
                     />
 
+            <CheckBox
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/cb_hotrefresh"
+                android:layout_below="@+id/cb_inter"
+                android:layout_marginLeft="10dp"
+                />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_666666"
+                android:textSize="15sp"
+                android:text="hotRefresh"
+                android:layout_toRightOf="@+id/cb_hotrefresh"
+                android:layout_alignBaseline="@+id/cb_hotrefresh"
+                android:layout_marginLeft="10dp"
+                />
         </RelativeLayout>
 
         <!--<LinearLayout-->

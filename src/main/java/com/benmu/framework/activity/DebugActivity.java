@@ -2,6 +2,7 @@ package com.benmu.framework.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.debug.ws.DebuggerWebSocket;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
@@ -23,7 +25,8 @@ import com.benmu.framework.utils.SharePreferenceUtil;
 public class DebugActivity extends AbstractWeexActivity {
     private TextView tv_appversion;
     private TextView tv_jsverision;
-    private CheckBox cb_inter;
+    private CheckBox cb_inter, cb_hotrefresh;
+    private DebuggerWebSocket debugSocket;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class DebugActivity extends AbstractWeexActivity {
         tv_appversion = (TextView) findViewById(R.id.tv_appversion);
         tv_jsverision = (TextView) findViewById(R.id.tv_jsverision);
         cb_inter = (CheckBox) findViewById(R.id.cb_inter);
+        cb_hotrefresh = (CheckBox) findViewById(R.id.cb_hotrefresh);
 
         tv_appversion.setText(BaseCommonUtil.getVersionName(this));
         String activeState = SharePreferenceUtil.getInterceptorActive(this);
@@ -55,8 +59,28 @@ public class DebugActivity extends AbstractWeexActivity {
                 ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
                         Intent
                         (WXConstant.ACTION_INTERCEPTOR_SWTICH));
+
             }
         });
+
+
+        cb_hotrefresh.setChecked(SharePreferenceUtil.getHotRefreshSwitch(this));
+        cb_hotrefresh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.e("DebugActivity","onCheckedChanged -> "+isChecked);
+                SharePreferenceUtil.setHotRefreshSwitch(mAct, isChecked);
+                ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
+                        Intent
+                        (WXConstant.ACTION_INTERCEPTOR_SWTICH));
+            }
+        });
+
+    }
+
+
+    public void refresh() {
+
     }
 
 }

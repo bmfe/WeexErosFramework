@@ -1,13 +1,17 @@
 package com.benmu.framework.debug.ws;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
+import com.benmu.framework.activity.DebugActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.adapter.ws.DefaultWebSocketAdapter;
 import com.benmu.framework.adapter.ws.WSConfig;
@@ -15,7 +19,9 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.framework.utils.TextUtil;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.appfram.websocket.IWebSocketAdapter;
 import com.taobao.weex.appfram.websocket.WebSocketCloseCodes;
@@ -32,17 +38,22 @@ public class DebuggerWebSocket {
     private static final String TAG = "DebuggerWebSocket";
     private Handler mHandler;
     private boolean mActice;
+    private Context context;
 
-    public DebuggerWebSocket() {
+    public DebuggerWebSocket(Context context) {
         webSocketInstance = new DefaultWebSocketAdapter();
         eventListent = new MyWebSocketListener();
         mHandler = new Handler(Looper.getMainLooper());
+        this.context = context;
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
     }
 
 
     public void init() {
-        connect(WXConstant.DEBUG_SOKECT_URL);
+        if (!checkIsOpenHotRefresh()) return;
+
+        if (TextUtils.isEmpty(BMWXEnvironment.mPlatformConfig.getUrl().getSocketServer())) return;
+        connect(BMWXEnvironment.mPlatformConfig.getUrl().getSocketServer());
     }
 
     private void connect(String url) {
@@ -68,7 +79,7 @@ public class DebuggerWebSocket {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(BMWXEnvironment.mApplicationContext, "调试socket已链接", Toast
+                    Toast.makeText(BMWXEnvironment.mApplicationContext, "hot refresh connected.", Toast
                             .LENGTH_SHORT).show();
                 }
             });
@@ -76,6 +87,7 @@ public class DebuggerWebSocket {
 
         @Override
         public void onMessage(String data) {
+            if (!checkIsOpenHotRefresh()) return;
             if (Instruction.REFRESH.equals(data)) {
                 Activity peek = RouterTracker.peekActivity();
                 if (peek instanceof AbstractWeexActivity) {
@@ -88,21 +100,21 @@ public class DebuggerWebSocket {
         @Override
         public void onClose(int code, String reason, boolean wasClean) {
             //重连
-            Log.e(TAG, "调试socket关闭重试");
+            Log.e(TAG, "hot refresh disconnected.");
             reconnect();
         }
 
         @Override
         public void onError(String msg) {
             //重连
-            Log.e(TAG, "调试socket链接失败重试");
+            Log.e(TAG, "hot refresh disconnected.");
             reconnect();
         }
     }
 
     private void reconnect() {
         if (!mActice) return;
-
+        if (!checkIsOpenHotRefresh()) return;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -118,8 +130,22 @@ public class DebuggerWebSocket {
     public void onEvent(Intent intent) {
         if (WXConstant.ACTION_INTERCEPTOR_SWTICH.equals(intent.getAction())) {
             //interceptor swtich
-            connect(WXConstant.DEBUG_SOKECT_URL);
+            if (!checkIsOpenHotRefresh()) return;
+            if (TextUtils.isEmpty(BMWXEnvironment.mPlatformConfig.getUrl().getSocketServer()))
+                return;
+            connect(BMWXEnvironment.mPlatformConfig.getUrl().getSocketServer());
         }
     }
 
+    //检查是否满足开启socket条件
+    private boolean checkIsOpenHotRefresh() {
+        //拦截器是否关闭
+        if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(context)))
+            return false;
+        //热刷新是否开启
+        if (!SharePreferenceUtil.getHotRefreshSwitch(context)) return false;
+        //是否是debug模式
+        if (!DebugableUtil.isDebug()) return false;
+        return true;
+    }
 }
