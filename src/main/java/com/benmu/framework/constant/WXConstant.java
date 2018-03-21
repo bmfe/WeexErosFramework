@@ -13,6 +13,7 @@ public class WXConstant {
     public static final int HOT_REFRESH_DISCONNECT = HOT_REFRESH_CONNECT + 1;
     public static final int HOT_REFRESH_REFRESH = HOT_REFRESH_DISCONNECT + 1;
     public static final int HOT_REFRESH_CONNECT_ERROR = HOT_REFRESH_REFRESH + 1;
+    public static final String DEBUG_SOKECT_URL = "ws://127.0.0.1:8890";
 
     /**
      * ----------router moudle回调js参数名--------
@@ -86,6 +87,6 @@ public class WXConstant {
         public static final String EVENT_SET_HOMEPAGE = "EVENT_SET_HOMEPAGE";
         public static final String EVENT_IMAGE_PICK = "EVENT_IMAGE_PICK";
         public static final String EVENT_IMAGE_UPLOAD = "EVENT_IMAGE_UPLOAD";
-        public static final String EVENT_NAV="EVENT_NAV";
+        public static final String EVENT_NAV = "EVENT_NAV";
     }
 }

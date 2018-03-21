@@ -9,6 +9,7 @@ import com.benmu.framework.adapter.ws.DefaultWebSocketAdapter;
 import com.benmu.framework.constant.WXConstant;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.appfram.websocket.IWebSocketAdapter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -73,7 +74,7 @@ public class LightlyWebSocketAdapter implements IWebSocketAdapter {
     private void newInstance(String instanceId, String url, String protocol, EventListener
             listener) {
         DefaultWebSocketAdapter webSocketInstance = new DefaultWebSocketAdapter();
-        webSocketInstance.connect(url, protocol, listener);
+        webSocketInstance.connect(url, protocol, listener, null);
         mAdapters.put(instanceId, webSocketInstance);
     }
 

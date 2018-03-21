@@ -9,6 +9,7 @@ import android.support.multidex.MultiDex;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.debug.ws.DebuggerWebSocket;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
@@ -40,6 +41,7 @@ public class BMWXApplication extends Application {
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
             initShare();
+            new DebuggerWebSocket().init();
         }
     }
 
@@ -74,7 +76,6 @@ public class BMWXApplication extends Application {
     }
 
 
-
     private void registerLifecycle() {
         LifecycleManager lifecycleManager = ManagerFactory.getManagerService(LifecycleManager
                 .class);
@@ -90,7 +91,7 @@ public class BMWXApplication extends Application {
                             .getWXSDkInstance());
                 }
                 //app resume  try check verison
-                if (mVersionChecker != null){
+                if (mVersionChecker != null) {
                     mVersionChecker.checkVersion();
                 }
             }

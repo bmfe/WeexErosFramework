@@ -2,6 +2,7 @@ package com.benmu.framework.adapter.ws;
 
 import com.taobao.weex.appfram.websocket.IWebSocketAdapter;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,6 +33,7 @@ public class DefaultWebSocketAdapter {
     private Lock mLock;
     private WebSocket mWebSocket;
     private IWebSocketAdapter.EventListener mEventListener;
+    private WSConfig mConfig;
 
     public DefaultWebSocketAdapter() {
         CURRENT_STATUS = INIT;
@@ -84,16 +86,20 @@ public class DefaultWebSocketAdapter {
         }
     };
 
-    public void connect(String url, String protocol, IWebSocketAdapter.EventListener listener) {
+    public void connect(String url, String protocol, IWebSocketAdapter.EventListener listener,
+                        WSConfig config) {
         this.mUrl = url;
         this.mProtocol = protocol;
         this.mEventListener = listener;
+        this.mConfig = config;
         if (CURRENT_STATUS == INIT) {
             initWebSocket();
         }
     }
 
-    public void reconnect(String url, String protocol, IWebSocketAdapter.EventListener listener) {
+    public void reconnect() {
+        CURRENT_STATUS = INIT;
+        initWebSocket();
     }
 
     public void send(String message) {
@@ -123,7 +129,14 @@ public class DefaultWebSocketAdapter {
         if (CURRENT_STATUS != INIT) return;
         CURRENT_STATUS = CONNECTING;
         if (mClient == null) {
-            mClient = new OkHttpClient.Builder().retryOnConnectionFailure(false).build();
+            if (mConfig != null) {
+                mClient = new OkHttpClient.Builder().retryOnConnectionFailure(mConfig
+                        .isRetryOnConnectionFailure()).pingInterval(mConfig.getPingInterval(),
+                        TimeUnit.SECONDS).build();
+            } else {
+                mClient = new OkHttpClient.Builder().retryOnConnectionFailure(false).build();
+            }
+
         }
         if (mRequest == null) {
             mRequest = new Request.Builder().url(mUrl).build();

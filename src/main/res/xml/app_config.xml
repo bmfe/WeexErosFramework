@@ -30,17 +30,4 @@
     <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
     <module name="bmWebSocket">com.benmu.framework.extend.module.WebSocketModule</module>
 
-    <!--plug-in-->
-    <!--amap-->
-    <component name="weex-amap">com.plugamap.component.WXMapViewComponent
-    </component>
-    <component name="weex-amap-marker">com.plugamap.component.WXMapMarkerComponent</component>
-    <component name="weex-amap-info-window">com.plugamap.component.WXMapInfoWindowComponent</component>
-    <component name="weex-amap-circle">com.plugamap.component.WXMapCircleComponent</component>
-    <component name="weex-amap-polyline">com.plugamap.component.WXMapPolyLineComponent</component>
-    <component name="weex-amap-polygon">com.plugamap.component.WXMapPolygonComponent</component>
-    <module name="amap">com.plugamap.module.WXMapModule</module>
-    <!--amap-->
-
-    <!--plug-in-->
 </app_config>
