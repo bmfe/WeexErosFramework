@@ -34,10 +34,20 @@ public class DefaultWebSocketAdapter {
     private WebSocket mWebSocket;
     private IWebSocketAdapter.EventListener mEventListener;
     private WSConfig mConfig;
+    private boolean mConnected;
 
     public DefaultWebSocketAdapter() {
         CURRENT_STATUS = INIT;
         mLock = new ReentrantLock();
+    }
+
+
+    public boolean isConnected() {
+        return mConnected;
+    }
+
+    public void setConnected(boolean mConnected) {
+        this.mConnected = mConnected;
     }
 
     private WebSocketListener mListener = new WebSocketListener() {

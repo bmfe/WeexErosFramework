@@ -61,12 +61,17 @@ public class DebuggerWebSocket {
         if (!Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
                 (BMWXEnvironment.mApplicationContext)
         )) {
+            Log.e(TAG, "connecting");
             mActice = true;
+            //create new instance when webSocketInstance has connected
+            if (webSocketInstance.isConnected()) {
+                webSocketInstance = new DefaultWebSocketAdapter();
+            }
             webSocketInstance.connect(url, "", eventListent, new WSConfig(true, 10));
-
+            webSocketInstance.setConnected(true);
         } else {
+            close();
             mActice = false;
-            webSocketInstance.close(WebSocketCloseCodes.CLOSE_NORMAL.getCode(), "手动关闭");
         }
     }
 
@@ -75,12 +80,13 @@ public class DebuggerWebSocket {
 
         @Override
         public void onOpen() {
-            Log.e(TAG, "调试socket已链接");
+            Log.e(TAG, "debug sockect has been connected!");
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(BMWXEnvironment.mApplicationContext, "hot refresh connected.", Toast
-                            .LENGTH_SHORT).show();
+                    Toast.makeText(BMWXEnvironment.mApplicationContext, "debug socket connected.",
+                            Toast
+                                    .LENGTH_SHORT).show();
                 }
             });
         }
@@ -100,20 +106,22 @@ public class DebuggerWebSocket {
         @Override
         public void onClose(int code, String reason, boolean wasClean) {
             //重连
-            Log.e(TAG, "hot refresh disconnected.");
+            mActice = false;
+            Log.e(TAG, "debug socket disconnected.");
             reconnect();
         }
 
         @Override
         public void onError(String msg) {
             //重连
-            Log.e(TAG, "hot refresh disconnected.");
+            mActice = false;
+            Log.e(TAG, "debug socket disconnected.");
             reconnect();
         }
     }
 
     private void reconnect() {
-        if (!mActice) return;
+        if (mActice) return;
         if (!checkIsOpenHotRefresh()) {
             close();
             return;
@@ -121,7 +129,8 @@ public class DebuggerWebSocket {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(BMWXEnvironment.mApplicationContext, "调试socket尝试重连", Toast
+                Toast.makeText(BMWXEnvironment.mApplicationContext, "debug socket try " +
+                        "reconnecting", Toast
                         .LENGTH_SHORT).show();
                 webSocketInstance.reconnect();
             }
@@ -156,6 +165,9 @@ public class DebuggerWebSocket {
     }
 
     public void close() {
-        webSocketInstance.close(WebSocketCloseCodes.CLOSE_NORMAL.getCode(), "close");
+        if (webSocketInstance != null) {
+            webSocketInstance.close(WebSocketCloseCodes.CLOSE_NORMAL.getCode(), "debug socket " +
+                    "closed");
+        }
     }
 }
