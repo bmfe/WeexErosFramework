@@ -1,6 +1,7 @@
 package com.benmu.framework.manager.impl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Looper;
@@ -25,15 +26,14 @@ import java.util.List;
 
 public class ModalManager extends Manager {
     public static class BmAlert {
-        private static BMAlert mBmAlert = null;
+        private static AlertDialog mBmAlert = null;
 
         public static void showAlert(Context context, String title, String message, String okBtn,
                                      DialogInterface.OnClickListener okListenner, String cancelBtn,
                                      DialogInterface.OnClickListener cancelListenner, String
                                              titleAlign, String contentAlign) {
-            BMAlert.Builder builder = new BMAlert.Builder(context);
-            builder.setTitle(title).setMessage(message).setPositiveButton(okBtn, okListenner)
-                    .setTitleAlign(titleAlign).setMessageAlign(contentAlign);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(title).setMessage(message).setPositiveButton(okBtn, okListenner);
             if (!TextUtils.isEmpty(cancelBtn)) {
                 builder.setNegativeButton(cancelBtn, cancelListenner);
             }
