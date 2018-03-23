@@ -75,9 +75,11 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     public DefaultWXHttpAdapter(Context context) {
         this.mContext = context;
         mInjector = BaseJsInjector.getInstance();
-        client = new OkHttpClient.Builder()
-                .addNetworkInterceptor(new WeexOkhttp3Interceptor())
-                .build();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (DebugableUtil.isDebug()) {
+            builder.addNetworkInterceptor(new WeexOkhttp3Interceptor());
+        }
+        client = builder.build();
     }
 
     @Override

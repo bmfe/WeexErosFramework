@@ -50,6 +50,8 @@ public class DebugActivity extends AbstractWeexActivity {
             tv_jsverision.setText(jsVersion);
 
         }
+
+        cb_hotrefresh.setEnabled(!Constant.INTERCEPTOR_ACTIVE.equals(activeState));
         cb_inter.setChecked(Constant.INTERCEPTOR_ACTIVE.equals(activeState));
         cb_inter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -24,6 +24,7 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.AppUtils;
+import com.benmu.framework.utils.DebugableUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,15 +52,17 @@ public class AxiosManager extends Manager {
     public OkHttpClient createClient(Context context, long timeout) {
         CookieJarImpl cookieJar = new CookieJarImpl(new BMPersistentCookieStore
                 (context));
-        return new OkHttpClient.Builder()
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(new LoggerInterceptor("TAG"))
-                .addNetworkInterceptor(new WeexOkhttp3Interceptor())
                 //接口超时时间  默认3000毫秒
                 .connectTimeout(timeout == 0 ? 3000L : timeout, TimeUnit.MILLISECONDS)
                 .readTimeout(timeout == 0 ? 30000L : timeout, TimeUnit.MILLISECONDS).cookieJar
-                        (cookieJar)
-                //其他配置
-                .build();
+                        (cookieJar);
+        if (DebugableUtil.isDebug()) {
+            builder.addNetworkInterceptor(new WeexOkhttp3Interceptor());
+        }
+        return builder.build();
     }
 
     public void initClient(Context context) {
