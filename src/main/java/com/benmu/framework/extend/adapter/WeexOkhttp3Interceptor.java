@@ -60,24 +60,24 @@ public class WeexOkhttp3Interceptor implements Interceptor {
         Request request = chain.request();
         mEventReporter = NetworkEventReporterManager.get();
         RequestBodyHelper requestBodyHelper = null;
-//        if (mEventReporter.isEnabled()) {
+        if (mEventReporter != null) {
             requestBodyHelper = new RequestBodyHelper(mEventReporter, requestId);
             OkHttpInspectorRequest inspectorRequest =
                     new OkHttpInspectorRequest(requestId, request, requestBodyHelper);
             mEventReporter.requestWillBeSent(inspectorRequest);
-//        }
+        }
 
         Response response;
         try {
             response = chain.proceed(request);
         } catch (IOException e) {
-//            if (mEventReporter.isEnabled()) {
+            if (mEventReporter != null) {
                 mEventReporter.httpExchangeFailed(requestId, e.toString());
-//            }
+            }
             throw e;
         }
 
-//        if (mEventReporter.isEnabled()) {
+        if (mEventReporter != null) {
             if (requestBodyHelper.hasBody()) {
                 requestBodyHelper.reportDataSent();
             }
@@ -108,7 +108,7 @@ public class WeexOkhttp3Interceptor implements Interceptor {
                         .body(new ForwardingResponseBody(body, responseStream))
                         .build();
             }
-//        }
+        }
 
         return response;
     }
