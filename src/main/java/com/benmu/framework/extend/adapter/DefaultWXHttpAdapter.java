@@ -265,14 +265,14 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                     ? RequestBody.create(MediaType.parse(request.paramMap.get("Content-Type")), requestBodyString) : null;
         } else {
             body = HttpMethod.requiresRequestBody(method)
-                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), requestBodyString) : null;
+                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8"), requestBodyString) : null;
         }
         Request.Builder requestBuilder = new Request.Builder()
                 .url(request.url)
                 .method(method, body);
         if (request.paramMap != null) {
             for (Map.Entry<String, String> param : request.paramMap.entrySet()) {
-                requestBuilder.addHeader(param.getKey(), param.getValue());
+                requestBuilder.addHeader(param.getKey(),  TextUtil.toHumanReadableAscii(param.getValue()));
             }
         }
 
@@ -331,51 +331,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 }
             }
         });
-//        try {
-//            HttpURLConnection connection = openConnection(request, listener);
-//            Map<String, List<String>> headers = connection.getHeaderFields();
-//            int responseCode = connection.getResponseCode();
-//            if (listener != null) {
-//                listener.onHeadersReceived(responseCode, headers);
-//            }
-//
-//            response.statusCode = String.valueOf(responseCode);
-//            if (responseCode >= 200 && responseCode <= 299) {
-//                InputStream rawStream = connection.getInputStream();
-//                if (isInterceptor(request.url)) {
-////                    appendBaseJs(readInputStreamAsBytes(rawStream,
-////                            listener), response, listener);
-//                    response.originalData = readInputStreamAsBytes(rawStream,
-//                            listener);
-//                    if (listener != null) {
-//                        listener.onHttpFinish(response);
-//                    }
-//                } else {
-//                    //iconFont
-//                    response.originalData = readInputStreamAsBytes(rawStream, listener);
-//                    if (listener != null) {
-//                        listener.onHttpFinish(response);
-//                    }
-//                }
-//
-//            } else {
-//                response.errorMsg = readInputStream(connection.getErrorStream(), listener);
-//                if (listener != null) {
-//                    listener.onHttpFinish(response);
-//                }
-//            }
-//
-//        } catch (IOException | IllegalArgumentException e) {
-//            e.printStackTrace();
-//            response.statusCode = "-1";
-//            response.errorCode = "-1";
-//            response.errorMsg = e.getMessage();
-//            if (listener != null) {
-//                listener.onHttpFinish(response);
-//            }
-//            if (e instanceof IOException) {
-//            }
-//        }
     }
 
 
