@@ -21,6 +21,7 @@ import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.framework.utils.TextUtil;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
