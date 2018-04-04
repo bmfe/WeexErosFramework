@@ -71,7 +71,6 @@ dependencies {
     compile files('libs/umeng_social_net.jar')
     compile files('libs/umeng_social_api.jar')
     compile files('libs/umeng_social_tool.jar')
-    compile files('libs/GetuiSDK2.9.3.0.jar')
     compile 'com.android.support:multidex:1.0.1'
 
     //bs patch
@@ -86,4 +85,5 @@ dependencies {
 
     //plugin Moudle
     compile project(':ErosPluginAmap')
+    compile project(':erosplugingt')
 }

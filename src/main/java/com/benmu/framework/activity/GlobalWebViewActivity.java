@@ -24,7 +24,7 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.model.WebViewParamBean;
-import com.benmu.framework.utils.BaseCommonUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 
 /**
  * Created by Carry on 2017/8/25.

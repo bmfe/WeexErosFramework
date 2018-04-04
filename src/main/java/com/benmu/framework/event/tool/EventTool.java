@@ -3,9 +3,9 @@ package com.benmu.framework.event.tool;
 import android.content.Context;
 import android.text.TextUtils;
 import com.benmu.framework.model.CidBean;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 import com.taobao.weex.bridge.JSCallback;
 
 /**

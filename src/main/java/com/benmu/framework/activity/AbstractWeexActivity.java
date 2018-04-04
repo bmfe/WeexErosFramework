@@ -1,7 +1,9 @@
 package com.benmu.framework.activity;
 
+import com.benmu.erosplugingt.GetuiPushService;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.BuildConfig;
+import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.manager.ManagerFactory;
@@ -48,7 +50,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.benmu.framework.R;
-import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.PersistentManager;
@@ -86,6 +87,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by Carry on 2017/8/16.
@@ -159,7 +161,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     private void initPush() {
-        PushManager.getInstance().initialize(this.getApplicationContext());
+        PushManager.getInstance().initialize(this.getApplicationContext(), GetuiPushService.class);
     }
 
     private void initDebug() {
@@ -890,8 +892,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 } else {
                     postBusScanCode(code);
                 }
-            }catch (Exception e){
-                Log.e(TAG," handleDecodeInternally Exception -> " + e.getMessage());
+            } catch (Exception e) {
+                Log.e(TAG, " handleDecodeInternally Exception -> " + e.getMessage());
                 postBusScanCode(code);
             }
         }

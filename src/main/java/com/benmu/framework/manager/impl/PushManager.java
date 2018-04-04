@@ -15,8 +15,8 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.model.NotificationBean;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.ResourceUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 import com.taobao.weex.WXSDKInstance;
 
 import java.util.ArrayList;

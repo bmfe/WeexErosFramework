@@ -3,6 +3,7 @@ package com.benmu.framework.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.GlobalEventManager;

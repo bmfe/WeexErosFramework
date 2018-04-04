@@ -16,8 +16,8 @@ import com.benmu.framework.model.JsVersionInfoBean;
 import com.benmu.framework.model.Md5MapperModel;
 import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.AssetsUtil;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 
 import java.io.File;
 import java.util.Date;

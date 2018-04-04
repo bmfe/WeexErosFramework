@@ -13,10 +13,10 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.ShareManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.RelayBean;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.MultipleFileDownloader;
 import com.benmu.framework.utils.ResourceUtil;
 import com.benmu.framework.utils.WeChatRelayUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
