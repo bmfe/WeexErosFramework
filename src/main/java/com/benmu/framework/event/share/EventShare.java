@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
@@ -13,10 +14,12 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.ShareManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.RelayBean;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.MultipleFileDownloader;
 import com.benmu.framework.utils.ResourceUtil;
 import com.benmu.framework.utils.WeChatRelayUtil;
 import com.benmu.widget.utils.BaseCommonUtil;
+import com.benmu.wxbase.EventGate;
 import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
@@ -26,11 +29,24 @@ import java.util.List;
  * Created by Carry on 2017/9/26.
  */
 
-public class EventShare {
+public class EventShare extends EventGate {
     private static int ACTION_FRIEND = 0;
     private static int ACTION_CRICLE = 1;
     private JSCallback mSuccessCallback;
     private JSCallback mFailedCallback;
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean, String type) {
+        String params = weexEventBean.getJsParams();
+        if (WXEventCenter.EVENT_SHARE.equals(type)) {
+            share(context, params, weexEventBean.getCallbacks().get(0),
+                    weexEventBean.getCallbacks().get(1));
+        } else if (WXEventCenter.EVENT_RELAYTOFRIEND.equals(type)) {
+            relayToFriend(context, params, weexEventBean.getCallbacks());
+        } else if (WXEventCenter.EVENT_RELAYTOCRICLE.equals(type)) {
+            relayToCricle(context, params, weexEventBean.getCallbacks());
+        }
+    }
 
     public void share(Context context, String params, JSCallback success, JSCallback fail) {
         if (context == null || TextUtils.isEmpty(params)) return;
@@ -83,7 +99,7 @@ public class EventShare {
 
         if (WeChatRelayUtil.MEDIA_TEXT.equals(object.getMediaType())) {
             WeChatRelayUtil.relayToFriend(context, object.getDescription(), null, object
-                    .getMediaType(), mSuccessCallback,mFailedCallback);
+                    .getMediaType(), mSuccessCallback, mFailedCallback);
         } else {
 
             downLoadResource(context, object, ACTION_FRIEND);
@@ -153,10 +169,10 @@ public class EventShare {
                         if (ACTION_FRIEND == type) {
 
                             WeChatRelayUtil.relayToFriend(context, bean.getDescription(), uris,
-                                    bean.getMediaType(), mSuccessCallback,mFailedCallback);
+                                    bean.getMediaType(), mSuccessCallback, mFailedCallback);
                         } else if (ACTION_CRICLE == type) {
                             WeChatRelayUtil.relayToCircle(context, bean.getDescription(), uris,
-                                    bean.getMediaType(), mSuccessCallback,mFailedCallback);
+                                    bean.getMediaType(), mSuccessCallback, mFailedCallback);
                         }
                     }
                 }).execute();

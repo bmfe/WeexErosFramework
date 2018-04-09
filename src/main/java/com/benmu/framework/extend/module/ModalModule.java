@@ -1,5 +1,6 @@
 package com.benmu.framework.extend.module;
 
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
@@ -7,6 +8,7 @@ import com.taobao.weex.common.WXModule;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.constant.WXConstant;
+
 import java.util.ArrayList;
 
 /**
@@ -19,7 +21,7 @@ public class ModalModule extends WXModule {
     public void alert(String options, final JSCallback callback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_MODAL_ALERT);
+        eventBean.setKey(WXEventCenter.EVENT_MODAL_ALERT);
         eventBean.setJsParams(options);
         eventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
@@ -29,7 +31,7 @@ public class ModalModule extends WXModule {
     public void confirm(String options, final JSCallback cancel, final JSCallback ok) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_MODAL_CONFIRM);
+        eventBean.setKey(WXEventCenter.EVENT_MODAL_CONFIRM);
         eventBean.setJsParams(options);
         ArrayList<JSCallback> jsCallbacks = new ArrayList<>();
         jsCallbacks.add(cancel);
@@ -42,7 +44,7 @@ public class ModalModule extends WXModule {
     public void showLoading(String options, JSCallback callback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_MODAL_SHOWLOADING);
+        eventBean.setKey(WXEventCenter.EVENT_MODAL_SHOWLOADING);
         eventBean.setJsParams(options);
         eventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
@@ -52,7 +54,7 @@ public class ModalModule extends WXModule {
     public void hideLoading(JSCallback callback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_MODAL_DISMISSLOADING);
+        eventBean.setKey(WXEventCenter.EVENT_MODAL_DISMISSLOADING);
         eventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
@@ -61,7 +63,7 @@ public class ModalModule extends WXModule {
     public void toast(String options) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_MODAL_TOAST);
+        eventBean.setKey(WXEventCenter.EVENT_MODAL_TOAST);
         eventBean.setJsParams(options);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }

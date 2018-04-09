@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.squareup.otto.Subscribe;
@@ -42,7 +43,7 @@ public class EventCenter {
 
     @Subscribe
     public void on(Intent intent) {
-        if (WXConstant.WXEventCenter.EVENT_JS_ON.equals(intent.getAction())) {
+        if (WXEventCenter.EVENT_JS_ON.equals(intent.getAction())) {
             Event event = (Event) intent.getSerializableExtra("data");
             List<Event> list = mEvents.get(event.getType());
             if (list == null) {
@@ -59,7 +60,7 @@ public class EventCenter {
 
     @Subscribe
     public void emit(Intent intent) {
-        if (WXConstant.WXEventCenter.EVENT_JS_EMIT.equals(intent.getAction())) {
+        if (WXEventCenter.EVENT_JS_EMIT.equals(intent.getAction())) {
             Log.e("emit", "==========");
             Emit emit = (Emit) intent.getSerializableExtra("data");
             List<Event> list = mEvents.get(emit.getType());
@@ -85,7 +86,7 @@ public class EventCenter {
 
     @Subscribe
     public void off(Intent intent) {
-        if (WXConstant.WXEventCenter.EVENT_JS_OFF.equals(intent.getAction())) {
+        if (   WXEventCenter.EVENT_JS_OFF.equals(intent.getAction())) {
             Off off = (Off) intent.getSerializableExtra("data");
             mEvents.remove(off.getType());
             if (off.getCallback() != null) {
@@ -96,7 +97,7 @@ public class EventCenter {
 
     @Subscribe
     public void offall(Intent intent) {
-        if (WXConstant.WXEventCenter.EVENT_JS_OFFALL.equals(intent.getAction())) {
+        if (   WXEventCenter.EVENT_JS_OFFALL.equals(intent.getAction())) {
             mEvents.clear();
         }
     }
@@ -104,7 +105,7 @@ public class EventCenter {
 
     @Subscribe
     public void destoryInstance(Intent intent) {
-        if (WXConstant.WXEventCenter.EVENT_INSTANCE_DESTORY.equals(intent.getAction())) {
+        if (   WXEventCenter.EVENT_INSTANCE_DESTORY.equals(intent.getAction())) {
             String destoryInstanceId = intent.getStringExtra("data");
             if (mWxInstances.contains(destoryInstanceId)) {
                 mWxInstances.remove(destoryInstanceId);

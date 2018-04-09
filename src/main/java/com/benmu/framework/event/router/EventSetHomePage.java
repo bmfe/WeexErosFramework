@@ -11,12 +11,20 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.model.RouterModel;
+import com.benmu.framework.model.WeexEventBean;
+import com.benmu.wxbase.EventGate;
 
 /**
  * Created by liuyuanxiao on 18/1/4.
  */
 
-public class EventSetHomePage {
+public class EventSetHomePage extends EventGate{
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean) {
+        setHomePage(context, weexEventBean.getJsParams());
+    }
+
     @SuppressWarnings("WrongConstant")
     public void setHomePage(Context context, String params) {
         StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);

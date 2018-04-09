@@ -6,11 +6,13 @@ import com.benmu.framework.BuildConfig;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.PermissionManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
@@ -57,14 +59,12 @@ import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.UploadImageBean;
-import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.InsertEnvUtil;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMFloatingLayer;
 import com.benmu.widget.view.BMLoding;
 import com.benmu.widget.view.BaseToolBar;
-import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.util.BitmapUtil;
@@ -75,6 +75,7 @@ import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMShareAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,7 +162,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     private void initPush() {
-        PushManager.getInstance().initialize(this.getApplicationContext(), GetuiPushService.class);
+
     }
 
     private void initDebug() {
@@ -213,7 +214,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                             .getManagerService(DispatchEventManager.class);
                     WeexEventBean eventBean = new WeexEventBean();
                     eventBean.setContext(mAct);
-                    eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+                    eventBean.setKey(WXEventCenter.EVENT_CAMERA);
                     dispatchEventManager.getBus().post(eventBean);
 //                    connectionDebugService(BMWXEnvironment.mPlatformConfig.getUrl()
 //                            .getDebugServer());
@@ -474,7 +475,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
     protected void destroyWXInstance() {
         if (mWXInstance != null) {
-            Intent intent = new Intent(WXConstant.WXEventCenter.EVENT_INSTANCE_DESTORY);
+            Intent intent = new Intent(WXEventCenter.EVENT_INSTANCE_DESTORY);
             intent.putExtra("data", mWXInstance.getInstanceId());
             ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(intent);
             mWXInstance.registerRenderListener(null);
@@ -748,6 +749,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 }
                 break;
         }
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 

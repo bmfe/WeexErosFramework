@@ -10,7 +10,9 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WechatLoginBean;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.JsPoster;
+import com.benmu.wxbase.EventGate;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 import com.umeng.socialize.UMAuthListener;
@@ -23,11 +25,16 @@ import java.util.Map;
  * Created by Carry on 2017/11/24.
  */
 
-public class EventAuth {
+public class EventAuth extends EventGate{
     private Context mContext;
     private JSCallback mCallback;
     private boolean mSharing;
     private ProgressDialog mProgressDialog;
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean) {
+        wechat(context, weexEventBean.getJsParams(), weexEventBean.getJscallback());
+    }
 
     public void wechat(Context context, String params, JSCallback jscallback) {
         if (context == null) return;

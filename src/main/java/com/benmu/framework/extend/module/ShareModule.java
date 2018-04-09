@@ -1,5 +1,6 @@
 package com.benmu.framework.extend.module;
 
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
@@ -7,6 +8,7 @@ import com.taobao.weex.common.WXModule;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.constant.WXConstant;
+
 import java.util.ArrayList;
 
 /**
@@ -17,7 +19,7 @@ public class ShareModule extends WXModule {
     @JSMethod
     public void share(String params, JSCallback success, JSCallback fail) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_SHARE);
+        weexEventBean.setKey(WXEventCenter.EVENT_SHARE);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJsParams(params);
         ArrayList<JSCallback> callbacks = new ArrayList<>();
@@ -38,7 +40,7 @@ public class ShareModule extends WXModule {
     public void relayToFriend(String params, JSCallback successCallback, JSCallback
             failedCallback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_RELAYTOFRIEND);
+        weexEventBean.setKey(WXEventCenter.EVENT_RELAYTOFRIEND);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJsParams(params);
         ArrayList<JSCallback> callbacks = new ArrayList<>();
@@ -52,7 +54,7 @@ public class ShareModule extends WXModule {
     public void relayToCricle(String params, JSCallback successCallback, JSCallback
             failedCallback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_RELAYTOCRICLE);
+        weexEventBean.setKey(WXEventCenter.EVENT_RELAYTOCRICLE);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJsParams(params);
         ArrayList<JSCallback> callbacks = new ArrayList<>();

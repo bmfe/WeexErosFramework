@@ -3,6 +3,7 @@ package com.benmu.framework.extend.module;
 import android.support.v7.app.AlertDialog;
 
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
@@ -26,7 +27,7 @@ public class CameraModule extends WXModule {
     public void scan(JSCallback callback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA);
+        eventBean.setKey(WXEventCenter.EVENT_CAMERA);
         eventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
@@ -36,16 +37,17 @@ public class CameraModule extends WXModule {
     public void uploadImage(String params, JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_UPLOADIMAGE);
+        eventBean.setKey(WXEventCenter.EVENT_CAMERA_UPLOADIMAGE);
         eventBean.setJsParams(params);
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
+
     @JSMethod
     public void cameraUpload(String params, JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_PATH);
+        eventBean.setKey(WXEventCenter.EVENT_CAMERA_PATH);
         eventBean.setJsParams(params);
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
@@ -56,7 +58,7 @@ public class CameraModule extends WXModule {
     public void uploadScreenshot(JSCallback callback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_CAMERA_UPLOADSCREENSHOT);
+        eventBean.setKey(WXEventCenter.EVENT_CAMERA_UPLOADSCREENSHOT);
         eventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }

@@ -1,5 +1,6 @@
 package com.benmu.framework.extend.module;
 
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
@@ -16,7 +17,7 @@ public class WeChatLoginModule extends WXModule {
     @JSMethod
     public void wechat(String parameterString, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_WECHATLOGIN);
+        weexEventBean.setKey(WXEventCenter.EVENT_WECHATLOGIN);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         weexEventBean.setJsParams(parameterString);

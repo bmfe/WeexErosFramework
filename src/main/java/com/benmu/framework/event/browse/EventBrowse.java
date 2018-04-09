@@ -8,12 +8,19 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.BroeserImgModuleBean;
+import com.benmu.framework.model.WeexEventBean;
+import com.benmu.wxbase.EventGate;
 
 /**
  * Created by Carry on 2017/8/21.
  */
 
-public class EventBrowse {
+public class EventBrowse extends EventGate{
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean) {
+        open(weexEventBean.getJsParams(),context);
+    }
 
     public void open(String params, Context context) {
 

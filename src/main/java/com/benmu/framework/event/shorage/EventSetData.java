@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.StorageManager;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.JsPoster;
+import com.benmu.wxbase.EventGate;
 import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
@@ -13,7 +15,14 @@ import java.util.ArrayList;
  * Created by Carry on 2017/5/21.
  */
 
-public class EventSetData {
+public class EventSetData extends EventGate {
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean) {
+        setData(context, weexEventBean.getParamsList(), weexEventBean
+                .getJscallback());
+    }
+
     public void setData(Context context, ArrayList<String> paramsList, JSCallback jscallback) {
         StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
         String key = paramsList.get(0);

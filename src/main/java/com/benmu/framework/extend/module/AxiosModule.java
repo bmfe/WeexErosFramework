@@ -2,6 +2,7 @@ package com.benmu.framework.extend.module;
 
 
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
@@ -20,7 +21,7 @@ public class AxiosModule extends WXModule {
     public void fetch(String params, final JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_FETCH);
+        eventBean.setKey(   WXEventCenter.EVENT_FETCH);
         eventBean.setJsParams(params);
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
@@ -30,7 +31,7 @@ public class AxiosModule extends WXModule {
     public void uploadImage(String params, final JSCallback jsCallback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_IMAGE_UPLOAD);
+        eventBean.setKey(   WXEventCenter.EVENT_IMAGE_UPLOAD);
         eventBean.setJsParams(params);
         eventBean.setJscallback(jsCallback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post

@@ -58,7 +58,6 @@ dependencies {
     compile 'com.taobao.android:weex_inspector:0.13.4'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.alibaba:fastjson:1.1.68.android'
     compile project(':sdk')
     compile(name: 'bm_imagepicker', ext: 'aar')
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'

@@ -1,5 +1,6 @@
 package com.benmu.framework.extend.module;
 
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.model.WeexEventBean;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
@@ -20,7 +21,7 @@ public class PayModule extends WXModule {
     public void payByWechat(String params, JSCallback callback) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_PAYBYWECHAT);
+        eventBean.setKey(WXEventCenter.EVENT_PAYBYWECHAT);
         eventBean.setJsParams(params);
         eventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);

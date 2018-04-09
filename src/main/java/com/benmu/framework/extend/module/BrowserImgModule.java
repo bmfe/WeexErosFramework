@@ -1,6 +1,7 @@
 package com.benmu.framework.extend.module;
 
 import com.benmu.framework.constant.WXConstant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
@@ -17,7 +18,7 @@ public class BrowserImgModule extends WXModule {
     public void open(String json) {
         WeexEventBean eventBean = new WeexEventBean();
         eventBean.setContext(mWXSDKInstance.getContext());
-        eventBean.setKey(WXConstant.WXEventCenter.EVENT_BROWSERIMG);
+        eventBean.setKey(WXEventCenter.EVENT_BROWSERIMG);
         eventBean.setJsParams(json);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }

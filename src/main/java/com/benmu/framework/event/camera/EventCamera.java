@@ -1,11 +1,15 @@
 package com.benmu.framework.event.camera;
 
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.PermissionUtils;
 import com.benmu.framework.utils.TextUtil;
+import com.benmu.wxbase.EventGate;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import android.Manifest;
@@ -17,7 +21,6 @@ import com.benmu.framework.R;
 import com.benmu.framework.manager.impl.CameraManager;
 import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.ModalManager;
-import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.UploadImageBean;
@@ -30,9 +33,21 @@ import com.taobao.weex.bridge.JSCallback;
  * Created by Carry on 2017/8/16.
  */
 
-public class EventCamera {
+public class EventCamera extends EventGate {
     private JSCallback mUploadAvatar, mScanCallback, mScreenShotCallback;
     private Context mUploadContext;
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean, String type) {
+        String params = weexEventBean.getJsParams();
+        if (WXEventCenter.EVENT_CAMERA_UPLOADIMAGE.equals(type)) {
+            uploadImage(params, context, weexEventBean.getJscallback());
+        } else if (WXEventCenter.EVENT_CAMERA_PATH.equals(type)) {
+            openCamera(params, context, weexEventBean.getJscallback());
+        } else if (WXEventCenter.EVENT_CAMERA.equals(type)) {
+            scan(weexEventBean.getJscallback(), context);
+        }
+    }
 
     public void scan(JSCallback jscallback, Context context) {
         mScanCallback = jscallback;
