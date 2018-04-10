@@ -1,6 +1,5 @@
 package com.benmu.framework.activity;
 
-import com.benmu.erosplugingt.GetuiPushService;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -147,7 +146,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initUrl(data);
         synRouterStack();
         initDebug();
-        initPush();
+//        initPush();
         imagePicker = ImagePicker.getInstance();
         mReloadReceiver = new BroadcastReceiver() {
             @Override
@@ -161,9 +160,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         mWxAnalyzerDelegate.onCreate();
     }
 
-    private void initPush() {
-
-    }
+//    private void initPush() {
+//        GetuiManager.pushInit(this.getApplication());
+//    }
 
     private void initDebug() {
         if (!DebugableUtil.isDebug()) return;

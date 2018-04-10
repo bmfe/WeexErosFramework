@@ -84,5 +84,5 @@ dependencies {
 
     //plugin Moudle
     compile project(':ErosPluginAmap')
-    compile project(':erosplugingt')
+//    compile project(':erosplugingt')
 }

@@ -13,7 +13,11 @@ import java.util.HashMap;
 
 public class PlugManager {
     public static void initPlug() {
-        Manager geoManager = ManagerFactory.getManagerService("com.plugamap.manager.GeoManager");
+        pluginInit("com.plugamap.manager.GeoManager");
+    }
+
+    private static void pluginInit(String clazzName) {
+        Manager geoManager = ManagerFactory.getManagerService(clazzName);
         if (geoManager != null) {
             geoManager.init();
             registerCompnentsAndModules(geoManager.getComponentsAndModules());
