@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class PlugManager {
     public static void initPlug() {
         pluginInit("com.plugamap.manager.GeoManager");
+        pluginInit("com.plugamap.manager.GeoManager");
     }
 
     private static void pluginInit(String clazzName) {
