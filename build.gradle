@@ -79,10 +79,12 @@ dependencies {
     debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
 
     //Bindigx
-    implementation 'com.alibaba.android:bindingx-core:1.0.1'
-    implementation 'com.alibaba.android:bindingx_weex_plugin:1.0.2'
+    compile 'com.alibaba.android:bindingx-core:1.0.1'
+    compile  'com.alibaba.android:bindingx_weex_plugin:1.0.2'
+    compile 'org.weex.plugin:plugin-loader:1.0.0'
+
 
     //plugin Moudle
     compile project(':ErosPluginAmap')
-//    compile project(':erosplugingt')
+    compile project(':erosplugingt')
 }

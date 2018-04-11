@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
+import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -61,6 +62,7 @@ public class BMWXEngine {
 //        initMap();
         PlugManager.initPlug();
         initBindingx();
+        WeexPluginContainer.loadAll(context);
     }
 
     private static void initBindingx() {
