@@ -96,7 +96,7 @@ public class BMWXApplication extends Application {
                     GlobalEventManager.appActive(((AbstractWeexActivity) activity)
                             .getWXSDkInstance());
                 }
-                //app resume  try check verison
+                //app resume  try check version
                 if (mVersionChecker != null) {
                     mVersionChecker.checkVersion();
                 }
