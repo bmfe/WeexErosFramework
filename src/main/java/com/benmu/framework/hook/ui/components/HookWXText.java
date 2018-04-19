@@ -1,4 +1,4 @@
-package com.benmu.framework.extend.comoponents;
+package com.benmu.framework.hook.ui.components;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Layout;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
-import com.benmu.framework.extend.comoponents.view.BMWXTextView;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Constants;
@@ -30,138 +28,67 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by Carry on 17/3/27.
+ * Created by Carry on 2018/4/17.
  */
-public class BMWXText extends WXComponent<BMWXTextView> {
-    public BMWXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
-        super(instance, dom, parent);
-        registerBroadCast();
+
+public class HookWXText extends WXText {
+    private String TAG = getClass().getName();
+
+    public HookWXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
+            instanceId, boolean isLazy) {
+        super(instance, dom, parent, instanceId, isLazy);
+        Log.e(TAG, "HookWXText init");
         initFontSize();
     }
 
+    public HookWXText(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+        super(instance, node, parent);
+        Log.e(TAG, "HookWXText init");
+        initFontSize();
+    }
 
-    public static final int sDEFAULT_SIZE = 32;
-    private BMWXText.DefaultBroadcastReceiver mReceiver;
-    private Layout mCurrentLayout;
-    private String mCurrentFontSize = "NORM";
-    private String mChangeFontSize;
-    private float mCurrentEnlarge;
-    private float mCurrentScale = 1;
-    private boolean has = false;
 
     public static class Creator implements ComponentCreator {
 
         public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer
                 parent) throws IllegalAccessException, InvocationTargetException,
                 InstantiationException {
-            return new WXText(instance, node, parent);
+            return new HookWXText(instance, node, parent);
         }
     }
 
-    @Deprecated
-    public BMWXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
-            instanceId, boolean isLazy) {
-        this(instance, dom, parent);
-    }
-
-
-    @Override
-    protected BMWXTextView initComponentHostView(@NonNull Context context) {
-        BMWXTextView textView = new BMWXTextView(context);
-        return textView;
-    }
 
     @Override
     public void updateExtra(Object extra) {
-        if (extra instanceof Layout &&
-                getHostView() != null && !extra.equals(getHostView().getTextLayout())) {
-
-            final Layout layout = (Layout) extra;
-            getHostView().setTextLayout(layout);
-            getHostView().invalidate();
-        }
+        super.updateExtra(extra);
         updateFontSize();
-//        if (!has) {
-//            WXStyle styles = getDomObject().getStyles();
-//            styles.put("width", 1080);
-//            styles.put("height", Math.ceil(38.8*750/1080.0));
-//            updateStyle(styles);
-//            has = true;
-//        }
     }
 
-    @Override
-    public void refreshData(WXComponent component) {
-        super.refreshData(component);
-        if (component instanceof WXText) {
-            updateExtra(component.getDomObject().getExtra());
-        }
-    }
+    private String mCurrentFontSize = "NORM";
+    private String mChangeFontSize;
+    private float mCurrentEnlarge;
+    private float mCurrentScale = 1;
+    private HookWXText.DefaultBroadcastReceiver mReceiver;
 
-    @Override
-    protected boolean setProperty(String key, Object param) {
-        switch (key) {
-            case Constants.Name.LINES:
-            case Constants.Name.FONT_SIZE:
-            case Constants.Name.FONT_WEIGHT:
-            case Constants.Name.FONT_STYLE:
-            case Constants.Name.COLOR:
-            case Constants.Name.TEXT_DECORATION:
-            case Constants.Name.FONT_FAMILY:
-            case Constants.Name.TEXT_ALIGN:
-            case Constants.Name.TEXT_OVERFLOW:
-            case Constants.Name.LINE_HEIGHT:
-            case Constants.Name.VALUE:
-                return true;
-            default:
-                return super.setProperty(key, param);
-        }
-    }
-
-    /**
-     * Flush view no matter what height and width the {@link WXDomObject} specifies.
-     *
-     * @param extra must be a {@link Layout} object, otherwise, nothing will happen.
-     */
-    private void flushView(Object extra) {
-
-    }
-
-
-    @Override
-    protected Object convertEmptyProperty(String propName, Object originalValue) {
-        switch (propName) {
-            case Constants.Name.FONT_SIZE:
-                return WXText.sDEFAULT_SIZE;
-            case Constants.Name.COLOR:
-                return "black";
-        }
-        return super.convertEmptyProperty(propName, originalValue);
-    }
-
-
-    /**
-     * 自定义方法start
-     **/
     private void initFontSize() {
+        registerBroadCast();
         SharedPreferences sp = getContext().getSharedPreferences("JYT_NATIVE_SP", Context
                 .MODE_PRIVATE);
         mChangeFontSize = sp.getString("SP_FONTSIZE", null);
     }
 
-    private void registerBroadCast() {
-        mReceiver = new BMWXText.DefaultBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.benmu.jyt.ACTION_GOBALFONTSIZE_CHANGE");
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, filter);
-    }
-
 
     private void updateFontSize() {
+        if (getDomObject() != null && getDomObject().getStyles().get(Constants.Name.FONT_SIZE) ==
+                null) {
+            WXStyle s = getDomObject().getStyles();
+            s.put(Constants.Name.FONT_SIZE, 30);
+            updateStyle(s);
+            return;
+        }
         if (mChangeFontSize == null) {
             return;
         }
-
         WXStyle styles = null;
         WXAttr attrs = null;
         if (getDomObject() != null) {
@@ -201,7 +128,7 @@ public class BMWXText extends WXComponent<BMWXTextView> {
             Object object = wxStyle.get("fontSize");
             if (object instanceof Integer) {
                 int fontSize = (int) object;
-                int changeFontSize = (int) (fontSize * (scale));
+                int changeFontSize = Math.round(fontSize * (scale));
                 wxStyle.put("fontSize", changeFontSize);
 
             }
@@ -209,7 +136,7 @@ public class BMWXText extends WXComponent<BMWXTextView> {
             Object lineHeight = wxStyle.get("lineHeight");
             if (lineHeight instanceof Integer) {
                 int target = (int) lineHeight;
-                wxStyle.put("lineHeight", (int) (target * scale));
+                wxStyle.put("lineHeight", Math.round(target * scale));
             }
 
 
@@ -220,14 +147,23 @@ public class BMWXText extends WXComponent<BMWXTextView> {
 
     }
 
-    /**
-     * 自定义方法end
-     **/
 
 
-    /**
-     * 自定义方法start
-     **/
+
+    public void updateStyle(Map<String,Object> styles){
+        Message message = Message.obtain();
+        WXDomTask task = new WXDomTask();
+        task.instanceId = getInstanceId();
+        task.args = new ArrayList<>();
+
+        JSONObject styleJson = new JSONObject(styles);
+        task.args.add(getRef());
+        task.args.add(styleJson);
+        task.args.add(false);//flag pesudo
+        message.obj = task;
+        message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+        WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
+    }
 
     private float getEnlarge(String fontsize) {
         if ("NORM".equals(fontsize)) {
@@ -253,6 +189,15 @@ public class BMWXText extends WXComponent<BMWXTextView> {
         }
     }
 
+
+    private void registerBroadCast() {
+        mReceiver = new HookWXText.DefaultBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.benmu.jyt.ACTION_GOBALFONTSIZE_CHANGE");
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mReceiver, filter);
+    }
+
+
     public class DefaultBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -266,21 +211,8 @@ public class BMWXText extends WXComponent<BMWXTextView> {
     }
 
 
-    public void updateStyle(Map<String,Object> styles){
-        Message message = Message.obtain();
-        WXDomTask task = new WXDomTask();
-        task.instanceId = getInstanceId();
-        task.args = new ArrayList<>();
+    //benmu.org
 
-        JSONObject styleJson = new JSONObject(styles);
-        task.args.add(getRef());
-        task.args.add(styleJson);
-        task.args.add(false);//flag pesudo
-        message.obj = task;
-        message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
-        WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
-    }
+
 
 }
-
-

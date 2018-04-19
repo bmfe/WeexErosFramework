@@ -10,6 +10,7 @@ import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.debug.ws.DebuggerWebSocket;
+import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
@@ -32,6 +33,7 @@ public class BMWXApplication extends Application {
     private WXSDKInstance mMediator;
     private VersionChecker mVersionChecker;
     private DebuggerWebSocket debugSocket;
+    private DefaultTypefaceAdapter typefaceAdapter;
 
     @Override
     public void onCreate() {
@@ -49,6 +51,14 @@ public class BMWXApplication extends Application {
     private void initDebugSocket() {
         debugSocket = new DebuggerWebSocket(this);
         debugSocket.init();
+    }
+
+    public DefaultTypefaceAdapter getTypefaceAdapter() {
+        return typefaceAdapter;
+    }
+
+    public void setTypefaceAdapter(DefaultTypefaceAdapter typefaceAdapter) {
+        this.typefaceAdapter = typefaceAdapter;
     }
 
     private void initShare() {

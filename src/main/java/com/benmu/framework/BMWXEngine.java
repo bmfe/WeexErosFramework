@@ -12,11 +12,16 @@ import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
-import com.benmu.framework.extend.adapter.BMTypefaceAdapter;
+import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
 import com.benmu.framework.extend.mediator.MediatorDocker;
+import com.benmu.framework.hook.ui.components.HookImage;
+import com.benmu.framework.hook.ui.components.HookInput;
+import com.benmu.framework.hook.ui.components.HookListComponent;
+import com.benmu.framework.hook.ui.components.HookTextarea;
+import com.benmu.framework.hook.ui.components.HookWXText;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
@@ -28,8 +33,9 @@ import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
-import com.taobao.weex.dom.RichTextDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
+import com.taobao.weex.ui.SimpleComponentHolder;
+import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
@@ -61,6 +67,36 @@ public class BMWXEngine {
 //        initMap();
         PlugManager.initPlug();
         initBindingx();
+        initHook();
+    }
+
+    private static void initHook() {
+        try {
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            HookWXText.class,
+                            new HookWXText.Creator()
+                    ),
+                    false,
+                    WXBasicComponentType.TEXT
+            );
+            WXSDKEngine.registerComponent(WXBasicComponentType.INPUT, HookInput.class, false);
+            WXSDKEngine.registerComponent(WXBasicComponentType.TEXTAREA, HookTextarea.class, false);
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            HookImage.class,
+                            new HookImage.Ceator()
+                    ),
+                    false,
+                    WXBasicComponentType.IMAGE,
+                    WXBasicComponentType.IMG
+            );
+            WXSDKEngine.registerComponent(HookListComponent.class, false, WXBasicComponentType
+                            .LIST, WXBasicComponentType.VLIST, WXBasicComponentType.RECYCLER,
+                    WXBasicComponentType.WATERFALL);
+        } catch (WXException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void initBindingx() {
@@ -110,6 +146,7 @@ public class BMWXEngine {
         BMWXEnvironment.mPlatformConfig = CustomerEnvOptionManager.initPlatformConfig
                 (context);
         BMWXEnvironment.mApplicationContext = context;
+        BMWXApplication.getWXApplication().setTypefaceAdapter(new DefaultTypefaceAdapter(context));
     }
 
     private static void initInterceptor(Application context, BMInitConfig initConfig) {
@@ -141,7 +178,7 @@ public class BMWXEngine {
     private static void registerCustomDomObject() throws WXException {
         WXSDKEngine.registerDomObject("bmtext", WXTextDomObject.class);
         WXSDKEngine.registerDomObject("bmspan", WXTextDomObject.class);
-        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
+//        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
     }
 
 
@@ -151,7 +188,6 @@ public class BMWXEngine {
                         .setImgAdapter(new DefaultWXImageAdapter())
                         .setHttpAdapter(new DefaultWXHttpAdapter(app))
                         .setWebSocketAdapterFactory(new LightlyWebSocketFactory())
-                        .setTypefaceAdapter(new BMTypefaceAdapter(app))
                         .setURIAdapter(new BMDefaultUriAdapter())
                         .build()
         );

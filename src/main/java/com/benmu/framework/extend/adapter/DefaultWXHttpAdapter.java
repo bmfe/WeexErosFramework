@@ -10,6 +10,7 @@ import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.hook.TypeFaceHandler;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
@@ -25,6 +26,7 @@ import com.benmu.framework.utils.TextUtil;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.utils.TypefaceUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -59,6 +61,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private ExecutorService mExecutorService;
     private Context mContext;
     private String[] mFileFilter = {".js", ".css", ".html"};
+    private String[] mIconFontFilter = {".ttf", ".woff"};
     private String mBaseJs;
     private BaseJsInjector mInjector;
     private OkHttpClient client;
@@ -81,10 +84,22 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         client = builder.build();
     }
 
+
+    public OkHttpClient getHttpClient() {
+        return client;
+    }
+
     @Override
     public void sendRequest(final WXRequest request, final OnHttpListener listener) {
         if (listener != null) {
             listener.onHttpStart();
+        }
+
+        Log.e("DefaultWXHttpAdapter", "url>>>>>>" + request.url);
+
+        if (isIconFontRes(request.url)) {
+            TypeFaceHandler.load(request.url, listener);
+            return;
         }
 
         if (!(Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive
@@ -95,7 +110,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 @Override
                 public void run() {
                     doInterceptor(request, listener);
-
                 }
             });
         }
@@ -105,6 +119,13 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
     private boolean isInterceptor(String url) {
         return url.endsWith(".js");
+    }
+
+    private boolean isIconFontRes(String url) {
+        for (String iconFilter : mIconFontFilter) {
+            if (url.endsWith(iconFilter)) return true;
+        }
+        return false;
     }
 
     private void doInterceptor(WXRequest request, OnHttpListener listener) {
@@ -158,15 +179,9 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             if (listener != null) {
                 response.statusCode = 200 + "";
                 if (isInterceptor(request.url)) {
-//                    response.originalData = appendBaseJs(bytes);
                     response.originalData = bytes;
                     appendBaseJs(response, listener);
-                } else {
-                    //iconFont
-                    response.originalData = bytes;
-                    listener.onHttpFinish(response);
                 }
-
             }
             hideError();
         } else {
@@ -261,17 +276,20 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         RequestBody body = null;
         if (request.paramMap != null && request.paramMap.containsKey("Content-Type")) {
             body = HttpMethod.requiresRequestBody(method)
-                    ? RequestBody.create(MediaType.parse(request.paramMap.get("Content-Type")), requestBodyString) : null;
+                    ? RequestBody.create(MediaType.parse(request.paramMap.get("Content-Type")),
+                    requestBodyString) : null;
         } else {
             body = HttpMethod.requiresRequestBody(method)
-                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8"), requestBodyString) : null;
+                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;" +
+                    "charset=UTF-8"), requestBodyString) : null;
         }
         Request.Builder requestBuilder = new Request.Builder()
                 .url(request.url)
                 .method(method, body);
         if (request.paramMap != null) {
             for (Map.Entry<String, String> param : request.paramMap.entrySet()) {
-                requestBuilder.addHeader(param.getKey(),  TextUtil.toHumanReadableAscii(param.getValue()));
+                requestBuilder.addHeader(param.getKey(), TextUtil.toHumanReadableAscii(param
+                        .getValue()));
             }
         }
 
@@ -304,7 +322,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 wxResponse.statusCode = String.valueOf(response.code());
                 wxResponse.originalData = responseBody;
                 wxResponse.extendParams = new HashMap<>();
-                for (Map.Entry<String, List<String>> entry : response.headers().toMultimap().entrySet()) {
+                for (Map.Entry<String, List<String>> entry : response.headers().toMultimap()
+                        .entrySet()) {
                     wxResponse.extendParams.put(entry.getKey(), entry.getValue());
                 }
 
@@ -316,13 +335,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
                 } else {
                     if (isInterceptor(request.url)) {
                         appendBaseJs(wxResponse, listener);
-//                    response.originalData = readInputStreamAsBytes(rawStream,
-//                            listener);
-                        if (listener != null) {
-                            listener.onHttpFinish(wxResponse);
-                        }
-                    } else {
-                        //iconFont
                         if (listener != null) {
                             listener.onHttpFinish(wxResponse);
                         }
@@ -332,133 +344,4 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
         });
     }
 
-
-    /**
-     * Opens an {@link HttpURLConnection} with parameters.
-     *
-     * @return an open connection
-     */
-    private HttpURLConnection openConnection(WXRequest request, OnHttpListener listener) throws
-            IOException {
-        URL url = new URL(request.url);
-        HttpURLConnection connection = createConnection(url);
-        connection.setConnectTimeout(request.timeoutMs);
-        connection.setReadTimeout(request.timeoutMs);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-
-        if (request.paramMap != null) {
-            Set<String> keySets = request.paramMap.keySet();
-            for (String key : keySets) {
-                connection.addRequestProperty(key, request.paramMap.get(key));
-            }
-        }
-
-        if ("POST".equals(request.method) || "PUT".equals(request.method) || "PATCH".equals
-                (request.method)) {
-            connection.setRequestMethod(request.method);
-            if (request.body != null) {
-                if (listener != null) {
-                    listener.onHttpUploadProgress(0);
-                }
-                connection.setDoOutput(true);
-                DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-                out.write(request.body.getBytes());
-                out.close();
-                if (listener != null) {
-                    listener.onHttpUploadProgress(100);
-                }
-            }
-        } else if (!TextUtils.isEmpty(request.method)) {
-            connection.setRequestMethod(request.method);
-        } else {
-            connection.setRequestMethod("GET");
-        }
-
-        return connection;
-    }
-
-    private byte[] readInputStreamAsBytes(InputStream inputStream, OnHttpListener listener)
-            throws IOException {
-        if (inputStream == null) {
-            return null;
-        }
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-        int nRead;
-        int readCount = 0;
-        byte[] data = new byte[2048];
-
-        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, nRead);
-            readCount += nRead;
-            if (listener != null) {
-                listener.onHttpResponseProgress(readCount);
-            }
-        }
-
-        buffer.flush();
-
-        return buffer.toByteArray();
-    }
-
-    private String readInputStream(InputStream inputStream, OnHttpListener listener) throws
-            IOException {
-        if (inputStream == null) {
-            return null;
-        }
-        StringBuilder builder = new StringBuilder();
-        BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        char[] data = new char[2048];
-        int len;
-        while ((len = localBufferedReader.read(data)) != -1) {
-            builder.append(data, 0, len);
-            if (listener != null) {
-                listener.onHttpResponseProgress(builder.length());
-            }
-        }
-        localBufferedReader.close();
-        return builder.toString();
-    }
-
-    /**
-     * Create an {@link HttpURLConnection} for the specified {@code url}.
-     */
-    protected HttpURLConnection createConnection(URL url) throws IOException {
-        return (HttpURLConnection) url.openConnection();
-    }
-
-    public interface IEventReporterDelegate {
-        void preConnect(HttpURLConnection connection, String body);
-
-        void postConnect();
-
-        InputStream interpretResponseStream(InputStream inputStream);
-
-        void httpExchangeFailed(IOException e);
-    }
-
-    private static class NOPEventReportDelegate implements com.taobao.weex.adapter
-            .DefaultWXHttpAdapter
-            .IEventReporterDelegate {
-        @Override
-        public void preConnect(HttpURLConnection connection, String body) {
-            //do nothing
-        }
-
-        @Override
-        public void postConnect() {
-            //do nothing
-        }
-
-        @Override
-        public InputStream interpretResponseStream(InputStream inputStream) {
-            return inputStream;
-        }
-
-        @Override
-        public void httpExchangeFailed(IOException e) {
-            //do nothing
-        }
-    }
 }

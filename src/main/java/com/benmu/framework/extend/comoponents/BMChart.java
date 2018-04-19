@@ -68,7 +68,7 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     @Override
     protected View initComponentHostView(@NonNull Context context) {
         View view = mWebView.getView();
-        mWeb = mWebView.getWebView();
+//        mWeb = mWebView.getWebView();
         view.setBackgroundColor(Color.TRANSPARENT);
         WebSettings settings = mWeb.getSettings();
         settings.setJavaScriptEnabled(true);
