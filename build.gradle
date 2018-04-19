@@ -66,11 +66,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile project(':nexus')
 
-    //友盟数据分析
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_tool.jar')
+
     compile 'com.android.support:multidex:1.0.1'
 
     //bs patch
@@ -87,4 +83,6 @@ dependencies {
     //plugin Moudle
     compile project(':ErosPluginAmap')
     compile project(':erosplugingt')
+    compile project(':erospluginwxpay')
+    compile project(':erospluginumeng')
 }

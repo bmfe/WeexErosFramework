@@ -22,7 +22,6 @@ import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.ModalManager;
-import com.benmu.framework.model.ShareInfoBean;
 import com.benmu.framework.model.WebViewParamBean;
 import com.benmu.widget.utils.BaseCommonUtil;
 
@@ -56,10 +55,10 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         Intent data = getIntent();
         mWebViewParams = (WebViewParamBean) data.getSerializableExtra(Constant.WEBVIEW_PARAMS);
         String mUrl = mWebViewParams.getUrl();
-        ShareInfoBean shareInfo = mWebViewParams.getShareInfo();
-        if (shareInfo != null) {
-            getNavigationBar().setRightIcon(R.drawable.icon_share);
-        }
+//        ShareInfoBean shareInfo = mWebViewParams.getShareInfo();
+//        if (shareInfo != null) {
+//            getNavigationBar().setRightIcon(R.drawable.icon_share);
+//        }
 
         rl_refresh = findViewById(R.id.rl_refresh);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_progress);

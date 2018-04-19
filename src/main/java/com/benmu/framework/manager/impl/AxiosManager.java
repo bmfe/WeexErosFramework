@@ -1,6 +1,5 @@
 package com.benmu.framework.manager.impl;
 
-import android.app.Notification;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;

@@ -13,13 +13,8 @@ import com.benmu.framework.debug.ws.DebuggerWebSocket;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
-import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.update.VersionChecker;
-import com.benmu.framework.utils.DebugableUtil;
 import com.taobao.weex.WXSDKInstance;
-import com.umeng.socialize.Config;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
 
 import java.util.List;
 
@@ -41,7 +36,7 @@ public class BMWXApplication extends Application {
             initWeex();
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
-            initShare();
+//            initShare();
             initDebugSocket();
         }
     }
@@ -49,15 +44,6 @@ public class BMWXApplication extends Application {
     private void initDebugSocket() {
         debugSocket = new DebuggerWebSocket(this);
         debugSocket.init();
-    }
-
-    private void initShare() {
-        PlatformConfigBean.Wechat wechat = BMWXEnvironment.mPlatformConfig.getWechat();
-        if (wechat != null && wechat.isEnabled()) {
-            PlatformConfig.setWeixin(wechat.getAppId(), wechat.getAppSecret());
-        }
-        Config.DEBUG = DebugableUtil.isDebug();
-        UMShareAPI.get(this);
     }
 
 

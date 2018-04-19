@@ -12,6 +12,7 @@ import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.model.WeexEventBean;
+import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.WXAnalyzerDelegate;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
@@ -58,7 +59,6 @@ import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.CameraResultBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.UploadImageBean;
-import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.InsertEnvUtil;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.benmu.widget.view.BMFloatingLayer;
@@ -73,8 +73,6 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.UMShareAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -503,7 +501,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             mWxAnalyzerDelegate.onResume();
         }
 
-        MobclickAgent.onResume(this);
+//        MobclickAgent.onResume(this);
 
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post
                 (new Intent(Constant.Action
@@ -540,7 +538,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWxAnalyzerDelegate != null) {
             mWxAnalyzerDelegate.onPause();
         }
-        MobclickAgent.onPause(this);
+//        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -748,7 +746,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 }
                 break;
         }
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+//        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 

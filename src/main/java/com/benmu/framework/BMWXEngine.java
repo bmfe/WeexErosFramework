@@ -31,10 +31,6 @@ import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.dom.RichTextDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +52,8 @@ public class BMWXEngine {
         initInterceptor(context, initConfig);
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
-        initWeChat(context);
-        initUmeng(context);
+//        initWeChat(context);
+//        initUmeng(context);
         EventCenter.getInstance().init();
 //        initMap();
         PlugManager.initPlug();
@@ -76,30 +72,6 @@ public class BMWXEngine {
 
     private static void initPatch(Application context) {
         BsPatch.init(context);
-    }
-
-
-    private static void initUmeng(Application context) {
-        boolean enabled = BMWXEnvironment.mPlatformConfig.getUmeng().isEnabled();
-        String androidAppKey = BMWXEnvironment.mPlatformConfig.getUmeng().getAndroidAppKey();
-        if (enabled && !TextUtils.isEmpty(androidAppKey)) {
-            MobclickAgent.setDebugMode(DebugableUtil.isDebug());
-            MobclickAgent.openActivityDurationTrack(false);
-            MobclickAgent.setCatchUncaughtExceptions(!DebugableUtil.isDebug());
-            MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
-            PlatformConfig.setWeixin(BMWXEnvironment.mPlatformConfig.getWechat().getAppId(),
-                    BMWXEnvironment.mPlatformConfig.getWechat().getAppSecret());
-            UMShareAPI.get(context);
-        }
-    }
-
-
-    private static void initWeChat(Context context) {
-        boolean enabled = BMWXEnvironment.mPlatformConfig.getWechat().isEnabled();
-        String appId = BMWXEnvironment.mPlatformConfig.getWechat().getAppId();
-        if (enabled && !TextUtils.isEmpty(appId)) {
-            BMWXEnvironment.mWXApi = WXAPIFactory.createWXAPI(context, appId, true);
-        }
     }
 
 
