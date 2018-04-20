@@ -40,7 +40,7 @@ public class BMSpan extends WXComponent<View> {
         if (parent == null) return;
         if (parent instanceof BMRich) {
             BMRich bmRichText = (BMRich) parent;
-//            bmRichText.receiveBubbleEvent(object);
+            bmRichText.receiveBubbleEvent(object);
         } else {
             postBubbleEvent(parent.getParent(), object);
         }

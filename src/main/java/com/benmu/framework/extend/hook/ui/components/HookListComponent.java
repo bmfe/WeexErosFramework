@@ -1,12 +1,12 @@
-package com.benmu.framework.hook.ui.components;
+package com.benmu.framework.extend.hook.ui.components;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.benmu.framework.hook.HookConstants;
-import com.benmu.framework.hook.ui.view.HookBounceRecyclerView;
-import com.benmu.framework.hook.ui.view.refresh.bmrefresh.BMBaseRefresh;
-import com.benmu.framework.hook.ui.view.refresh.bmrefresh.BMLoadingRefresh;
+import com.benmu.framework.extend.hook.HookConstants;
+import com.benmu.framework.extend.hook.ui.view.HookBounceRecyclerView;
+import com.benmu.framework.extend.hook.ui.view.refresh.bmrefresh.BMBaseRefresh;
+import com.benmu.framework.extend.hook.ui.view.refresh.bmrefresh.BMLoadingRefresh;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.Constants;
