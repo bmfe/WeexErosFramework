@@ -16,12 +16,14 @@ import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
+import com.benmu.framework.extend.dom.richtext.RichTextDomObject;
+import com.benmu.framework.extend.hook.ui.components.HookWxScroller;
 import com.benmu.framework.extend.mediator.MediatorDocker;
-import com.benmu.framework.hook.ui.components.HookImage;
-import com.benmu.framework.hook.ui.components.HookInput;
-import com.benmu.framework.hook.ui.components.HookListComponent;
-import com.benmu.framework.hook.ui.components.HookTextarea;
-import com.benmu.framework.hook.ui.components.HookWXText;
+import com.benmu.framework.extend.hook.ui.components.HookImage;
+import com.benmu.framework.extend.hook.ui.components.HookInput;
+import com.benmu.framework.extend.hook.ui.components.HookListComponent;
+import com.benmu.framework.extend.hook.ui.components.HookTextarea;
+import com.benmu.framework.extend.hook.ui.components.HookWXText;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
@@ -89,6 +91,14 @@ public class BMWXEngine {
             WXSDKEngine.registerComponent(HookListComponent.class, false, WXBasicComponentType
                             .LIST, WXBasicComponentType.VLIST, WXBasicComponentType.RECYCLER,
                     WXBasicComponentType.WATERFALL);
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            HookWxScroller.class,
+                            new HookWxScroller.Creator()
+                    ),
+                    false,
+                    WXBasicComponentType.SCROLLER
+            );
         } catch (WXException e) {
             e.printStackTrace();
         }
@@ -149,7 +159,7 @@ public class BMWXEngine {
     private static void registerCustomDomObject() throws WXException {
         WXSDKEngine.registerDomObject("bmtext", WXTextDomObject.class);
         WXSDKEngine.registerDomObject("bmspan", WXTextDomObject.class);
-//        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
+        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
     }
 
 

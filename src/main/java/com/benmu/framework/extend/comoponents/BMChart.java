@@ -13,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.benmu.framework.extend.comoponents.view.BMWebView;
 import com.benmu.framework.utils.AssetsUtil;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
@@ -34,7 +35,7 @@ import java.util.Date;
 
 public class BMChart extends WXComponent implements IWebView.OnPageListener {
 
-    private WXWebView mWebView;
+    private BMWebView mWebView;
     private WebView mWeb;
     private String mCharInfo;
     private Date s;
@@ -62,13 +63,13 @@ public class BMChart extends WXComponent implements IWebView.OnPageListener {
     }
 
     private void init() {
-        mWebView = new WXWebView(getContext());
+        mWebView = new BMWebView(getContext());
     }
 
     @Override
     protected View initComponentHostView(@NonNull Context context) {
         View view = mWebView.getView();
-//        mWeb = mWebView.getWebView();
+        mWeb = mWebView.getWebView();
         view.setBackgroundColor(Color.TRANSPARENT);
         WebSettings settings = mWeb.getSettings();
         settings.setJavaScriptEnabled(true);

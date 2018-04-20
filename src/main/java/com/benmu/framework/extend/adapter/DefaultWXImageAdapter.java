@@ -169,7 +169,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.benmu.framework.R;
-import com.benmu.framework.hook.ui.view.HookWXImageView;
+import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
 import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.framework.utils.ImageUtil;
 import com.benmu.framework.utils.L;
@@ -190,7 +190,6 @@ import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXImageQuality;
 import com.taobao.weex.ui.component.WXImage;
-import com.taobao.weex.ui.view.WXImageView;
 
 public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     private static final String PLACEHOLDER_DEFAULT = "default";

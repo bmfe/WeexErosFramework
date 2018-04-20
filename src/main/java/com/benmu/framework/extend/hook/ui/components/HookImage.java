@@ -1,4 +1,4 @@
-package com.benmu.framework.hook.ui.components;
+package com.benmu.framework.extend.hook.ui.components;
 
 import android.content.Context;
 import android.os.Build;
@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.benmu.framework.hook.ui.view.HookWXImageView;
+import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
