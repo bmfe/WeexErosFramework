@@ -61,16 +61,12 @@ dependencies {
     compile 'com.taobao.android:weex_inspector:0.13.4'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile(name: 'bm_imagepicker', ext: 'aar')
+    compile 'com.lzy.widget:imagepicker:0.6.1'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile project(':nexus')
-    //友盟数据分析
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_tool.jar')
+
     compile 'com.android.support:multidex:1.0.1'
     //bs patch
     compile 'me.ele:bspatch:1.0.6'
@@ -79,7 +75,11 @@ dependencies {
     //Bindigx
     compile 'com.alibaba.android:bindingx-core:1.0.1'
     compile 'com.alibaba.android:bindingx_weex_plugin:1.0.2'
+    compile 'org.weex.plugin:plugin-loader:1.0.0'
+
     //plugin Moudle
-//    compile project(':ErosPluginAmap')
-//    compile project(':erosplugingt')
+    compile project(':ErosPluginAmap')
+    compile project(':erosplugingt')
+//    compile project(':erospluginwxpay')
+//    compile project(':erospluginumeng')
 }

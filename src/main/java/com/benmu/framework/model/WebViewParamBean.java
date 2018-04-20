@@ -10,7 +10,7 @@ import java.util.List;
 public class WebViewParamBean implements Serializable {
     private String url;
     private String title;
-    private ShareInfoBean shareInfo;
+//    private ShareInfoBean shareInfo;
     private boolean navShow;
     private String type;
 
@@ -46,12 +46,11 @@ public class WebViewParamBean implements Serializable {
         this.title = title;
     }
 
-    public ShareInfoBean getShareInfo() {
-        return shareInfo;
-    }
-
-    public void setShareInfo(ShareInfoBean shareInfo) {
-        this.shareInfo = shareInfo;
-    }
+//    public ShareInfoBean getShareInfo() {
+//        return shareInfo;
+//    }
+//    public void setShareInfo(ShareInfoBean shareInfo) {
+//        this.shareInfo = shareInfo;
+//    }
 
 }

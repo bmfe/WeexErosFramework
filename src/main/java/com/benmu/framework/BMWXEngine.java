@@ -6,8 +6,8 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
+import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
@@ -36,10 +36,7 @@ import com.taobao.weex.common.WXException;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.component.WXBasicComponentType;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,13 +58,11 @@ public class BMWXEngine {
         initInterceptor(context, initConfig);
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
-        initWeChat(context);
-        initUmeng(context);
         EventCenter.getInstance().init();
-//        initMap();
         PlugManager.initPlug();
         initBindingx();
         initHook();
+        WeexPluginContainer.loadAll(context);
     }
 
     private static void initHook() {
@@ -110,30 +105,6 @@ public class BMWXEngine {
 
     private static void initPatch(Application context) {
         BsPatch.init(context);
-    }
-
-
-    private static void initUmeng(Application context) {
-        boolean enabled = BMWXEnvironment.mPlatformConfig.getUmeng().isEnabled();
-        String androidAppKey = BMWXEnvironment.mPlatformConfig.getUmeng().getAndroidAppKey();
-        if (enabled && !TextUtils.isEmpty(androidAppKey)) {
-            MobclickAgent.setDebugMode(DebugableUtil.isDebug());
-            MobclickAgent.openActivityDurationTrack(false);
-            MobclickAgent.setCatchUncaughtExceptions(!DebugableUtil.isDebug());
-            MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
-            PlatformConfig.setWeixin(BMWXEnvironment.mPlatformConfig.getWechat().getAppId(),
-                    BMWXEnvironment.mPlatformConfig.getWechat().getAppSecret());
-            UMShareAPI.get(context);
-        }
-    }
-
-
-    private static void initWeChat(Context context) {
-        boolean enabled = BMWXEnvironment.mPlatformConfig.getWechat().isEnabled();
-        String appId = BMWXEnvironment.mPlatformConfig.getWechat().getAppId();
-        if (enabled && !TextUtils.isEmpty(appId)) {
-            BMWXEnvironment.mWXApi = WXAPIFactory.createWXAPI(context, appId, true);
-        }
     }
 
 

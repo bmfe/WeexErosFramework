@@ -14,13 +14,8 @@ import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
-import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.update.VersionChecker;
-import com.benmu.framework.utils.DebugableUtil;
 import com.taobao.weex.WXSDKInstance;
-import com.umeng.socialize.Config;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
 
 import java.util.List;
 
@@ -43,7 +38,7 @@ public class BMWXApplication extends Application {
             initWeex();
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
-            initShare();
+//            initShare();
             initDebugSocket();
         }
     }
@@ -59,15 +54,6 @@ public class BMWXApplication extends Application {
 
     public void setTypefaceAdapter(DefaultTypefaceAdapter typefaceAdapter) {
         this.typefaceAdapter = typefaceAdapter;
-    }
-
-    private void initShare() {
-        PlatformConfigBean.Wechat wechat = BMWXEnvironment.mPlatformConfig.getWechat();
-        if (wechat != null && wechat.isEnabled()) {
-            PlatformConfig.setWeixin(wechat.getAppId(), wechat.getAppSecret());
-        }
-        Config.DEBUG = DebugableUtil.isDebug();
-        UMShareAPI.get(this);
     }
 
 
@@ -106,7 +92,7 @@ public class BMWXApplication extends Application {
                     GlobalEventManager.appActive(((AbstractWeexActivity) activity)
                             .getWXSDkInstance());
                 }
-                //app resume  try check verison
+                //app resume  try check version
                 if (mVersionChecker != null) {
                     mVersionChecker.checkVersion();
                 }
