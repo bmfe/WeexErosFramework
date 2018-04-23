@@ -28,31 +28,6 @@ public class ToolModule extends WXModule {
 
 
     /**
-     * 获取是否安装WeChat
-     */
-    @JSMethod
-    public void isInstallWXApp(JSCallback callback) {
-        WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXEventCenter.EVENT_ISINSTALLWXAPP);
-        weexEventBean.setContext(mWXSDKInstance.getContext());
-        weexEventBean.setJscallback(callback);
-        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
-
-    }
-
-    /**
-     * 获取个推的Cid
-     */
-    @JSMethod
-    public void getCid(JSCallback callback) {
-        WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXEventCenter.EVENT_GETCID);
-        weexEventBean.setContext(mWXSDKInstance.getContext());
-        weexEventBean.setJscallback(callback);
-        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
-    }
-
-    /**
      * 复制字符串到粘贴板
      */
     @JSMethod
