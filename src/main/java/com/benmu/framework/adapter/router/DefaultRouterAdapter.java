@@ -43,7 +43,7 @@ public class DefaultRouterAdapter {
             routerModel.backCallback = (SimpleJSCallback) jsCallback;
         }
         return !(routerModel == null || !(context instanceof Activity)) && performStartActivity(
-                (Activity) context, routerModel, Constant.BMPAGE_CATEGORY);
+                (Activity) context, routerModel, Constant.getPageCategory());
     }
 
     private boolean performStartActivity(Activity activity, RouterModel routerModel, String
@@ -172,7 +172,7 @@ public class DefaultRouterAdapter {
                 .class);
         String title = webViewParamBean.getTitle();
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addCategory(Constant.BMWEBVIEW_CATEGORY);
+        intent.addCategory(Constant.getWebViewCategory());
         String type = webViewParamBean.getType() == null ? Constant.ACTIVITIES_ANIMATION
                 .ANIMATION_PUSH : webViewParamBean.getType();
         RouterModel routerModel = new RouterModel(null, type, null, title, webViewParamBean
