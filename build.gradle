@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-
+//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven'
 android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
@@ -65,8 +66,8 @@ dependencies {
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile project(':nexus')
-
+//    compile project(':nexus')
+    compile 'com.benmu.eros:eros-nexus:0.0.2'
     compile 'com.android.support:multidex:1.0.1'
     //bs patch
     compile 'me.ele:bspatch:1.0.6'
@@ -78,8 +79,37 @@ dependencies {
     compile 'org.weex.plugin:plugin-loader:1.0.0'
 
     //plugin Moudle
-    compile project(':ErosPluginAmap')
-    compile project(':erosplugingt')
+//    compile project(':ErosPluginAmap')
+//    compile project(':erosplugingt')
 //    compile project(':erospluginwxpay')
 //    compile project(':erospluginumeng')
+}
+
+//publish {
+//    userOrg = 'erosandroid'
+//    repoName='ErosApi'
+//    groupId = 'com.benmu.eros'
+//    artifactId = 'eros-framework'
+//    publishVersion = '0.0.2'
+//    desc = 'A framework for eros app'
+//    website = 'https://github.com/bmfe/WeexErosFramework'
+//}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+
+            pom.project {
+                groupId = 'com.benmu.eros'
+                artifactId = 'eros-framework'
+                version = '0.0.2'
+                description 'test upload'
+                url 'https://github.com/xianlinbox/Toggle'
+            }
+        }
+    }
 }
