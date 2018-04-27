@@ -28,8 +28,26 @@ import java.util.Map;
 
 public class DefaultRouterAdapter {
     private static DefaultRouterAdapter mInstance = new DefaultRouterAdapter();
+    private String mApplicationId;
 
     private DefaultRouterAdapter() {
+    }
+
+
+
+
+    public String getPageCategory(Context context){
+        if(TextUtils.isEmpty(mApplicationId)){
+            mApplicationId=context.getApplicationInfo().packageName;
+        }
+        return mApplicationId + ".categoty.page";
+    }
+
+    public String getWebViewCategory(Context context){
+        if(TextUtils.isEmpty(mApplicationId)){
+            mApplicationId=context.getApplicationInfo().packageName;
+        }
+        return mApplicationId+".category.web";
     }
 
     public static DefaultRouterAdapter getInstance() {
@@ -43,7 +61,7 @@ public class DefaultRouterAdapter {
             routerModel.backCallback = (SimpleJSCallback) jsCallback;
         }
         return !(routerModel == null || !(context instanceof Activity)) && performStartActivity(
-                (Activity) context, routerModel, Constant.getPageCategory());
+                (Activity) context, routerModel, getPageCategory(context));
     }
 
     private boolean performStartActivity(Activity activity, RouterModel routerModel, String
@@ -172,7 +190,7 @@ public class DefaultRouterAdapter {
                 .class);
         String title = webViewParamBean.getTitle();
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addCategory(Constant.getWebViewCategory());
+        intent.addCategory(getWebViewCategory(context));
         String type = webViewParamBean.getType() == null ? Constant.ACTIVITIES_ANIMATION
                 .ANIMATION_PUSH : webViewParamBean.getType();
         RouterModel routerModel = new RouterModel(null, type, null, title, webViewParamBean
