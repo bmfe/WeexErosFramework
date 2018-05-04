@@ -1,9 +1,5 @@
 package com.benmu.framework;
 
-<<<<<<< HEAD
-=======
-import com.alibaba.weex.plugin.loader.WeexPluginContainer;
->>>>>>> feature
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;

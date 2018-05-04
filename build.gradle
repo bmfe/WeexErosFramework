@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
-//apply plugin: 'maven'
 android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
@@ -79,15 +77,6 @@ dependencies {
 
 }
 
-publish {
-    userOrg = 'erosandroid'
-    repoName='ErosApi'
-    groupId = 'com.benmu.eros'
-    artifactId = 'eros-framework'
-    publishVersion = '1.0.0'
-    desc = 'A framework for eros app'
-    website = 'https://github.com/bmfe/WeexErosFramework'
-}
 
 
 //uploadArchives {
