@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'maven'
 android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
@@ -29,6 +30,10 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
@@ -44,7 +49,6 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -55,35 +59,51 @@ dependencies {
      */
     compile 'com.taobao.android.weex_inspection:protocol:1.1.4.1'
     compile 'com.taobao.android:weex_inspector:0.13.4'
-    compile 'com.taobao.android:weex_inspector:0.13.4'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.alibaba:fastjson:1.1.68.android'
-    compile project(':sdk')
-    compile(name: 'bm_imagepicker', ext: 'aar')
+    compile 'com.lzy.widget:imagepicker:0.6.1'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile project(':nexus')
-
-    //友盟数据分析
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_tool.jar')
-    compile files('libs/GetuiSDK2.9.3.0.jar')
+//    compile project(':nexus')
+    compile 'com.benmu.eros:eros-nexus:0.0.1'
     compile 'com.android.support:multidex:1.0.1'
-
     //bs patch
     compile 'me.ele:bspatch:1.0.6'
-
     //weex analyzer
     debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
-
     //Bindigx
-    implementation 'com.alibaba.android:bindingx-core:1.0.1'
-    implementation 'com.alibaba.android:bindingx_weex_plugin:1.0.2'
+    compile 'com.alibaba.android:bindingx-core:1.0.1'
+    compile 'com.alibaba.android:bindingx_weex_plugin:1.0.2'
+    compile 'org.weex.plugin:plugin-loader:1.0.0'
 
-    //plugin Moudle
-    compile project(':ErosPluginAmap')
 }
+
+publish {
+    userOrg = 'erosandroid'
+    repoName='ErosApi'
+    groupId = 'com.benmu.eros'
+    artifactId = 'eros-framework'
+    publishVersion = '1.0.0'
+    desc = 'A framework for eros app'
+    website = 'https://github.com/bmfe/WeexErosFramework'
+}
+
+
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
+//                authentication(userName: "admin", password: "admin123")
+//            }
+//
+//            pom.project {
+//                groupId = 'com.benmu.eros'
+//                artifactId = 'eros-framework'
+//                version = '0.0.2'
+//                description 'test upload'
+//                url 'https://github.com/xianlinbox/Toggle'
+//            }
+//        }
+//    }
+//}

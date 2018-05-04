@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.exception.CancelException;
@@ -25,8 +26,10 @@ import com.benmu.framework.model.AxiosPost;
 import com.benmu.framework.model.AxiosResultBean;
 import com.benmu.framework.model.UploadImageBean;
 import com.benmu.framework.model.UploadResultBean;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.JsPoster;
 import com.benmu.framework.utils.TextUtil;
+import com.benmu.wxbase.EventGate;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
@@ -40,9 +43,19 @@ import okhttp3.Call;
  * Created by Carry on 2017/8/16.
  */
 
-public class EventFetch {
+public class EventFetch extends EventGate {
     private JSCallback mUploadAvatar;
     private Context mUploadContext;
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean, String type) {
+        String params = weexEventBean.getJsParams();
+        if (WXEventCenter.EVENT_FETCH.equals(type)) {
+            fetch(params, context, weexEventBean.getJscallback());
+        } else if (WXEventCenter.EVENT_IMAGE_UPLOAD.equals(type)) {
+            uploadImage(params, context, weexEventBean.getJscallback());
+        }
+    }
 
     public void fetch(String params, final Context context, final JSCallback jscallback) {
 

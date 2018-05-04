@@ -1,5 +1,9 @@
 package com.benmu.framework;
 
+<<<<<<< HEAD
+=======
+import com.alibaba.weex.plugin.loader.WeexPluginContainer;
+>>>>>>> feature
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.Manager;
 import com.benmu.framework.manager.ManagerFactory;
@@ -13,10 +17,14 @@ import java.util.HashMap;
 
 public class PlugManager {
     public static void initPlug() {
-        Manager geoManager = ManagerFactory.getManagerService("com.plugamap.manager.GeoManager");
+        pluginInit("com.plugamap.manager.GeoManager");
+        pluginInit("com.benmu.erosplugingt.manager.PushManager");
+    }
+
+    private static void pluginInit(String clazzName) {
+        Manager geoManager = ManagerFactory.getManagerService(clazzName);
         if (geoManager != null) {
             geoManager.init();
-            registerCompnentsAndModules(geoManager.getComponentsAndModules());
         }
     }
 

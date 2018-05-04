@@ -3,10 +3,13 @@ package com.benmu.framework.event;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.CommunicationManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.AxiosResultBean;
+import com.benmu.framework.model.WeexEventBean;
+import com.benmu.wxbase.EventGate;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 
@@ -16,8 +19,17 @@ import java.util.List;
  * Created by liuyuanxiao on 17/12/29.
  */
 
-public class EventCommunication {
+public class EventCommunication extends EventGate{
     private JSCallback mContactsCallBack;
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean,String type) {
+        if(WXEventCenter.EVENT_COMMUNICATION_SMS.equals(type)){
+            sms(weexEventBean.getExpand().toString(), weexEventBean.getJsParams(), context);
+        }else if(WXEventCenter.EVENT_COMMUNICATION_CONTACTS.equals(type)){
+            contacts(context, weexEventBean.getJscallback());
+        }
+    }
 
     public void sms(String recipients, String params, final Context context) {
         List<String> rec = JSON.parseArray(recipients, String.class);

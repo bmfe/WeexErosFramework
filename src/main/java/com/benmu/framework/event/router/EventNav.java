@@ -8,13 +8,21 @@ import android.net.Uri;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.NavModule;
+import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.GeoUtils;
+import com.benmu.wxbase.EventGate;
 
 /**
  * Created by Carry on 2018/1/10.
  */
 
-public class EventNav {
+public class EventNav extends EventGate {
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean) {
+        nav(weexEventBean.getJsParams(), context);
+    }
+
     public void nav(String params, Context context) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavModule navModule = parseManager.parseObject(params, NavModule.class);
@@ -59,7 +67,7 @@ public class EventNav {
                 , Double.parseDouble(info.getCurrentLongitude()));
         double[] destination_bd = GeoUtils.gcj02_To_Bd09(Double.parseDouble(info.getLatitude()),
                 Double
-                .parseDouble(info.getLongitude()));
+                        .parseDouble(info.getLongitude()));
         try {
             Intent intent = new Intent();
             intent.setData(Uri.parse

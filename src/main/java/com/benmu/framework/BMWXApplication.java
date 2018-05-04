@@ -10,16 +10,12 @@ import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.debug.ws.DebuggerWebSocket;
+import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
-import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.update.VersionChecker;
-import com.benmu.framework.utils.DebugableUtil;
 import com.taobao.weex.WXSDKInstance;
-import com.umeng.socialize.Config;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
 
 import java.util.List;
 
@@ -32,6 +28,7 @@ public class BMWXApplication extends Application {
     private WXSDKInstance mMediator;
     private VersionChecker mVersionChecker;
     private DebuggerWebSocket debugSocket;
+    private DefaultTypefaceAdapter typefaceAdapter;
 
     @Override
     public void onCreate() {
@@ -41,7 +38,7 @@ public class BMWXApplication extends Application {
             initWeex();
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
-            initShare();
+//            initShare();
             initDebugSocket();
         }
     }
@@ -51,13 +48,12 @@ public class BMWXApplication extends Application {
         debugSocket.init();
     }
 
-    private void initShare() {
-        PlatformConfigBean.Wechat wechat = BMWXEnvironment.mPlatformConfig.getWechat();
-        if (wechat != null && wechat.isEnabled()) {
-            PlatformConfig.setWeixin(wechat.getAppId(), wechat.getAppSecret());
-        }
-        Config.DEBUG = DebugableUtil.isDebug();
-        UMShareAPI.get(this);
+    public DefaultTypefaceAdapter getTypefaceAdapter() {
+        return typefaceAdapter;
+    }
+
+    public void setTypefaceAdapter(DefaultTypefaceAdapter typefaceAdapter) {
+        this.typefaceAdapter = typefaceAdapter;
     }
 
 
@@ -96,7 +92,7 @@ public class BMWXApplication extends Application {
                     GlobalEventManager.appActive(((AbstractWeexActivity) activity)
                             .getWXSDkInstance());
                 }
-                //app resume  try check verison
+                //app resume  try check version
                 if (mVersionChecker != null) {
                     mVersionChecker.checkVersion();
                 }

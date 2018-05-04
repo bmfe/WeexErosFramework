@@ -1,6 +1,7 @@
 package com.benmu.framework.extend.comoponents;
 
 import android.content.Context;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.SpannableString;
@@ -14,14 +15,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
+import com.alibaba.fastjson.JSONObject;
 import com.benmu.framework.extend.comoponents.view.BMWXTextView;
+import com.benmu.framework.extend.dom.richtext.RichTextDomObject;
 import com.benmu.framework.utils.BMRichUtil;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.ImmutableDomObject;
-import com.taobao.weex.dom.RichTextDomObject;
+import com.taobao.weex.dom.WXDomHandler;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.dom.WXEvent;
 import com.taobao.weex.dom.WXStyle;
 import com.taobao.weex.dom.WXTextDomObject;
@@ -29,9 +33,9 @@ import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.utils.WXUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Carry on 2017/6/14.
@@ -232,14 +236,11 @@ public class BMRich extends WXVContainer<LinearLayout> {
         }
     }
 
-
-    @Override
     public String getRichSpanned() {
         return mText.toString();
     }
 
 
-    @Override
     public List<RichTextDomObject.BMRichSpan> getSpans() {
         return mSpans;
     }
@@ -249,5 +250,21 @@ public class BMRich extends WXVContainer<LinearLayout> {
         if (!TextUtils.isEmpty(subCount)) {
             mSubCount = WXUtils.getInt(subCount);
         }
+    }
+
+
+    public void updateStyle(Map<String,Object> styles){
+        Message message = Message.obtain();
+        WXDomTask task = new WXDomTask();
+        task.instanceId = getInstanceId();
+        task.args = new ArrayList<>();
+
+        JSONObject styleJson = new JSONObject(styles);
+        task.args.add(getRef());
+        task.args.add(styleJson);
+        task.args.add(false);//flag pesudo
+        message.obj = task;
+        message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+        WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
     }
 }

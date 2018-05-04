@@ -37,14 +37,14 @@ public class VersionChecker {
     private JsVersionInfoBean newVersion;
     private String mUpdateUrl;
     private Context mContext;
-    private int mCurrentStatus= Constant.Version.SLEEP;
+    private int mCurrentStatus = Constant.Version.SLEEP;
 
     public VersionChecker(Context context) {
         this.mContext = context;
     }
 
     public void checkVersion() {
-        if(mCurrentStatus==Constant.Version.UPDATING)return;
+        if (mCurrentStatus == Constant.Version.UPDATING) return;
         readyUpdate();
     }
 
@@ -54,14 +54,14 @@ public class VersionChecker {
         if (TextUtils.isEmpty(mUpdateUrl)) return;
 
         if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(mContext))) {
-            mCurrentStatus=Constant.Version.UPDATING;
+            mCurrentStatus = Constant.Version.UPDATING;
             VersionManager versionManager = ManagerFactory.getManagerService(VersionManager.class);
             versionManager.checkBundleUpdate(mContext, mUpdateUrl,
                     true, new StringCallback() {
                         @Override
                         public void onError(Call call, Exception e, int id) {
                             Log.e(TAG, "获取更新失败");
-                            mCurrentStatus=Constant.Version.SLEEP;
+                            mCurrentStatus = Constant.Version.SLEEP;
                         }
 
                         @Override
@@ -72,7 +72,7 @@ public class VersionChecker {
                                             .class);
                             if (version == null) {
                                 Log.e(TAG, "返回结果异常");
-                                mCurrentStatus=Constant.Version.SLEEP;
+                                mCurrentStatus = Constant.Version.SLEEP;
                                 return;
                             }
                             switch (version.resCode) {
@@ -95,15 +95,15 @@ public class VersionChecker {
                                     break;
                                 case 401:
                                     Log.e(TAG, "JS文件查询失败!");
-                                    mCurrentStatus=Constant.Version.SLEEP;
+                                    mCurrentStatus = Constant.Version.SLEEP;
                                     break;
                                 case 4000:
                                     Log.e(TAG, "当前版本已是最新!");
-                                    mCurrentStatus=Constant.Version.SLEEP;
+                                    mCurrentStatus = Constant.Version.SLEEP;
                                     break;
                                 default:
                                     Log.e(TAG, "resCode:" + version.resCode);
-                                    mCurrentStatus=Constant.Version.SLEEP;
+                                    mCurrentStatus = Constant.Version.SLEEP;
                                     break;
 
                             }
@@ -145,7 +145,7 @@ public class VersionChecker {
     public void download(final VersionBean version, final boolean complete) {
         try {
             if (version == null) {
-                mCurrentStatus=Constant.Version.SLEEP;
+                mCurrentStatus = Constant.Version.SLEEP;
                 return;
             }
             VersionManager versionManager = ManagerFactory.getManagerService(VersionManager.class);
@@ -158,7 +158,7 @@ public class VersionChecker {
                     if (!complete) {
                         downloadCompleteZip();
                     } else {
-                        mCurrentStatus=Constant.Version.SLEEP;
+                        mCurrentStatus = Constant.Version.SLEEP;
                     }
                 }
 
@@ -177,13 +177,13 @@ public class VersionChecker {
                                     ManagerFactory.getManagerService(ParseManager.class)
                                             .toJsonString(newVersion));
                             newVersion = null;
-                            mCurrentStatus=Constant.Version.SLEEP;
+                            mCurrentStatus = Constant.Version.SLEEP;
                         } else {
                             L.e(TAG, "更新包md5校验失败，更新失败");
                             FileManager.deleteFile(new File(FileManager.getTempBundleDir
                                     (mContext), FileManager.TEMP_BUNDLE_NAME));
                             newVersion = null;
-                            mCurrentStatus=Constant.Version.SLEEP;
+                            mCurrentStatus = Constant.Version.SLEEP;
                         }
                     }
 
@@ -192,7 +192,7 @@ public class VersionChecker {
 
             });
         } catch (Exception e) {
-            mCurrentStatus=Constant.Version.SLEEP;
+            mCurrentStatus = Constant.Version.SLEEP;
             e.printStackTrace();
         }
 
@@ -206,6 +206,7 @@ public class VersionChecker {
     private boolean checkZipValidate(File file) {
         if (file.exists()) {
             byte[] json = FileManager.extractZip(file, "md5.json");
+            if (json == null) return false;
             try {
                 Md5MapperModel mapper = ManagerFactory.getManagerService(ParseManager.class)
                         .parseObject(new String(json, "UTF-8"),
@@ -268,7 +269,7 @@ public class VersionChecker {
                         SharePreferenceUtil.setDownLoadVersion(mContext, ManagerFactory
                                 .getManagerService(ParseManager.class).toJsonString(newVersion));
                         newVersion = null;
-                        mCurrentStatus=Constant.Version.SLEEP;
+                        mCurrentStatus = Constant.Version.SLEEP;
                     } else {
                         L.e("version", "下载patch md5校验出错");
                         //删除生成的新包和patch包
@@ -277,7 +278,7 @@ public class VersionChecker {
                         FileManager.deleteFile(new File(FileManager.getTempBundleDir
                                 (mContext), FileManager.TEMP_BUNDLE_NAME));
                         newVersion = null;
-                        mCurrentStatus=Constant.Version.SLEEP;
+                        mCurrentStatus = Constant.Version.SLEEP;
                     }
 
 
@@ -290,7 +291,7 @@ public class VersionChecker {
                             (mContext), FileManager.PATCH_NAME));
                     FileManager.deleteFile(new File(FileManager.getTempBundleDir
                             (mContext), FileManager.TEMP_BUNDLE_NAME));
-                    mCurrentStatus=Constant.Version.SLEEP;
+                    mCurrentStatus = Constant.Version.SLEEP;
                 }
             });
         }

@@ -15,8 +15,8 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.JsVersionInfoBean;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 
 /**
  * Created by Carry on 2017/8/25.

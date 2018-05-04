@@ -169,6 +169,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.benmu.framework.R;
+import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
 import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.framework.utils.ImageUtil;
 import com.benmu.framework.utils.L;
@@ -189,7 +190,6 @@ import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXImageQuality;
 import com.taobao.weex.ui.component.WXImage;
-import com.taobao.weex.ui.view.WXImageView;
 
 public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     private static final String PLACEHOLDER_DEFAULT = "default";
@@ -206,12 +206,12 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     @Override
     public void setImage(String url, final ImageView view,
                          WXImageQuality quality, final WXImageStrategy strategy) {
-        if (view == null || !(view instanceof WXImageView)) return;
+        if (view == null || !(view instanceof HookWXImageView)) return;
         Log.e("url>>>>>>", "url>>>>>" + url);
-        WXImageView wxImageView = (WXImageView) view;
+        HookWXImageView wxImageView = (HookWXImageView) view;
         wxImageView.setImageBitmap(null);
         if (TextUtils.isEmpty(url)) {
-            handleError((WXImageView) view);
+            handleError((HookWXImageView) view);
             if (strategy != null && strategy.getImageListener() != null) {
                 strategy.getImageListener().onImageFinish(url, view, true, null);
             }
@@ -233,7 +233,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
         return mErrorBitmap;
     }
 
-    private void handleError(WXImageView imageView) {
+    private void handleError(HookWXImageView imageView) {
         WXImage component = imageView.getComponent();
         if (component == null) return;
         ImmutableDomObject domObject = component.getDomObject();
@@ -251,12 +251,12 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
 
 
     private class BMDesignSimpleTarget extends SimpleTarget<GlideDrawable> {
-        private WXImageView mView;
+        private HookWXImageView mView;
         private WXImageStrategy mStrategy;
         private boolean mPlaceHolder;
         private String mUrl;
 
-        private BMDesignSimpleTarget(WXImageView wxImageView, WXImageStrategy strategy, boolean
+        private BMDesignSimpleTarget(HookWXImageView wxImageView, WXImageStrategy strategy, boolean
                 placeHolder, String url) {
             this.mView = wxImageView;
             this.mStrategy = strategy;
@@ -305,7 +305,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
             super.onLoadFailed(e, errorDrawable);
             if (denyPreviousRequest(mUrl, mView)) return;
             mView.hideLoading();
-            handleError((WXImageView) mView);
+            handleError((HookWXImageView) mView);
             if (mStrategy != null && mStrategy.getImageListener() != null) {
                 mStrategy.getImageListener().onImageFinish(mUrl, mView, true, null);
             }
@@ -314,11 +314,11 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
 
 
     private boolean denyPreviousRequest(String url, View imageView) {
-        return !url.equals(((WXImageView) imageView).getCurrentUrl());
+        return !url.equals(((HookWXImageView) imageView).getCurrentUrl());
     }
 
 
-    private void showAndCropGif(String url, WXImageView view, WXImageStrategy mStrategy) {
+    private void showAndCropGif(String url, HookWXImageView view, WXImageStrategy mStrategy) {
         BMRadiusTransfer radiusTransfer = new BMRadiusTransfer(WXEnvironment.getApplication(),
                 view);
         BitmapPool bitmapPool = Glide.get(WXEnvironment.getApplication()).getBitmapPool();
@@ -332,13 +332,13 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
 
     private static class BMRadiusTransfer extends BitmapTransformation {
 
-        private WXImageView mView;
+        private HookWXImageView mView;
 
         public BMRadiusTransfer(Context context) {
             this(context, null);
         }
 
-        BMRadiusTransfer(Context context, WXImageView imageView) {
+        BMRadiusTransfer(Context context, HookWXImageView imageView) {
             super(context);
             this.mView = imageView;
         }

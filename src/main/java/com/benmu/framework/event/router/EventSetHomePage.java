@@ -7,16 +7,25 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.adapter.router.DefaultRouterAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.model.RouterModel;
+import com.benmu.framework.model.WeexEventBean;
+import com.benmu.wxbase.EventGate;
 
 /**
  * Created by liuyuanxiao on 18/1/4.
  */
 
-public class EventSetHomePage {
+public class EventSetHomePage extends EventGate{
+
+    @Override
+    public void perform(Context context, WeexEventBean weexEventBean) {
+        setHomePage(context, weexEventBean.getJsParams());
+    }
+
     @SuppressWarnings("WrongConstant")
     public void setHomePage(Context context, String params) {
         StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
@@ -26,7 +35,7 @@ public class EventSetHomePage {
         String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage(context);
         RouterModel router = new RouterModel(homePage, Constant.ACTIVITIES_ANIMATION
                 .ANIMATION_PUSH, null, null, false, null);
-        Intent intent = performStartActivity(router, Constant.BMPAGE_CATEGORY);
+        Intent intent = performStartActivity(router,DefaultRouterAdapter.getInstance().getPageCategory(context));
         context.startActivity(intent);
 //        PendingIntent restartIntent = PendingIntent.getActivity(
 //                context.getApplicationContext(), 0, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);

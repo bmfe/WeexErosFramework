@@ -1,5 +1,6 @@
 package com.benmu.framework.extend.module;
 
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.event.shorage.EventDeleteData;
 import com.benmu.framework.event.shorage.EventGetData;
 import com.benmu.framework.event.shorage.EventRemoveData;
@@ -11,6 +12,7 @@ import com.taobao.weex.common.WXModule;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.constant.WXConstant;
+
 import java.util.ArrayList;
 
 /**
@@ -22,7 +24,7 @@ public class StorageModule extends WXModule {
     @JSMethod(uiThread = true)
     public Object setData(String key, String value, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_SETDATA);
+        weexEventBean.setKey(WXEventCenter.EVENT_SETDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         ArrayList<String> list = new ArrayList();
         list.add(key);
@@ -36,7 +38,7 @@ public class StorageModule extends WXModule {
     @JSMethod(uiThread = true)
     public Object getData(String key, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_GETDATA);
+        weexEventBean.setKey(WXEventCenter.EVENT_GETDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         ArrayList<String> list = new ArrayList();
         list.add(key);
@@ -49,7 +51,7 @@ public class StorageModule extends WXModule {
     @JSMethod(uiThread = true)
     public Object deleteData(String key, JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_DELETEDATA);
+        weexEventBean.setKey(WXEventCenter.EVENT_DELETEDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         ArrayList<String> list = new ArrayList();
         list.add(key);
@@ -63,7 +65,7 @@ public class StorageModule extends WXModule {
     @JSMethod(uiThread = true)
     public Object removeData(JSCallback callback) {
         WeexEventBean weexEventBean = new WeexEventBean();
-        weexEventBean.setKey(WXConstant.WXEventCenter.EVENT_REMOVEDATA);
+        weexEventBean.setKey(WXEventCenter.EVENT_REMOVEDATA);
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);

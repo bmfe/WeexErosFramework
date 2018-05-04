@@ -6,6 +6,7 @@ import android.util.Log;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
+import com.benmu.widget.utils.BaseCommonUtil;
 
 import java.io.File;
 import java.util.ArrayList;

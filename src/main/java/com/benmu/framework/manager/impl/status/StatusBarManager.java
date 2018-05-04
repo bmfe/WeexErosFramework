@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.model.RouterModel;
-import com.benmu.framework.utils.BaseCommonUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 
 /**
  * Created by Carry on 2017/9/14.

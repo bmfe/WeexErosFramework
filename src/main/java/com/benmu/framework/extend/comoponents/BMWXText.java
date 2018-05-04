@@ -5,15 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
 
+import com.alibaba.fastjson.JSONObject;
 import com.benmu.framework.extend.comoponents.view.BMWXTextView;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXAttr;
+import com.taobao.weex.dom.WXDomHandler;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.dom.WXStyle;
 import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.component.WXComponent;
@@ -21,6 +26,8 @@ import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXVContainer;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Carry on 17/3/27.
@@ -256,6 +263,22 @@ public class BMWXText extends WXComponent<BMWXTextView> {
             mChangeFontSize = size;
             updateFontSize();
         }
+    }
+
+
+    public void updateStyle(Map<String,Object> styles){
+        Message message = Message.obtain();
+        WXDomTask task = new WXDomTask();
+        task.instanceId = getInstanceId();
+        task.args = new ArrayList<>();
+
+        JSONObject styleJson = new JSONObject(styles);
+        task.args.add(getRef());
+        task.args.add(styleJson);
+        task.args.add(false);//flag pesudo
+        message.obj = task;
+        message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+        WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
     }
 
 }

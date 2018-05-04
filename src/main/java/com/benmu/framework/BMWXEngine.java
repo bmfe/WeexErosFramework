@@ -6,34 +6,39 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
+import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
-import com.benmu.framework.extend.adapter.BMTypefaceAdapter;
+import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
+import com.benmu.framework.extend.dom.richtext.RichTextDomObject;
+import com.benmu.framework.extend.hook.ui.components.HookWxScroller;
 import com.benmu.framework.extend.mediator.MediatorDocker;
+import com.benmu.framework.extend.hook.ui.components.HookImage;
+import com.benmu.framework.extend.hook.ui.components.HookInput;
+import com.benmu.framework.extend.hook.ui.components.HookListComponent;
+import com.benmu.framework.extend.hook.ui.components.HookTextarea;
+import com.benmu.framework.extend.hook.ui.components.HookWXText;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.CustomerEnvOptionManager;
 import com.benmu.framework.utils.AppUtils;
-import com.benmu.framework.utils.BaseCommonUtil;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
-import com.taobao.weex.dom.RichTextDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
+import com.taobao.weex.ui.SimpleComponentHolder;
+import com.taobao.weex.ui.component.WXBasicComponentType;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,12 +60,48 @@ public class BMWXEngine {
         initInterceptor(context, initConfig);
         initDispatchCenter();
         DebugableUtil.syncIsDebug(context);
-        initWeChat(context);
-        initUmeng(context);
         EventCenter.getInstance().init();
-//        initMap();
         PlugManager.initPlug();
         initBindingx();
+        initHook();
+        WeexPluginContainer.loadAll(context);
+    }
+
+    private static void initHook() {
+        try {
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            HookWXText.class,
+                            new HookWXText.Creator()
+                    ),
+                    false,
+                    WXBasicComponentType.TEXT
+            );
+            WXSDKEngine.registerComponent(WXBasicComponentType.INPUT, HookInput.class, false);
+            WXSDKEngine.registerComponent(WXBasicComponentType.TEXTAREA, HookTextarea.class, false);
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            HookImage.class,
+                            new HookImage.Ceator()
+                    ),
+                    false,
+                    WXBasicComponentType.IMAGE,
+                    WXBasicComponentType.IMG
+            );
+            WXSDKEngine.registerComponent(HookListComponent.class, false, WXBasicComponentType
+                            .LIST, WXBasicComponentType.VLIST, WXBasicComponentType.RECYCLER,
+                    WXBasicComponentType.WATERFALL);
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            HookWxScroller.class,
+                            new HookWxScroller.Creator()
+                    ),
+                    false,
+                    WXBasicComponentType.SCROLLER
+            );
+        } catch (WXException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void initBindingx() {
@@ -77,30 +118,6 @@ public class BMWXEngine {
     }
 
 
-    private static void initUmeng(Application context) {
-        boolean enabled = BMWXEnvironment.mPlatformConfig.getUmeng().isEnabled();
-        String androidAppKey = BMWXEnvironment.mPlatformConfig.getUmeng().getAndroidAppKey();
-        if (enabled && !TextUtils.isEmpty(androidAppKey)) {
-            MobclickAgent.setDebugMode(DebugableUtil.isDebug());
-            MobclickAgent.openActivityDurationTrack(false);
-            MobclickAgent.setCatchUncaughtExceptions(!DebugableUtil.isDebug());
-            MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
-            PlatformConfig.setWeixin(BMWXEnvironment.mPlatformConfig.getWechat().getAppId(),
-                    BMWXEnvironment.mPlatformConfig.getWechat().getAppSecret());
-            UMShareAPI.get(context);
-        }
-    }
-
-
-    private static void initWeChat(Context context) {
-        boolean enabled = BMWXEnvironment.mPlatformConfig.getWechat().isEnabled();
-        String appId = BMWXEnvironment.mPlatformConfig.getWechat().getAppId();
-        if (enabled && !TextUtils.isEmpty(appId)) {
-            BMWXEnvironment.mWXApi = WXAPIFactory.createWXAPI(context, appId, true);
-        }
-    }
-
-
     private static void initDispatchCenter() {
         DispatchEventCenter.getInstance().register();
         MediatorDocker.getInstance().registe();
@@ -110,6 +127,7 @@ public class BMWXEngine {
         BMWXEnvironment.mPlatformConfig = CustomerEnvOptionManager.initPlatformConfig
                 (context);
         BMWXEnvironment.mApplicationContext = context;
+        BMWXApplication.getWXApplication().setTypefaceAdapter(new DefaultTypefaceAdapter(context));
     }
 
     private static void initInterceptor(Application context, BMInitConfig initConfig) {
@@ -151,7 +169,6 @@ public class BMWXEngine {
                         .setImgAdapter(new DefaultWXImageAdapter())
                         .setHttpAdapter(new DefaultWXHttpAdapter(app))
                         .setWebSocketAdapterFactory(new LightlyWebSocketFactory())
-                        .setTypefaceAdapter(new BMTypefaceAdapter(app))
                         .setURIAdapter(new BMDefaultUriAdapter())
                         .build()
         );
