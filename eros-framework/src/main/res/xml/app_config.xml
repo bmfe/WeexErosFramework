@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<app_config version="1">
+    <!--weex-component-->
+    <component name="bm-view">com.benmu.framework.extend.comoponents.BMView</component>
+    <component name="bmtext">com.benmu.framework.extend.comoponents.BMWXText</component>
+    <component name="bmmask">com.benmu.framework.extend.comoponents.BMMask</component>
+    <component name="bmpop">com.benmu.framework.extend.comoponents.BMPop</component>
+    <component name="bmrichtext">com.benmu.framework.extend.comoponents.BMRich</component>
+    <component name="bmspan">com.benmu.framework.extend.comoponents.BMSpan</component>
+    <component name="bmcalendar">com.benmu.framework.extend.comoponents.BMCalendar</component>
+    <component name="bmchart">com.benmu.framework.extend.comoponents.BMChart</component>
+
+    <!--weex-module-->
+    <module name="bmRouter">com.benmu.framework.extend.module.RouterModule</module>
+    <module name="bmNavigator">com.benmu.framework.extend.module.TitleModule</module>
+    <module name="bmAxios">com.benmu.framework.extend.module.AxiosModule</module>
+    <module name="bmGeolocation">com.benmu.framework.extend.module.GeolocationModule</module>
+    <module name="bmModal">com.benmu.framework.extend.module.ModalModule</module>
+    <module name="bmImage">com.benmu.framework.extend.module.ImageModule</module>
+    <!--<module name="bmPay">com.benmu.framework.extend.module.PayModule</module>-->
+    <module name="bmStorage">com.benmu.framework.extend.module.StorageModule</module>
+    <!--<module name="bmShare">com.benmu.framework.extend.module.ShareModule</module>-->
+    <module name="bmFont">com.benmu.framework.extend.module.AppConfigModule</module>
+    <module name="bmEvents">com.benmu.framework.extend.module.EventModule</module>
+    <module name="bmBrowserImg">com.benmu.framework.extend.module.BrowserImgModule</module>
+    <module name="bmTool">com.benmu.framework.extend.module.ToolModule</module>
+    <!--<module name="bmAuth">com.benmu.framework.extend.module.WeChatLoginModule</module>-->
+    <module name="bmCommunication">com.benmu.framework.extend.module.CommunicationModule</module>
+    <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
+    <module name="bmWebSocket">com.benmu.framework.extend.module.WebSocketModule</module>
+
+</app_config>
