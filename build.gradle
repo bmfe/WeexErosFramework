@@ -1,104 +1,24 @@
-<<<<<<< HEAD
-apply plugin: 'com.android.library'
-android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 1
-        versionName '2.1.3'
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-=======
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
     repositories {
-        google()
         jcenter()
->>>>>>> 20171216-V2.0.6
+        google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-
-<<<<<<< HEAD
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-=======
+        classpath 'com.benmu.eros:eros-raven:0.0.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
->>>>>>> 20171216-V2.0.6
-    }
-
-    lintOptions {
-        abortOnError false
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
-<<<<<<< HEAD
-repositories {
-    mavenCentral()
-    maven {
-        url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories"
-    }
-    flatDir {
-
-        dirs 'libs'
-
-    }
-}
-
-dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile "com.android.support:appcompat-v7:${PROJECT_SUPPORTLIBVERSION}"
-    testCompile 'junit:junit:4.12'
-    /**
-     * debug调试要用到的
-     */
-    compile 'com.taobao.android.weex_inspection:protocol:1.1.4.1'
-    compile 'com.taobao.android:weex_inspector:0.13.4'
-    compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.lzy.widget:imagepicker:0.6.1'
-    compile 'com.journeyapps:zxing-android-embedded:3.4.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-//    compile project(':nexus')
-    compile 'com.benmu.eros:eros-nexus:0.0.1'
-    compile 'com.android.support:multidex:1.0.1'
-    //bs patch
-    compile 'me.ele:bspatch:1.0.6'
-    //weex analyzer
-    debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
-    //Bindigx
-    compile 'com.alibaba.android:bindingx-core:1.0.1'
-    compile 'com.alibaba.android:bindingx_weex_plugin:1.0.2'
-    compile 'org.weex.plugin:plugin-loader:1.0.0'
-
-=======
 allprojects {
     repositories {
-        google()
         jcenter()
+        google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
@@ -106,25 +26,5 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
->>>>>>> 20171216-V2.0.6
 }
 
-
-
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
-//                authentication(userName: "admin", password: "admin123")
-//            }
-//
-//            pom.project {
-//                groupId = 'com.benmu.eros'
-//                artifactId = 'eros-framework'
-//                version = '0.0.2'
-//                description 'test upload'
-//                url 'https://github.com/xianlinbox/Toggle'
-//            }
-//        }
-//    }
-//}
