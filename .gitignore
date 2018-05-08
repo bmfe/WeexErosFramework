@@ -1,2 +1,15 @@
-/build
 *.iml
+.gradle
+.idea
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+<<<<<<< HEAD
+*.iml
+=======
+/captures
+.externalNativeBuild
+
+>>>>>>> 20171216-V2.0.6
