@@ -14,6 +14,7 @@ import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.model.BaseResultBean;
+import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorBarModel;
 import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.widget.utils.ColorUtils;
@@ -84,7 +85,7 @@ public class DefaultNavigationAdapter {
         String fontWeight = navigatorBarModel.getFontWeight();
         if (!TextUtils.isEmpty(fontWeight) && !"normal".equals(fontWeight)) {
             textView.getPaint().setFakeBoldText(true);
-        }else {
+        } else {
             textView.getPaint().setFakeBoldText(false);
         }
         String text = navigatorBarModel.getText();
@@ -134,12 +135,20 @@ public class DefaultNavigationAdapter {
 
     public static void setNavigationInfo(String params, final JSCallback jscallback) {
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
+//        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
+//                .class);
+        NatigatorModel navigatorModel = parseManager.parseObject(params, NatigatorModel
                 .class);
         BaseToolBar navigationBar = getToolBar();
         if (navigationBar == null) return;
-        navigationBar.setVisibility(navigatorBarModel.isNavShow() ? View.VISIBLE : View.GONE);
+        navigationBar.setVisibility(navigatorModel.isNavShow() ? View.VISIBLE : View.GONE);
         if (navigationBar.getVisibility() == View.GONE) return;
+        navigationBar.getTitleTextView().setText(navigatorModel.getTitle());
+        if (navigatorModel.getStatusBarStyle() == null || "".equals(navigatorModel.getStatusBarStyle()) || "Default".equals(navigatorModel.getStatusBarStyle())) {
+            navigationBar.getTitleTextView().setTextColor(ColorUtils.getColor("#000000"));
+        } else {
+            navigationBar.getTitleTextView().setTextColor(ColorUtils.getColor("#ffffff"));
+        }
         if (jscallback != null)
             navigationBar.setOnTitleListenner(new BaseToolBar.OnTitleClick() {
                 @Override

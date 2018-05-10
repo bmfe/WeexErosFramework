@@ -1,6 +1,7 @@
 package com.benmu.framework.manager.impl.status;
 
 import android.app.Activity;
+import android.view.View;
 import android.view.Window;
 
 import java.lang.reflect.Field;
@@ -31,8 +32,11 @@ public class MIUIHelper implements IHelper {
                 Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
                 if (isFontColorDark) {
                     extraFlagField.invoke(window, darkModeFlag, darkModeFlag);//状态栏透明且黑色字体
+                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 } else {
                     extraFlagField.invoke(window, 0, darkModeFlag);//清除黑色字体
+                    int flag = window.getDecorView().getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                    window.getDecorView().setSystemUiVisibility(flag);
                 }
                 result = true;
             } catch (Exception e) {

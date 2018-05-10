@@ -13,10 +13,11 @@ public class RouterModel implements Serializable {
     public String type;
     public Object params;
     public int length;
-    public boolean canBack=true;
+    public boolean canBack = true;
     public String navTitle;
     public boolean navShow;
-    public String statusBarStyle;
+//    public String statusBarStyle;
+    public String statusBarStyle = "Default";
     public boolean isRunBackCallback;
     public SimpleJSCallback backCallback;
 

@@ -40,7 +40,7 @@ public class StatusBarManager {
 
     public static void setStatusBarFontStyle(Activity activity, RouterModel style) {
         if (style == null) return;
-        if ("Default".equals(style.statusBarStyle)) {
+        if (style.statusBarStyle == null || "Default".equals(style.statusBarStyle )) {
             Helper.statusBarLightMode(activity);
         }
     }
