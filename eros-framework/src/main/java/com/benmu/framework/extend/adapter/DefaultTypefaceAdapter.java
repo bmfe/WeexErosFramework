@@ -6,6 +6,7 @@ import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.taobao.weex.adapter.IWXTypefaceAdapter;
 
 import java.io.File;
 
@@ -13,7 +14,7 @@ import java.io.File;
  * Created by Carry on 2017/10/26.
  */
 
-public class DefaultTypefaceAdapter {
+public class DefaultTypefaceAdapter implements IWXTypefaceAdapter{
     private Context mContext;
 
     public DefaultTypefaceAdapter(Context context) {
