@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
@@ -55,6 +55,6 @@ dependencies {
     compile 'com.alibaba.android:bindingx-core:1.0.1'
     compile 'com.alibaba.android:bindingx_weex_plugin:1.0.2'
     compile 'org.weex.plugin:plugin-loader:1.0.0'
-
-    compile 'com.github.bmfe.eros-nexus:nexus:0.0.6'
+    //    compile 'com.github.bmfe.eros-nexus:nexus:0.0.6'
+    compile project(':eros-nexus')
 }
