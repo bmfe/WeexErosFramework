@@ -617,8 +617,8 @@ public class RichTextDomObject extends WXDomObject {
         WXComponent wxComponent = WXSDKManager.getInstance().getWXRenderManager().getWXComponent
                 (getDomContext().getInstanceId(), getRef());
         if (wxComponent != null && wxComponent instanceof BMRich) {
-            List<com.taobao.weex.dom.RichTextDomObject.BMRichSpan> spans = ((BMRich) wxComponent).getSpans();
-            for (com.taobao.weex.dom.RichTextDomObject.BMRichSpan span : spans) {
+            List<RichTextDomObject.BMRichSpan> spans = ((BMRich) wxComponent).getSpans();
+            for (RichTextDomObject.BMRichSpan span : spans) {
                 Log.e("rich", span.toString());
                 int start = span.getStart();
                 int end = span.getEnd();
@@ -665,48 +665,48 @@ public class RichTextDomObject extends WXDomObject {
     }
 
 
-//    public static class BMRichSpan {
-//        private Object span;
-//        private int start;
-//        private int end;
-//
-//        public BMRichSpan(Object span, int start, int end) {
-//            this.span = span;
-//            this.start = start;
-//            this.end = end;
-//        }
-//
-//        public Object getSpan() {
-//            return span;
-//        }
-//
-//        public void setSpan(CharacterStyle span) {
-//            this.span = span;
-//        }
-//
-//        public int getStart() {
-//            return start;
-//        }
-//
-//        public void setStart(int start) {
-//            this.start = start;
-//        }
-//
-//        public int getEnd() {
-//            return end;
-//        }
-//
-//        public void setEnd(int end) {
-//            this.end = end;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return "BMRichSpan{" +
-//                    "span=" + span +
-//                    ", start=" + start +
-//                    ", end=" + end +
-//                    '}';
-//        }
-//    }
+    public static class BMRichSpan {
+        private Object span;
+        private int start;
+        private int end;
+
+        public BMRichSpan(Object span, int start, int end) {
+            this.span = span;
+            this.start = start;
+            this.end = end;
+        }
+
+        public Object getSpan() {
+            return span;
+        }
+
+        public void setSpan(CharacterStyle span) {
+            this.span = span;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public void setStart(int start) {
+            this.start = start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public void setEnd(int end) {
+            this.end = end;
+        }
+
+        @Override
+        public String toString() {
+            return "BMRichSpan{" +
+                    "span=" + span +
+                    ", start=" + start +
+                    ", end=" + end +
+                    '}';
+        }
+    }
 }
