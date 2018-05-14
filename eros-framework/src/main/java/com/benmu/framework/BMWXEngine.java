@@ -170,7 +170,6 @@ public class BMWXEngine {
                         .setHttpAdapter(new DefaultWXHttpAdapter(app))
                         .setWebSocketAdapterFactory(new LightlyWebSocketFactory())
                         .setURIAdapter(new BMDefaultUriAdapter())
-                        .setTypefaceAdapter(new DefaultTypefaceAdapter(app))
                         .build()
         );
     }
