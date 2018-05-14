@@ -68,7 +68,7 @@ public class EventFetch extends EventGate {
         if (noRepeat != null && noRepeat) {
             axiosManager.cancel(mUrl);
         }
-        switch (object.getString("method")) {
+        switch (object.getString("method").toUpperCase()) {
 
             case OkHttpUtils.METHOD.GET:
                 AxiosGet axiosGet = parseManager.parseObject(params, AxiosGet.class);
