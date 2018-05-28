@@ -22,4 +22,16 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <!--红色消息提醒气泡，大-->
+    <style name="CellPointBig">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">17dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:minWidth">17dp</item>
+        <item name="android:background">@drawable/shape_red_point</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

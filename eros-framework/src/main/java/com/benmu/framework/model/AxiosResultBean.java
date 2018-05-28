@@ -9,6 +9,7 @@ public class AxiosResultBean implements Serializable {
     public Object status;
     public String errorMsg = "";
     public Object data;
+    public Object header;
 
     public AxiosResultBean() {
     }
