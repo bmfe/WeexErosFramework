@@ -167,8 +167,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.benmu.framework.R;
+import com.benmu.framework.extend.hook.ui.components.HookImage;
 import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
 import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.framework.utils.ImageUtil;
@@ -189,8 +189,6 @@ import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXImageQuality;
-import com.taobao.weex.ui.component.WXImage;
-
 public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     private static final String PLACEHOLDER_DEFAULT = "default";
     private Bitmap mErrorBitmap;
@@ -207,7 +205,6 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     public void setImage(String url, final ImageView view,
                          WXImageQuality quality, final WXImageStrategy strategy) {
         if (view == null || !(view instanceof HookWXImageView)) return;
-        Log.e("url>>>>>>", "url>>>>>" + url);
         HookWXImageView wxImageView = (HookWXImageView) view;
         wxImageView.setImageBitmap(null);
         if (TextUtils.isEmpty(url)) {
@@ -234,7 +231,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     }
 
     private void handleError(HookWXImageView imageView) {
-        WXImage component = imageView.getComponent();
+        HookImage component = imageView.getComponent();
         if (component == null) return;
         ImmutableDomObject domObject = component.getDomObject();
         if (domObject == null) return;
