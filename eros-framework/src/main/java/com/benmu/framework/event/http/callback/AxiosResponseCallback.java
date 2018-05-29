@@ -20,15 +20,14 @@ public abstract class AxiosResponseCallback extends Callback<AxiosResultBean> {
 
     @Override
     public AxiosResultBean parseNetworkResponse(Response response, int id) throws Exception {
-        int code = response.code();
-        String responseBody = response.body().string();
         Map<String, List<String>> responseHeader = new HashMap<>();
         for (Map.Entry<String, List<String>> entry : response.headers().toMultimap()
                 .entrySet()) {
             responseHeader.put(entry.getKey(), entry.getValue());
         }
         try {
-            return new AxiosResultBean(code, "", JSON.parse(responseBody), responseHeader);
+            return new AxiosResultBean(response.code(), "", JSON.parse(response.body().string()),
+                    responseHeader);
         } catch (JSONException e) {
             e.printStackTrace();
             return new AxiosResultBean(-1, "json解析错误", null, responseHeader);

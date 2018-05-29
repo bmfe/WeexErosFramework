@@ -234,28 +234,6 @@ public class EventFetch extends EventGate {
         }
     }
 
-//    private void parseResponse(String response, JSCallback callBack, int code) {
-//        try {
-//            AxiosResultBean bean = new AxiosResultBean();
-//            if (callBack != null && !TextUtils.isEmpty(response)) {
-//                bean.status = code;
-//                bean.errorMsg = "";
-//                bean.data = JSON.parse(response);
-//                callBack.invoke(bean);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            L.e("json 解析错误");
-//            AxiosResultBean bean = new AxiosResultBean();
-//            bean.status = -1;
-//            bean.errorMsg = "json 解析错误";
-//            if (callBack != null) {
-//                callBack.invoke(bean);
-//            }
-//        }
-//
-//    }
-
     public void uploadImage(String json, Context context, JSCallback jsCallback) {
         mUploadAvatar = jsCallback;
         mUploadContext = context;
