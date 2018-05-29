@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
@@ -99,6 +100,7 @@ public class BMWXEngine {
                     false,
                     WXBasicComponentType.SCROLLER
             );
+
         } catch (WXException e) {
             e.printStackTrace();
         }
