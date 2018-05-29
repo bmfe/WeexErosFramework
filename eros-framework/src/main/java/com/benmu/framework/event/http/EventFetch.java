@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXEventCenter;
+import com.benmu.framework.event.http.callback.AxiosResponseCallback;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.exception.CancelException;
@@ -99,7 +100,8 @@ public class EventFetch extends EventGate {
 
     private void patch(final Context context, AxiosManager axiosManager, AxiosPost axiosPatch,
                        final JSCallback jscallback) {
-        axiosManager.patch(axiosPatch.url, axiosPatch.data, axiosPatch.header, new StringCallback
+        axiosManager.patch(axiosPatch.url, axiosPatch.data, axiosPatch.header, new
+                AxiosResponseCallback
                 () {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -107,55 +109,58 @@ public class EventFetch extends EventGate {
             }
 
             @Override
-            public void onResponse(String response, int id) {
-                parseResponse(response, jscallback, code);
+            public void onResponse(AxiosResultBean response, int id) {
+                callback(response, jscallback);
             }
         }, axiosPatch.url, axiosPatch.timeout);
     }
 
     private void put(final Context context, AxiosManager axiosManager, AxiosPost axiosPut, final
     JSCallback jscallback) {
-        axiosManager.put(axiosPut.url, axiosPut.data, axiosPut.header, new StringCallback() {
+        axiosManager.put(axiosPut.url, axiosPut.data, axiosPut.header, new AxiosResponseCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 parseError(context, e, jscallback);
             }
 
             @Override
-            public void onResponse(String response, int id) {
-                parseResponse(response, jscallback, code);
+            public void onResponse(AxiosResultBean response, int id) {
+                callback(response, jscallback);
             }
+
         }, axiosPut.url, axiosPut.timeout);
     }
 
     private void delete(final Context context, AxiosManager axiosManager, AxiosPost axiosDelete,
                         final JSCallback jscallback) {
         axiosManager.delete(axiosDelete.url, axiosDelete.data, axiosDelete.header, new
-                StringCallback() {
+                AxiosResponseCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         parseError(context, e, jscallback);
                     }
 
                     @Override
-                    public void onResponse(String response, int id) {
-                        parseResponse(response, jscallback, code);
+                    public void onResponse(AxiosResultBean response, int id) {
+                        callback(response, jscallback);
                     }
+
                 }, axiosDelete.url, axiosDelete.timeout);
     }
 
 
     private void head(final Context context, AxiosManager axiosManager, AxiosGet axiosHead, final
     JSCallback jscallback) {
-        axiosManager.head(axiosHead.url, axiosHead.data, axiosHead.header, new StringCallback() {
+        axiosManager.head(axiosHead.url, axiosHead.data, axiosHead.header, new
+                AxiosResponseCallback() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 parseError(context, e, jscallback);
             }
 
             @Override
-            public void onResponse(String response, int id) {
-                parseResponse(response, jscallback, code);
+            public void onResponse(AxiosResultBean response, int id) {
+                callback(response, jscallback);
             }
         }, axiosHead.url, axiosHead.timeout);
     }
@@ -164,7 +169,7 @@ public class EventFetch extends EventGate {
                       final JSCallback
                               jscallback) {
         axiosManager.post(axiosPost.url, axiosPost.data, axiosPost.header, new
-                StringCallback() {
+                AxiosResponseCallback() {
 
 
                     @Override
@@ -173,8 +178,8 @@ public class EventFetch extends EventGate {
                     }
 
                     @Override
-                    public void onResponse(String response, int id) {
-                        parseResponse(response, jscallback, code);
+                    public void onResponse(AxiosResultBean response, int id) {
+                        callback(response, jscallback);
                     }
                 }, axiosPost.url, axiosPost.timeout);
     }
@@ -183,7 +188,7 @@ public class EventFetch extends EventGate {
     private void get(final Context context, AxiosManager axiosManager, AxiosGet axiosGet, final
     JSCallback jscallback) {
         axiosManager.get(axiosGet.url, axiosGet.data, axiosGet.header, new
-                StringCallback() {
+                AxiosResponseCallback() {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
@@ -191,9 +196,10 @@ public class EventFetch extends EventGate {
                     }
 
                     @Override
-                    public void onResponse(String response, int id) {
-                        parseResponse(response, jscallback, code);
+                    public void onResponse(AxiosResultBean response, int id) {
+                        callback(response, jscallback);
                     }
+
                 }, axiosGet.url, axiosGet.timeout);
     }
 
@@ -213,34 +219,42 @@ public class EventFetch extends EventGate {
             IrregularUrlException irregularUrlException = (IrregularUrlException) e;
             bean.status = 9;
             bean.errorMsg = irregularUrlException.getmErrosMeeage();
+        } else {
+            bean.status = 9;
+            bean.errorMsg = e.getMessage();
         }
-
         if (callback != null) {
             callback.invoke(bean);
         }
     }
 
-    private void parseResponse(String response, JSCallback callBack, int code) {
-        try {
-            AxiosResultBean bean = new AxiosResultBean();
-            if (callBack != null && !TextUtils.isEmpty(response)) {
-                bean.status = code;
-                bean.errorMsg = "";
-                bean.data = JSON.parse(response);
-                callBack.invoke(bean);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            L.e("json 解析错误");
-            AxiosResultBean bean = new AxiosResultBean();
-            bean.status = -1;
-            bean.errorMsg = "json 解析错误";
-            if (callBack != null) {
-                callBack.invoke(bean);
-            }
+    private void callback(Object object, JSCallback callback) {
+        if (callback != null) {
+            callback.invoke(object);
         }
-
     }
+
+//    private void parseResponse(String response, JSCallback callBack, int code) {
+//        try {
+//            AxiosResultBean bean = new AxiosResultBean();
+//            if (callBack != null && !TextUtils.isEmpty(response)) {
+//                bean.status = code;
+//                bean.errorMsg = "";
+//                bean.data = JSON.parse(response);
+//                callBack.invoke(bean);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            L.e("json 解析错误");
+//            AxiosResultBean bean = new AxiosResultBean();
+//            bean.status = -1;
+//            bean.errorMsg = "json 解析错误";
+//            if (callBack != null) {
+//                callBack.invoke(bean);
+//            }
+//        }
+//
+//    }
 
     public void uploadImage(String json, Context context, JSCallback jsCallback) {
         mUploadAvatar = jsCallback;
