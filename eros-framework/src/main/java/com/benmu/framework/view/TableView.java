@@ -27,6 +27,7 @@ import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.model.WeexEventBean;
+import com.benmu.widget.utils.ColorUtils;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.JSCallback;
 
@@ -80,11 +81,11 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         navigatorArray = new SparseArray<>();
         // 设置Tab 上面线的颜色
         if (!TextUtils.isEmpty(tabBar.getBorderColor())) {
-            borderLine.setBackgroundColor(Color.parseColor(tabBar.getBorderColor()));
+            borderLine.setBackgroundColor(ColorUtils.getColor(tabBar.getBorderColor()));
         }
         // 设置 Tab 背景
         if (!TextUtils.isEmpty(tabBar.getBackgroundColor())) {
-            llTabBar.setBackgroundColor(Color.parseColor(tabBar.getBorderColor()));
+            llTabBar.setBackgroundColor(ColorUtils.getColor(tabBar.getBorderColor()));
         }
         fragmentAdapter = new MyFragmentAdapter(((AbstractWeexActivity) context).getSupportFragmentManager(), fragments);
         initItem(tabBar);
