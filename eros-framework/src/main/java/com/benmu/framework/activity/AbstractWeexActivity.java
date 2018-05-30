@@ -73,6 +73,7 @@ import com.taobao.weex.RenderContainer;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXRenderStrategy;
 
 import org.json.JSONException;
@@ -356,7 +357,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     //改造SVProgressHUD loadingView
     private void createLoadingView() {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
-        Log.d("SVProgressHUD", "context hasCode -> " + this.hashCode());
         decorView = (ViewGroup) (this).getWindow().getDecorView().findViewById(android.R.id
                 .content);
         rootView = (ViewGroup) layoutInflater.inflate(com.benmu.R.layout
@@ -929,5 +929,12 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         homePage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
                 "/dist/js" + homePage;
         return homePage.equals(this.mPageUrl);
+    }
+
+    /**
+     * navigation 设置监听器，为了传递给下层 fragment
+     */
+    public boolean navigationListenter(WeexEventBean weexEventBean) {
+        return false;
     }
 }

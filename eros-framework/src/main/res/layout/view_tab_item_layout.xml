@@ -16,17 +16,16 @@
         <ImageView
             android:id="@+id/itemIconIv"
             android:layout_width="wrap_content"
-            android:layout_height="28dp"
+            android:layout_height="27dp"
             android:layout_marginTop="2dp"
-            tools:src="@drawable/ic_launcher"
-            android:scaleType="centerInside" />
+            tools:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/itemNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textColor="@android:color/black"
             tools:text="首页"/>
 

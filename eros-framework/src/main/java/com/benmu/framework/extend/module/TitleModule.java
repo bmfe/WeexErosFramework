@@ -27,6 +27,7 @@ public class TitleModule extends WXModule {
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         weexEventBean.setJsParams(json);
+        weexEventBean.setExpand(mWXSDKInstance.hashCode());
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
 
@@ -37,6 +38,7 @@ public class TitleModule extends WXModule {
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         weexEventBean.setJsParams(json);
+        weexEventBean.setExpand(mWXSDKInstance.hashCode());
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
 
@@ -48,6 +50,7 @@ public class TitleModule extends WXModule {
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         weexEventBean.setJsParams(json);
+        weexEventBean.setExpand(mWXSDKInstance.hashCode());
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
 
     }
@@ -59,6 +62,7 @@ public class TitleModule extends WXModule {
         weexEventBean.setContext(mWXSDKInstance.getContext());
         weexEventBean.setJscallback(callback);
         weexEventBean.setJsParams(json);
+        weexEventBean.setExpand(mWXSDKInstance.hashCode());
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
 

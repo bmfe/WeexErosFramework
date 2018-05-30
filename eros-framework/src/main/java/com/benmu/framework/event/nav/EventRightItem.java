@@ -11,14 +11,16 @@ import com.taobao.weex.bridge.JSCallback;
  * Created by Carry on 2017/9/13.
  */
 
-public class EventRightItem extends EventGate{
+public class EventRightItem extends NavigationEventGate {
 
     @Override
     public void perform(Context context, WeexEventBean weexEventBean) {
-        setRightItem(weexEventBean.getJsParams(), weexEventBean.getJscallback());
+        if (!setNavitionListenter(weexEventBean)) {
+            setRightItem(weexEventBean.getJsParams(), weexEventBean.getJscallback());
+        }
     }
 
     public void setRightItem(String params, JSCallback jscallback) {
-        DefaultNavigationAdapter.setRightItem(params,jscallback);
+        DefaultNavigationAdapter.setRightItem(params, jscallback);
     }
 }

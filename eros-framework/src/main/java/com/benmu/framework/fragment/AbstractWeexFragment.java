@@ -146,8 +146,14 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
 //        GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
     }
 
+    public int getWxInstanseHasCode() {
+        if (mWXInstance != null) {
+            return mWXInstance.hashCode();
+        }
+        return -1;
+    }
+
     public void setPageUrl(String url) {
-        Log.e("AbstractWeexFragment", "url - > " + url);
         Uri pathUri = Uri.parse(url);
         if (!TextUtils.equals("http", pathUri.getScheme()) && !TextUtils.equals("https", pathUri
                 .getScheme())) {
