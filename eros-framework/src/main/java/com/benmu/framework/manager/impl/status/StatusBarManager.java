@@ -3,6 +3,7 @@ package com.benmu.framework.manager.impl.status;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.widget.utils.BaseCommonUtil;
+
+import qiu.niorgai.StatusBarCompat;
 
 /**
  * Created by Carry on 2017/9/14.
@@ -40,7 +43,7 @@ public class StatusBarManager {
 
     public static void setStatusBarFontStyle(Activity activity, RouterModel style) {
         if (style == null) return;
-        if (style.statusBarStyle == null || "Default".equals(style.statusBarStyle )) {
+        if (style.statusBarStyle == null || "Default".equals(style.statusBarStyle)) {
             Helper.statusBarLightMode(activity);
         }
     }
@@ -83,7 +86,7 @@ public class StatusBarManager {
     }
 
     private static void translucentStatusBar(AbstractWeexActivity activity) {
-
+        StatusBarCompat.translucentStatusBar(activity);
     }
 
 
@@ -109,24 +112,26 @@ public class StatusBarManager {
 
     public static void setStatusBarColor(Activity activity, int color, int statusBarAlpha, View
             rootView) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams
-                    .FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            activity.getWindow().setStatusBarColor(calculateStatusColor(color, statusBarAlpha));
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-            int count = decorView.getChildCount();
-            if (count > 0 && decorView.getChildAt(count - 1) instanceof StatusBarView) {
-                decorView.getChildAt(count - 1).setBackgroundColor(calculateStatusColor(color,
-                        statusBarAlpha));
-            } else {
-                StatusBarView statusView = createStatusBarView(activity, color, statusBarAlpha);
-                decorView.addView(statusView);
-            }
-        }
-        setRootView(rootView);
+        StatusBarCompat.setStatusBarColor(activity, color);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            activity.getWindow().addFlags(WindowManager.LayoutParams
+//                    .FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            activity.getWindow().setStatusBarColor(calculateStatusColor(color, statusBarAlpha));
+//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+//            int count = decorView.getChildCount();
+//            if (count > 0 && decorView.getChildAt(count - 1) instanceof StatusBarView) {
+//                decorView.getChildAt(count - 1).setBackgroundColor(calculateStatusColor(color,
+//                        statusBarAlpha));
+//            } else {
+//                StatusBarView statusView = createStatusBarView(activity, color, statusBarAlpha);
+//                decorView.addView(statusView);
+//            }
+//        }
+//        setRootView(rootView);
     }
 
     private static int calculateStatusColor(int color, int alpha) {

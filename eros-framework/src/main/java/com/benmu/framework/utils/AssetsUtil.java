@@ -2,9 +2,7 @@ package com.benmu.framework.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.alibaba.fastjson.JSON;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+
 
 /**
  * Assets 文件工具类

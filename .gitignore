@@ -6,10 +6,4 @@
 /.idea/libraries
 .DS_Store
 /build
-<<<<<<< HEAD
-*.iml
-=======
 /captures
-.externalNativeBuild
-
->>>>>>> 20171216-V2.0.6

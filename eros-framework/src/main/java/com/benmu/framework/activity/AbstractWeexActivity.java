@@ -14,6 +14,7 @@ import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.WXAnalyzerDelegate;
+import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 
@@ -72,6 +73,7 @@ import com.taobao.weex.RenderContainer;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXRenderStrategy;
 
 import org.json.JSONException;
@@ -144,7 +146,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initUrl(data);
         synRouterStack();
         initDebug();
-//        initPush();
         imagePicker = ImagePicker.getInstance();
         mReloadReceiver = new BroadcastReceiver() {
             @Override
@@ -158,9 +159,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         mWxAnalyzerDelegate.onCreate();
     }
 
-//    private void initPush() {
-//        GetuiManager.pushInit(this.getApplication());
-//    }
 
     private void initDebug() {
         if (!DebugableUtil.isDebug()) return;
@@ -359,7 +357,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     //改造SVProgressHUD loadingView
     private void createLoadingView() {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
-        Log.d("SVProgressHUD", "context hasCode -> " + this.hashCode());
         decorView = (ViewGroup) (this).getWindow().getDecorView().findViewById(android.R.id
                 .content);
         rootView = (ViewGroup) layoutInflater.inflate(com.benmu.R.layout
@@ -463,6 +460,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             destroyWXInstance();
         }
         RenderContainer renderContainer = new RenderContainer(this);
+        if (mRouterParam != null && !TextUtils.isEmpty(mRouterParam.backgroundColor)) {
+            renderContainer.setBackgroundColor(ColorUtils.getColor(mRouterParam.backgroundColor));
+        }
         mContainer.addView(renderContainer);
         mWXInstance = new WXSDKInstance(this);
         mWXInstance.registerRenderListener(this);
@@ -871,8 +871,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 if (uri.getQueryParameterNames().contains("bundle")) {
                     WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
                     WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
-                    String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" : "Has " +
-                            "switched to Normal Mode";
+                    String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" :
+                            "Has " +
+                                    "switched to Normal Mode";
                     Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
                     finish();
                     return;
@@ -911,21 +912,17 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
-                GlobalEventManager.homeBack(getWXSDkInstance());
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    private boolean isHomePage() {
+    protected boolean isHomePage() {
         String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage(this);
         homePage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
                 "/dist/js" + homePage;
         return homePage.equals(this.mPageUrl);
+    }
+
+    /**
+     * navigation 设置监听器，为了传递给下层 fragment
+     */
+    public boolean navigationListenter(WeexEventBean weexEventBean) {
+        return false;
     }
 }

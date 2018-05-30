@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 import com.benmu.framework.adapter.BMDefaultUriAdapter;
@@ -16,7 +17,6 @@ import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
-import com.benmu.framework.extend.dom.richtext.RichTextDomObject;
 import com.benmu.framework.extend.hook.ui.components.HookWxScroller;
 import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.extend.hook.ui.components.HookImage;
@@ -35,6 +35,7 @@ import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
+import com.taobao.weex.dom.RichTextDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.component.WXBasicComponentType;
@@ -99,6 +100,7 @@ public class BMWXEngine {
                     false,
                     WXBasicComponentType.SCROLLER
             );
+
         } catch (WXException e) {
             e.printStackTrace();
         }

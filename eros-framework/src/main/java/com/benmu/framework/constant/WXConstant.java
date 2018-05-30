@@ -29,4 +29,6 @@ public class WXConstant {
 
     public static final String MEDIATOR_INIT = "MEDIATOR_INIT";
 
+    public static final String ACTION_NETWORK_CHANGED="ACTION_NETWORK_CHANGED";
+
 }

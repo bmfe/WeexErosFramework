@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/itemRootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/itemIconIv"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginTop="2dp"
+            tools:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/itemNameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            tools:text="首页"/>
+
+        <com.benmu.widget.view.CellPointTextView
+            android:id="@+id/ivGroupCell"
+            style="@style/CellPointBig"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="-45dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/ivFindCell"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="-41dp"
+            android:background="@drawable/shape_red_point"
+            android:gravity="center"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

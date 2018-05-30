@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 圆角 -->
+    <corners
+        android:radius="360px"
+        /><!-- 设置圆角半径 -->
+
+    <!-- 填充 -->
+    <solid
+        android:color="@color/msg_point_red"/><!-- 填充的颜色 -->
+
+</shape>
