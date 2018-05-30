@@ -1,6 +1,7 @@
 package com.benmu.framework.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -30,6 +31,8 @@ public class TableItemView extends LinearLayout {
     private TextView itemNameTv;
     private CellPointTextView ivGroupCell;
     private int index = -1;
+    private String textColor, textSelectColor; // 选中和未选择时的 text 背景颜色
+    private String icon, selectedIcon; // 选中和未选择时的 图片地址
 
     public TableItemView(Context context) {
         super(context);
@@ -60,9 +63,46 @@ public class TableItemView extends LinearLayout {
     public void setData(PlatformConfigBean.TabItem item) {
         Log.e("TableItemView", "name - > " + item.getText());
         itemNameTv.setText(item.getText());
-        if (!TextUtils.isEmpty(item.getIcon())) {
-            BMHookGlide.load(context, item.getIcon()).into(itemIconIv);
+        this.icon = item.getIcon();
+        this.selectedIcon = item.getSelectedIcon();
+        if (!TextUtils.isEmpty(icon)) {
+            BMHookGlide.load(context, icon).into(itemIconIv);
         }
+        if (!TextUtils.isEmpty(textColor)) {
+            itemNameTv.setTextColor(Color.parseColor(textColor));
+        }
+        if (index == 0) {
+            if (!TextUtils.isEmpty(selectedIcon)) {
+                BMHookGlide.load(context, selectedIcon).into(itemIconIv);
+            }
+            if (!TextUtils.isEmpty(textSelectColor)) {
+                itemNameTv.setTextColor(Color.parseColor(textSelectColor));
+            }
+        }
+    }
+
+    public void setSelector(int index) {
+        if (this.index == index) {
+            if (!TextUtils.isEmpty(selectedIcon)) {
+                BMHookGlide.load(context, selectedIcon).into(itemIconIv);
+            }
+            if (!TextUtils.isEmpty(textSelectColor)) {
+                itemNameTv.setTextColor(Color.parseColor(textSelectColor));
+            }
+
+        } else {
+            if (!TextUtils.isEmpty(icon)) {
+                BMHookGlide.load(context, icon).into(itemIconIv);
+            }
+            if (!TextUtils.isEmpty(textColor)) {
+                itemNameTv.setTextColor(Color.parseColor(textColor));
+            }
+        }
+    }
+
+    public void setTextColor(String textColor, String textSelectColor) {
+        this.textColor = textColor;
+        this.textSelectColor = textSelectColor;
     }
 
     public int getIndex() {

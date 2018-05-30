@@ -10,16 +10,24 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.benmu.framework.R;
 import com.benmu.framework.activity.AbstractWeexActivity;
+import com.benmu.framework.adapter.DefaultNavigationAdapter;
+import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.fragment.MainWeexFragment;
+import com.benmu.framework.model.NatigatorModel;
+import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.PlatformConfigBean;
+import com.benmu.framework.model.WeexEventBean;
+import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +37,7 @@ import java.util.List;
  * Created by liuyuanxiao on 2018/5/24.
  */
 
-public class TabbleView extends RelativeLayout {
+public class TabbleView extends RelativeLayout implements ViewPager.OnPageChangeListener {
     private Context context;
     private LayoutInflater inflater;
     private View view;
@@ -39,6 +47,7 @@ public class TabbleView extends RelativeLayout {
     private PlatformConfigBean.TabBar tabBarBean;
     private List<Fragment> fragments;
     private MyFragmentAdapter fragmentAdapter;
+    private SparseArray<NavigatorModel> navigatorArray;
 
     public TabbleView(Context context) {
         super(context);
@@ -67,6 +76,7 @@ public class TabbleView extends RelativeLayout {
 
     public void setData(PlatformConfigBean.TabBar tabBar) {
         this.tabBarBean = tabBar;
+        navigatorArray = new SparseArray<>();
         // 设置Tab 上面线的颜色
         if (!TextUtils.isEmpty(tabBar.getBorderColor())) {
             borderLine.setBackgroundColor(Color.parseColor(tabBar.getBorderColor()));
@@ -76,20 +86,28 @@ public class TabbleView extends RelativeLayout {
             llTabBar.setBackgroundColor(Color.parseColor(tabBar.getBorderColor()));
         }
         fragmentAdapter = new MyFragmentAdapter(((AbstractWeexActivity) context).getSupportFragmentManager(), fragments);
-        initItem(tabBarBean.getList());
+        initItem(tabBar);
         viewpager.setAdapter(fragmentAdapter);
+        viewpager.addOnPageChangeListener(this);
+        viewpager.setCurrentItem(0);
     }
 
-    private void initItem(List<PlatformConfigBean.TabItem> items) {
+    /**
+     * 初始化各个Item
+     *
+     * @param tabBar
+     */
+    private void initItem(PlatformConfigBean.TabBar tabBar) {
+        List<PlatformConfigBean.TabItem> items = tabBar.getList();
         // 循环add  tab Item
         for (int i = 0; i < items.size(); i++) {
-            Log.e("TabbleView", "url - > " + items.get(i).getPagePath() + " name - > " + items.get(i).getText());
             PlatformConfigBean.TabItem item = items.get(i);
             TableItemView itemView = new TableItemView(context);
             LinearLayout.LayoutParams weight1 = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
             itemView.setLayoutParams(weight1);
-            itemView.setData(item);
+            itemView.setTextColor(tabBar.getColor(), tabBar.getSelectedColor());
             itemView.setIndex(i);
+            itemView.setData(item);
             llTabBar.addView(itemView);
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -98,17 +116,116 @@ public class TabbleView extends RelativeLayout {
                 }
             });
             // new fragment
-            initFragment(item);
+            initFragment(item, i);
         }
     }
 
+    /**
+     * 初始化 Fragment
+     */
 
-    private void initFragment(PlatformConfigBean.TabItem item) {
+    private void initFragment(PlatformConfigBean.TabItem item, int index) {
         MainWeexFragment fragment = new MainWeexFragment();
         Bundle bundle = new Bundle();
         bundle.putString(MainWeexFragment.PAGE_URL, item.getPagePath());
         fragment.setArguments(bundle);
         fragments.add(fragment);
+        NavigatorModel model = new NavigatorModel();
+        model.navigatorModel = getNavStr(item);
+        navigatorArray.append(index, model);
+        if (index == 0) {
+            fragment.setNavigator(model);
+        }
+    }
+
+
+    private String getNavStr(PlatformConfigBean.TabItem item) {
+        NatigatorModel model = new NatigatorModel();
+        model.setNavShow(item.isNavShow());
+        model.setTitle(item.getNavTitle());
+        return JSON.toJSONString(model);
+    }
+
+    /**
+     * ViewPager 滑动时 动态切换底部按钮的 文字颜色和 图片
+     *
+     * @param index
+     */
+    private void setCurrentItem(int index) {
+        for (int i = 0; i < llTabBar.getChildCount(); i++) {
+            TableItemView itemView = (TableItemView) llTabBar.getChildAt(i);
+            itemView.setSelector(index);
+        }
+        MainWeexFragment fragment = (MainWeexFragment) fragments.get(index);
+        fragment.setNavigator(navigatorArray.get(index));
+    }
+
+
+    /**
+     * 接通 navigator ，前端可以直接 使用 navigator  设置到 fragment
+     *
+     * @param weexEventBean 参数对象
+     * @return
+     */
+    public boolean setNaigation(WeexEventBean weexEventBean) {
+        String params = weexEventBean.getJsParams();
+        JSCallback jsCallback = weexEventBean.getJscallback();
+        String type = weexEventBean.getKey();
+
+        int currentIndex = viewpager.getCurrentItem();
+
+        for (int i = 0; i < fragments.size(); i++) {
+            MainWeexFragment fragment = (MainWeexFragment) fragments.get(i);
+            if (fragment.getWxInstanseHasCode() == (int) weexEventBean.getExpand()) {
+                NavigatorModel navigatorModel = navigatorArray.get(i);
+                switch (type) {
+                    case WXEventCenter.EVENT_NAVIGATIONINFO: //setNavigationInfo
+                        navigatorModel.navigatorModel = params;
+                        if (currentIndex == i) {
+                            DefaultNavigationAdapter.setNavigationInfo(params, jsCallback);
+                        }
+                        break;
+                    case WXEventCenter.EVENT_LEFTITEM: //setLeftItem
+                        navigatorModel.leftNavigatorbarModel = params;
+                        navigatorModel.leftItemJsCallback = jsCallback;
+                        if (currentIndex == i) {
+                            DefaultNavigationAdapter.setLeftItem(params, jsCallback);
+                        }
+                        break;
+                    case WXEventCenter.EVENT_RIGHTITEM://setRightItem
+                        navigatorModel.rightNavigatorbarModel = params;
+                        navigatorModel.rightItemJsCallback = jsCallback;
+                        if (currentIndex == i) {
+                            DefaultNavigationAdapter.setRightItem(params, jsCallback);
+                        }
+                        break;
+                    case WXEventCenter.EVENT_CENTERITEM: //setCenterItem
+                        navigatorModel.centerNavigatorBarModel = params;
+                        navigatorModel.centerItemJsCallback = jsCallback;
+                        if (currentIndex == i) {
+                            DefaultNavigationAdapter.setCenterItem(params, jsCallback);
+                        }
+                        break;
+                }
+            }
+
+        }
+        return true;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setCurrentItem(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     /**
@@ -138,21 +255,5 @@ public class TabbleView extends RelativeLayout {
         }
     }
 
-    private static class ViewPagerChangeListenr implements ViewPager.OnPageChangeListener {
 
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    }
 }
