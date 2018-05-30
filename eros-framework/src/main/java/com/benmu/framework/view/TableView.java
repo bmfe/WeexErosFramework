@@ -27,6 +27,7 @@ import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.model.WeexEventBean;
+import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.List;
  * Created by liuyuanxiao on 2018/5/24.
  */
 
-public class TabbleView extends RelativeLayout implements ViewPager.OnPageChangeListener {
+public class TableView extends RelativeLayout implements ViewPager.OnPageChangeListener {
     private Context context;
     private LayoutInflater inflater;
     private View view;
@@ -49,17 +50,17 @@ public class TabbleView extends RelativeLayout implements ViewPager.OnPageChange
     private MyFragmentAdapter fragmentAdapter;
     private SparseArray<NavigatorModel> navigatorArray;
 
-    public TabbleView(Context context) {
+    public TableView(Context context) {
         super(context);
         initView(context);
     }
 
-    public TabbleView(Context context, AttributeSet attrs) {
+    public TableView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public TabbleView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TableView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
@@ -90,6 +91,7 @@ public class TabbleView extends RelativeLayout implements ViewPager.OnPageChange
         viewpager.setAdapter(fragmentAdapter);
         viewpager.addOnPageChangeListener(this);
         viewpager.setCurrentItem(0);
+        viewpager.setOffscreenPageLimit(5);
     }
 
     /**
@@ -144,6 +146,12 @@ public class TabbleView extends RelativeLayout implements ViewPager.OnPageChange
         model.setNavShow(item.isNavShow());
         model.setTitle(item.getNavTitle());
         return JSON.toJSONString(model);
+    }
+
+
+    public WXSDKInstance getWXSDKInstance() {
+        MainWeexFragment fragment = (MainWeexFragment) fragments.get(viewpager.getCurrentItem());
+        return fragment.getWXSDKInstance();
     }
 
     /**
@@ -207,6 +215,9 @@ public class TabbleView extends RelativeLayout implements ViewPager.OnPageChange
                         }
                         break;
                 }
+                if (currentIndex == i) {
+                    fragment.setStatusBar(navigatorModel);
+                }
             }
 
         }
@@ -220,6 +231,7 @@ public class TabbleView extends RelativeLayout implements ViewPager.OnPageChange
 
     @Override
     public void onPageSelected(int position) {
+        Log.e("TabbleView", " onPageSelected  position -> " + position);
         setCurrentItem(position);
     }
 

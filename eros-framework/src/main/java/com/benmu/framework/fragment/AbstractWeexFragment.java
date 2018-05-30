@@ -45,11 +45,14 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     private String mPageName;
     protected WXAnalyzerDelegate mWxAnalyzerDelegate;
     private DebugErrorDialog errorDialog;
+    private String mRouterType;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.e(TAG, " isVisibleToUser ->  onCreate");
         super.onCreate(savedInstanceState);
         mAct = getActivity();
+        mRouterType = GlobalEventManager.TYPE_OPEN;
         mWxAnalyzerDelegate = new WXAnalyzerDelegate(getActivity());
         mWxAnalyzerDelegate.onCreate();
     }
@@ -57,7 +60,46 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e(TAG, " isVisibleToUser ->  onCreateView");
         return super.onCreateView(inflater, container, savedInstanceState);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, " isVisibleToUser ->  onResume");
+        if (mWXInstance != null) {
+            GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e(TAG, " isVisibleToUser ->  onStart");
+        if (mWXInstance != null) {
+            GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e(TAG, " isVisibleToUser ->  onPause");
+        if (mWXInstance != null) {
+            GlobalEventManager.onViewWillDisappear(mWXInstance, mRouterType);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e(TAG, " isVisibleToUser ->  onStop");
+        if (mWXInstance != null) {
+            GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
+        }
+
     }
 
     protected void renderPage() {
@@ -143,7 +185,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
             }
         }
         mContainer.requestLayout();
-//        GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
+        GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
     }
 
     public int getWxInstanseHasCode() {
@@ -151,6 +193,10 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
             return mWXInstance.hashCode();
         }
         return -1;
+    }
+
+    public WXSDKInstance getWXSDKInstance() {
+        return mWXInstance;
     }
 
     public void setPageUrl(String url) {
@@ -166,7 +212,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
         //do some report
-//        GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
+        GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
 
         if (mWxAnalyzerDelegate != null) {
             mWxAnalyzerDelegate.onWeexRenderSuccess(instance);
@@ -193,5 +239,15 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
             mWxAnalyzerDelegate.onException(instance, errCode, msg);
         }
     }
+
     /*****mWXInstance.registerRenderListener*****/
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && GlobalEventManager.TYPE_OPEN.equals(mRouterType)) {
+            mRouterType = GlobalEventManager.TYPE_BACK;
+        }
+
+    }
 }

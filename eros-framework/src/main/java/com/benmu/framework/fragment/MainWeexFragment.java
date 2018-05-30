@@ -1,5 +1,6 @@
 package com.benmu.framework.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -14,9 +15,11 @@ import com.benmu.framework.adapter.DefaultNavigationAdapter;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorBarModel;
 import com.benmu.framework.model.NavigatorModel;
+import com.benmu.framework.model.RouterModel;
 import com.taobao.weex.bridge.JSCallback;
 
 /**
@@ -58,7 +61,24 @@ public class MainWeexFragment extends AbstractWeexFragment {
         if (!TextUtils.isEmpty(navigatorModel.centerNavigatorBarModel)) {
             DefaultNavigationAdapter.setLeftItem(navigatorModel.centerNavigatorBarModel, navigatorModel.centerItemJsCallback);
         }
+        setStatusBar(navigatorModel);
     }
 
+    public void setStatusBar(NavigatorModel navigatorModel) {
+        Activity activity = getActivity();
+        if (activity instanceof AbstractWeexActivity) {
+
+            RouterModel routerModel = ((AbstractWeexActivity) activity).getRouterParam();
+            ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+            NatigatorModel model = parseManager.parseObject(navigatorModel.navigatorModel, NatigatorModel
+                    .class);
+            routerModel.navShow = model.isNavShow();
+            routerModel.navTitle = model.getTitle();
+            routerModel.canBack = false;
+            ((AbstractWeexActivity) activity).setRouterParam(routerModel);
+            ((AbstractWeexActivity) activity).setNavigationBar();
+            StatusBarManager.setHeaderBg(routerModel, (AbstractWeexActivity) activity);
+        }
+    }
 
 }

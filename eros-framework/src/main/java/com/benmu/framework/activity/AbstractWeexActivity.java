@@ -912,19 +912,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) {
-                //如果是首页
-                GlobalEventManager.homeBack(getWXSDkInstance());
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    private boolean isHomePage() {
+    protected boolean isHomePage() {
         String homePage = BMWXEnvironment.mPlatformConfig.getPage().getHomePage(this);
         homePage = BMWXEnvironment.mPlatformConfig.getUrl().getJsServer() +
                 "/dist/js" + homePage;
