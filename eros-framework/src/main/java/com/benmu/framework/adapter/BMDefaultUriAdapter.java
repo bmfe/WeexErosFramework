@@ -4,8 +4,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.benmu.framework.BMWXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.adapter.URIAdapter;
+import com.taobao.weex.common.Constants;
 
 import java.util.List;
 
@@ -33,10 +35,23 @@ public class BMDefaultUriAdapter implements URIAdapter {
                 return resultBuilder.build();
             }
         }
+        if (uri.isAbsolute() && type.equals(URIAdapter.WEB)) {
+            String scheme = uri.getScheme();
+            if ("bmlocal".equals(scheme)) {
+                String path = BMWXEnvironment.loadBmLocal(instance.getContext(), uri);
+                Uri parse = Uri.parse(path);
+                if (TextUtils.isEmpty(parse.getScheme())) {
+                    return parse.buildUpon().scheme(Constants.Scheme.FILE).build();
+                }
+                return parse;
+            }
+        }
         return uri;
     }
 
-    private Uri.Builder buildRelativeURI(Uri.Builder resultBuilder, Uri base, Uri uri, String type) {
+
+    private Uri.Builder buildRelativeURI(Uri.Builder resultBuilder, Uri base, Uri uri, String
+            type) {
         if (uri.getAuthority() != null) {
             return resultBuilder.scheme(base.getScheme());
         } else {

@@ -14,6 +14,7 @@ import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.utils.DebugableUtil;
 import com.benmu.framework.utils.WXAnalyzerDelegate;
+import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.DebugErrorDialog;
 import com.benmu.widget.view.loading.LoadingDialog;
 
@@ -145,7 +146,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         initUrl(data);
         synRouterStack();
         initDebug();
-//        initPush();
         imagePicker = ImagePicker.getInstance();
         mReloadReceiver = new BroadcastReceiver() {
             @Override
@@ -159,9 +159,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         mWxAnalyzerDelegate.onCreate();
     }
 
-//    private void initPush() {
-//        GetuiManager.pushInit(this.getApplication());
-//    }
 
     private void initDebug() {
         if (!DebugableUtil.isDebug()) return;
@@ -463,6 +460,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             destroyWXInstance();
         }
         RenderContainer renderContainer = new RenderContainer(this);
+        if (mRouterParam != null && !TextUtils.isEmpty(mRouterParam.backgroundColor)) {
+            renderContainer.setBackgroundColor(ColorUtils.getColor(mRouterParam.backgroundColor));
+        }
         mContainer.addView(renderContainer);
         mWXInstance = new WXSDKInstance(this);
         mWXInstance.registerRenderListener(this);
@@ -871,8 +871,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
                 if (uri.getQueryParameterNames().contains("bundle")) {
                     WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
                     WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
-                    String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" : "Has " +
-                            "switched to Normal Mode";
+                    String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" :
+                            "Has " +
+                                    "switched to Normal Mode";
                     Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
                     finish();
                     return;
@@ -914,7 +915,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) { //如果是首页
+            if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) {
+                //如果是首页
                 GlobalEventManager.homeBack(getWXSDkInstance());
                 return true;
             }

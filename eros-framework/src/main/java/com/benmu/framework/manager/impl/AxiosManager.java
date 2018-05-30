@@ -13,6 +13,7 @@ import com.benmu.framework.http.okhttp.builder.GetBuilder;
 import com.benmu.framework.http.okhttp.builder.OkHttpRequestBuilder;
 import com.benmu.framework.http.okhttp.builder.OtherRequestBuilder;
 import com.benmu.framework.http.okhttp.builder.PostFormBuilder;
+import com.benmu.framework.http.okhttp.callback.Callback;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.cookie.CookieJarImpl;
@@ -73,11 +74,11 @@ public class AxiosManager extends Manager {
     }
 
     public void get(String mUrl, HashMap<String, String> params, HashMap<String, String> header,
-                    StringCallback stringCallback, Object tag, long timeout) {
+                    Callback callback, Object tag, long timeout) {
         mUrl = safeUrl(mUrl);
         if (mUrl == null) {
-            if (stringCallback != null) {
-                stringCallback.onError(null, new IrregularUrlException("url不合法"), 0);
+            if (callback != null) {
+                callback.onError(null, new IrregularUrlException("url不合法"), 0);
             }
             return;
         }
@@ -87,7 +88,7 @@ public class AxiosManager extends Manager {
         setTimeout(timeout);
         GetBuilder builder = OkHttpUtils.get().url(mUrl).tag(tag).headers(header);
         generateParams(params, builder);
-        builder.build().execute(stringCallback);
+        builder.build().execute(callback);
     }
 
     private void setTimeout(long timeout) {
@@ -97,12 +98,11 @@ public class AxiosManager extends Manager {
         }
     }
 
-    public void put(String url, String content, HashMap<String, String> header, StringCallback
-            callBack, Object tag, long timeout) {
+    public void put(String url, String content, HashMap<String, String> header,Callback callback, Object tag, long timeout) {
         url = safeUrl(url);
         if (url == null) {
-            if (callBack != null) {
-                callBack.onError(null, new IrregularUrlException("url不合法"), 0);
+            if (callback != null) {
+                callback.onError(null, new IrregularUrlException("url不合法"), 0);
             }
             return;
         }
@@ -114,10 +114,10 @@ public class AxiosManager extends Manager {
         if (content != null) {
             builder.requestBody(createRequestBodyByMediaType(header, content));
         }
-        builder.build().execute(callBack);
+        builder.build().execute(callback);
     }
 
-    public void delete(String url, String content, HashMap<String, String> header, StringCallback
+    public void delete(String url, String content, HashMap<String, String> header, Callback
             callBack, Object tag, long timeout) {
         url = safeUrl(url);
         if (url == null) {
@@ -138,7 +138,7 @@ public class AxiosManager extends Manager {
         builder.build().execute(callBack);
     }
 
-    public void patch(String url, String content, HashMap<String, String> header, StringCallback
+    public void patch(String url, String content, HashMap<String, String> header, Callback
             callback, Object tag, long timeout) {
         url = safeUrl(url);
 
@@ -161,7 +161,7 @@ public class AxiosManager extends Manager {
     }
 
     public void head(String url, HashMap<String, String> params, HashMap<String, String> header,
-                     StringCallback callback, Object tag, long timeout) {
+                     Callback callback, Object tag, long timeout) {
         url = safeUrl(url);
 
         if (url == null) {
@@ -243,7 +243,7 @@ public class AxiosManager extends Manager {
     }
 
 
-    public void post(String mUrl, String data, HashMap<String, String> header, StringCallback
+    public void post(String mUrl, String data, HashMap<String, String> header, Callback
             stringCallback, Object tag, long timeout) {
         mUrl = safeUrl(mUrl);
         if (mUrl == null) {
