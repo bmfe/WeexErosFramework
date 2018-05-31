@@ -42,14 +42,14 @@ public class NetworkUtil {
     public static final String UMB = "umb";
     public static final String HSPA_PLUS = "hspa+";
 
-    public static final String TYPE_UNKNOWN = "Unknown";
+    public static final String TYPE_UNKNOWN = "UNKNOWN";
     public static final String TYPE_ETHERNET = "ethernet";
     public static final String TYPE_ETHERNET_SHORT = "eth";
-    public static final String TYPE_WIFI = "Wifi";
+    public static final String TYPE_WIFI = "WIFI";
     public static final String TYPE_2G = "2g";
     public static final String TYPE_3G = "3g";
     public static final String TYPE_4G = "4g";
-    public static final String TYPE_NONE = "NotReachable";
+    public static final String TYPE_NONE = "NOT_REACHABLE";
     public static final String TYPE_3G_4G="3G/4G";
 
     public static String status(Context context) {
