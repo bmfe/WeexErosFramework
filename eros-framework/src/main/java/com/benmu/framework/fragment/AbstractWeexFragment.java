@@ -49,7 +49,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.e(TAG, " isVisibleToUser ->  onCreate");
         super.onCreate(savedInstanceState);
         mAct = getActivity();
         mRouterType = GlobalEventManager.TYPE_OPEN;
@@ -60,7 +59,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e(TAG, " isVisibleToUser ->  onCreateView");
         return super.onCreateView(inflater, container, savedInstanceState);
 
     }
@@ -68,7 +66,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG, " isVisibleToUser ->  onResume");
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
@@ -77,7 +74,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onStart() {
         super.onStart();
-        Log.e(TAG, " isVisibleToUser ->  onStart");
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
         }
@@ -86,7 +82,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onPause() {
         super.onPause();
-        Log.e(TAG, " isVisibleToUser ->  onPause");
         if (mWXInstance != null) {
             GlobalEventManager.onViewWillDisappear(mWXInstance, mRouterType);
         }
@@ -95,7 +90,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onStop() {
         super.onStop();
-        Log.e(TAG, " isVisibleToUser ->  onStop");
         if (mWXInstance != null) {
             GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
         }
