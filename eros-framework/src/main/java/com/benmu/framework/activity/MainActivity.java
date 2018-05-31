@@ -17,7 +17,7 @@ import com.taobao.weex.WXSDKInstance;
 
 public class MainActivity extends AbstractWeexActivity {
     private FrameLayout layout_container;
-    private ViewStub vs_tabView;
+    private ViewStub viewStub_tabView;
     private TableView tableView;
 
     @Override
@@ -39,8 +39,8 @@ public class MainActivity extends AbstractWeexActivity {
     }
 
     private void initTabView() {
-        vs_tabView = (ViewStub) findViewById(R.id.vs_tabView);
-        vs_tabView.inflate();
+        viewStub_tabView = (ViewStub) findViewById(R.id.vs_tabView);
+        viewStub_tabView.inflate();
         tableView = (TableView) findViewById(R.id.tabView);
         tableView.setData(BMWXEnvironment.mPlatformConfig.getTabBar());
 
