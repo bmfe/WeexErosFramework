@@ -58,7 +58,7 @@ public class ToolModule extends WXModule {
 
     @JSMethod(uiThread = false)
     public Object networkStatus() {
-        return JsPoster.getSuccess(NetworkUtil.status(BMWXEnvironment.mApplicationContext));
+        return NetworkUtil.status(BMWXEnvironment.mApplicationContext);
     }
 
     @JSMethod
