@@ -46,6 +46,7 @@ public class MainActivity extends AbstractWeexActivity {
 
     }
 
+
     @Override
     public boolean navigationListenter(WeexEventBean weexEventBean) {
         if (tableView != null) {
@@ -70,6 +71,16 @@ public class MainActivity extends AbstractWeexActivity {
 
     private WXSDKInstance getWXSDK() {
         return (tableView != null) ? tableView.getWXSDKInstance() : getWXSDkInstance();
+
+    }
+
+    @Override
+    public void refresh() {
+        if (tableView != null) {
+            tableView.refresh();
+        } else {
+            super.refresh();
+        }
 
     }
 }
