@@ -98,7 +98,7 @@ public class AxiosManager extends Manager {
         }
     }
 
-    public void put(String url, String content, HashMap<String, String> header,Callback callback, Object tag, long timeout) {
+    public void put(String url, String content, HashMap<String, String> header, Callback callback, Object tag, long timeout) {
         url = safeUrl(url);
         if (url == null) {
             if (callback != null) {
@@ -261,10 +261,17 @@ public class AxiosManager extends Manager {
         if (TextUtils.isEmpty(contentType)) {
             contentType = DEFAULT_MEDIATYPE;
         }
+        if (contentType.equals(DEFAULT_MEDIATYPE)) {
 
-        OkHttpUtils.postString().url(mUrl).content(data).mediaType(MediaType
-                .parse(contentType)).headers(header).tag(tag).build()
-                .execute(stringCallback);
+            OkHttpUtils.postString().url(mUrl).content(data).mediaType(MediaType
+                    .parse(contentType)).headers(header).tag(tag).build()
+                    .execute(stringCallback);
+        } else {
+
+            ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+            HashMap<String, String> params = parseManager.parseObject(data, HashMap.class);
+            OkHttpUtils.post().url(mUrl).params(params).headers(header).build().execute(stringCallback);
+        }
     }
 
 
