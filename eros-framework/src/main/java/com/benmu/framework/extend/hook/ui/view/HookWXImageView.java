@@ -303,6 +303,14 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
 
     }
 
+    public boolean ismShowing() {
+        return mShowing;
+    }
+
+    public void setmShowing(boolean mShowing) {
+        this.mShowing = mShowing;
+    }
+
     private int mWidth;
     private int mHeight;
     private Paint mPaint;

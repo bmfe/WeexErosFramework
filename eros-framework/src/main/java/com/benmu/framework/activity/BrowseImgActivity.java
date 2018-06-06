@@ -16,6 +16,7 @@ import com.benmu.framework.R;
 import com.benmu.framework.model.BroeserImgModuleBean;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import uk.co.senab.photoview.PhotoView;
 
@@ -115,21 +116,19 @@ public class BrowseImgActivity extends Activity implements ViewPager.OnPageChang
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            Glide.clear((View) object);
+            Glide.with(BrowseImgActivity.this).clear((View) object);
             container.removeView((View) object);
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-
             PhotoView imageView = new PhotoView(container.getContext());
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             imageView.setBackgroundColor(Color.WHITE);
             imageView.setZoomable(true);
             Glide.with(BrowseImgActivity.this)
                     .load(images.get(position))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .fitCenter()
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).fitCenter())
                     .into(imageView);
             container.addView(imageView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout
                     .LayoutParams.MATCH_PARENT);
