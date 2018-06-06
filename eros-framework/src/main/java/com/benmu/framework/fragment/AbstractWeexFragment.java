@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
+import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
@@ -201,6 +202,22 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
                     "/dist/js" + url;
         }
         this.mPageUrl = url;
+    }
+
+    public void refresh() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DispatchEventManager dispatchEventManager = ManagerFactory.getManagerService
+                        (DispatchEventManager.class);
+                Intent intent = new Intent(WXConstant.ACTION_WEEX_REFRESH);
+                intent.putExtra("instanceId", mWXInstance.getInstanceId());
+                dispatchEventManager.getBus().post(intent);
+                createWXInstance();
+                renderPage();
+            }
+        });
+
     }
 
     @Override

@@ -13,9 +13,12 @@ import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
 import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorBarModel;
+import com.benmu.framework.model.NavigatorModel;
+import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.BaseToolBar;
@@ -175,6 +178,23 @@ public class DefaultNavigationAdapter {
                     jscallback.invokeAndKeepAlive(new BaseResultBean());
                 }
             });
+    }
+
+
+    public static void setTabbarNavigation(Activity activity, NavigatorModel navigatorModel) {
+        if (activity instanceof AbstractWeexActivity) {
+
+            RouterModel routerModel = ((AbstractWeexActivity) activity).getRouterParam();
+            ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
+            NatigatorModel model = parseManager.parseObject(navigatorModel.navigatorModel, NatigatorModel
+                    .class);
+            routerModel.navShow = model.isNavShow();
+            routerModel.navTitle = model.getTitle();
+            routerModel.canBack = false;
+            ((AbstractWeexActivity) activity).setRouterParam(routerModel);
+            ((AbstractWeexActivity) activity).setNavigationBar();
+            StatusBarManager.setHeaderBg(routerModel, (AbstractWeexActivity) activity);
+        }
     }
 
     private static BaseToolBar getToolBar() {

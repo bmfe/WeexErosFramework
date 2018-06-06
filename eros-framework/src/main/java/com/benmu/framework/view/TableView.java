@@ -1,5 +1,6 @@
 package com.benmu.framework.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,9 +47,10 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     private ImageView borderLine;
     private ViewPager viewpager;
     private PlatformConfigBean.TabBar tabBarBean;
-    private List<Fragment> fragments;
+    private List<MainWeexFragment> fragments;
     private MyFragmentAdapter fragmentAdapter;
     private SparseArray<NavigatorModel> navigatorArray;
+    private Activity activity;
 
     public TableView(Context context) {
         super(context);
@@ -68,6 +69,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
 
     private void initView(Context context) {
         this.context = context;
+        activity = (Activity) context;
         this.inflater = LayoutInflater.from(context);
         fragments = new ArrayList<>();
         view = inflater.inflate(R.layout.view_tab_layout, this);
@@ -93,7 +95,11 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         viewpager.addOnPageChangeListener(this);
         viewpager.setCurrentItem(0);
         viewpager.setOffscreenPageLimit(5);
+
+        DefaultNavigationAdapter.setTabbarNavigation(activity, navigatorArray.get(0));
+
     }
+
 
     /**
      * 初始化各个Item
@@ -136,9 +142,6 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         NavigatorModel model = new NavigatorModel();
         model.navigatorModel = getNavStr(item);
         navigatorArray.append(index, model);
-        if (index == 0) {
-            fragment.setNavigator(model);
-        }
     }
 
 
@@ -151,8 +154,13 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
 
 
     public WXSDKInstance getWXSDKInstance() {
-        MainWeexFragment fragment = (MainWeexFragment) fragments.get(viewpager.getCurrentItem());
+        MainWeexFragment fragment = fragments.get(viewpager.getCurrentItem());
         return fragment.getWXSDKInstance();
+    }
+
+    public void refresh() {
+        MainWeexFragment fragment = fragments.get(viewpager.getCurrentItem());
+        fragment.refresh();
     }
 
     /**
@@ -165,7 +173,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
             TableItemView itemView = (TableItemView) llTabBar.getChildAt(i);
             itemView.setSelector(index);
         }
-        MainWeexFragment fragment = (MainWeexFragment) fragments.get(index);
+        MainWeexFragment fragment = fragments.get(index);
         fragment.setNavigator(navigatorArray.get(index));
     }
 
@@ -217,7 +225,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
                         break;
                 }
                 if (currentIndex == i) {
-                    fragment.setStatusBar(navigatorModel);
+                    DefaultNavigationAdapter.setTabbarNavigation(activity, navigatorModel);
                 }
             }
 
@@ -232,7 +240,6 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
-        Log.e("TabbleView", " onPageSelected  position -> " + position);
         setCurrentItem(position);
     }
 
@@ -245,9 +252,9 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
      * ViewPage Fragment 适配器
      */
     private static class MyFragmentAdapter extends FragmentPagerAdapter {
-        private List<Fragment> fragments;
+        private List<MainWeexFragment> fragments;
 
-        public MyFragmentAdapter(FragmentManager fm, List<Fragment> fragments) {
+        public MyFragmentAdapter(FragmentManager fm, List<MainWeexFragment> fragments) {
             super(fm);
             this.fragments = fragments;
         }
