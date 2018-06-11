@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.WeexOkhttp3Interceptor;
 import com.benmu.framework.http.Api;
 import com.benmu.framework.http.BMPersistentCookieStore;
@@ -25,8 +26,13 @@ import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.UploadResultBean;
 import com.benmu.framework.utils.AppUtils;
 import com.benmu.framework.utils.DebugableUtil;
+import com.benmu.framework.utils.TextUtil;
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.common.WXRequest;
+import com.taobao.weex.common.WXResponse;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +43,10 @@ import okhttp3.Call;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.internal.http.HttpMethod;
 
 
 /**
@@ -98,7 +107,8 @@ public class AxiosManager extends Manager {
         }
     }
 
-    public void put(String url, String content, HashMap<String, String> header, Callback callback, Object tag, long timeout) {
+    public void put(String url, String content, HashMap<String, String> header, Callback
+            callback, Object tag, long timeout) {
         url = safeUrl(url);
         if (url == null) {
             if (callback != null) {
@@ -270,7 +280,8 @@ public class AxiosManager extends Manager {
 
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
             HashMap<String, String> params = parseManager.parseObject(data, HashMap.class);
-            OkHttpUtils.post().url(mUrl).params(params).headers(header).build().execute(stringCallback);
+            OkHttpUtils.post().url(mUrl).params(params).headers(header).build().execute
+                    (stringCallback);
         }
     }
 
@@ -298,6 +309,81 @@ public class AxiosManager extends Manager {
 
     public void download(String url, FileCallBack fileCallBack) {
         OkHttpUtils.get().url(url).build().execute(fileCallBack);
+    }
+
+
+    public void loadJSBundle(final WXRequest request, final DefaultWXHttpAdapter.JSBundleCallback
+            listener) {
+        final WXResponse wxResponse = new WXResponse();
+        String method = request.method == null ? "GET" : request.method.toUpperCase();
+        String requestBodyString = request.body == null ? "{}" : request.body;
+
+        RequestBody body = null;
+        if (request.paramMap != null && request.paramMap.containsKey("Content-Type")) {
+            body = HttpMethod.requiresRequestBody(method)
+                    ? RequestBody.create(MediaType.parse(request.paramMap.get("Content-Type")),
+                    requestBodyString) : null;
+        } else {
+            body = HttpMethod.requiresRequestBody(method)
+                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;" +
+                    "charset=UTF-8"), requestBodyString) : null;
+        }
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(request.url)
+                .method(method, body);
+        if (request.paramMap != null) {
+            for (Map.Entry<String, String> param : request.paramMap.entrySet()) {
+                requestBuilder.addHeader(param.getKey(), TextUtil.toHumanReadableAscii(param
+                        .getValue()));
+            }
+        }
+
+        OkHttpUtils.getInstance().getOkHttpClient().newCall(requestBuilder.build()).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                wxResponse.errorMsg = e.getMessage();
+                wxResponse.errorCode = "-1";
+                wxResponse.statusCode = "-1";
+                if (listener != null) {
+                    listener.onFailure(wxResponse);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                byte[] responseBody = new byte[0];
+                try {
+                    responseBody = response.body().bytes();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    wxResponse.errorMsg = e.getMessage();
+                    wxResponse.errorCode = "-1";
+                    wxResponse.statusCode = "-1";
+                    if (listener != null) {
+                        listener.onFailure(wxResponse);
+                    }
+                }
+                wxResponse.data = new String(responseBody);
+                wxResponse.statusCode = String.valueOf(response.code());
+                wxResponse.originalData = responseBody;
+                wxResponse.extendParams = new HashMap<>();
+                for (Map.Entry<String, List<String>> entry : response.headers().toMultimap()
+                        .entrySet()) {
+                    wxResponse.extendParams.put(entry.getKey(), entry.getValue());
+                }
+
+                if (response.code() < 200 || response.code() > 299) {
+                    wxResponse.errorMsg = response.message();
+                    if (listener != null) {
+                        listener.onFailure(wxResponse);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onResponse(wxResponse);
+                    }
+                }
+            }
+        });
     }
 
 

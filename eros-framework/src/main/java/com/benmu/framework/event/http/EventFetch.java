@@ -1,20 +1,15 @@
 package com.benmu.framework.event.http;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.event.http.callback.AxiosResponseCallback;
 import com.benmu.framework.http.okhttp.OkHttpUtils;
-import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.http.okhttp.exception.CancelException;
 import com.benmu.framework.http.okhttp.exception.HttpException;
 import com.benmu.framework.http.okhttp.exception.IrregularUrlException;
-import com.benmu.framework.http.okhttp.utils.L;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.ImageManager;
@@ -34,11 +29,8 @@ import com.benmu.wxbase.EventGate;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
-
 import java.util.ArrayList;
-
 import okhttp3.Call;
-
 
 /**
  * Created by Carry on 2017/8/16.
