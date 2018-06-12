@@ -5,15 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
-import com.benmu.framework.extend.adapter.GlideImageLoader;
 import com.benmu.framework.http.Api;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.AxiosManager;
@@ -23,12 +19,10 @@ import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.PermissionManager;
 import com.benmu.framework.manager.impl.PersistentManager;
 import com.benmu.framework.model.UploadImageBean;
+import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.framework.utils.ImageUtil;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.loader.ImageLoader;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 
@@ -56,7 +50,7 @@ public class DefaultImageAdapter {
     public void pickPhoto(final Context context, UploadImageBean bean, int requestCode) {
         if (!checkPermission(context)) return;
 
-        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setImageLoader(new BMHookGlide());   //设置图片加载器
         imagePicker.setShowCamera(true);  //
         imagePicker.setCrop(false);//允许裁剪（单选才有效）
         imagePicker.setMultiMode(true);//是否是多张
@@ -72,7 +66,7 @@ public class DefaultImageAdapter {
     public void pickAvatar(final Context context, UploadImageBean bean, int requestCode) {
         if (!checkPermission(context)) return;
 
-        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setImageLoader(new BMHookGlide());   //设置图片加载器
         imagePicker.setShowCamera(true);  //显示拍照按钮
         imagePicker.setMultiMode(false);//是否是多张
         imagePicker.setCrop(true);//允许裁剪
@@ -89,7 +83,7 @@ public class DefaultImageAdapter {
     }
 
     public void openCamera(final Context context, UploadImageBean bean) {
-        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setImageLoader(new BMHookGlide());   //设置图片加载器
         imagePicker.setCrop(true);//允许裁剪
         imagePicker.setSaveRectangle(true); //是否按矩形区域保存
         imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
