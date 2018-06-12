@@ -121,7 +121,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewpager.setCurrentItem(((TableItemView) v).getIndex());
+                    viewpager.setCurrentItem(((TableItemView) v).getIndex(), false);
                 }
             });
             // new fragment

@@ -120,7 +120,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private Handler mHandler = new Handler(this);
     private long mLastTime, mCurTime; // 调试按钮点击时间
     private ImagePicker imagePicker;
-    private BroadcastReceiver mReloadReceiver;
+
     protected WXAnalyzerDelegate mWxAnalyzerDelegate;
 
     @Override
@@ -147,14 +147,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         synRouterStack();
         initDebug();
         imagePicker = ImagePicker.getInstance();
-        mReloadReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                renderPage();
-            }
-        };
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
-                IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
+
         mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
         mWxAnalyzerDelegate.onCreate();
     }

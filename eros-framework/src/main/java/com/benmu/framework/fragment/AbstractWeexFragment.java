@@ -97,7 +97,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
 
     }
 
-    protected void renderPage() {
+    public void renderPage() {
         if (TextUtils.isEmpty(mPageUrl)) {
             return;
         }
