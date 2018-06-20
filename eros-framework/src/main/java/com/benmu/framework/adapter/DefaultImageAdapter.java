@@ -84,7 +84,7 @@ public class DefaultImageAdapter {
 
     public void openCamera(final Context context, UploadImageBean bean) {
         imagePicker.setImageLoader(new BMHookGlide());   //设置图片加载器
-        imagePicker.setCrop(true);//允许裁剪
+        imagePicker.setCrop(bean.allowCrop);//允许裁剪
         imagePicker.setSaveRectangle(true); //是否按矩形区域保存
         imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
         imagePicker.setFocusWidth(Constant.ImageConstants.BIGGESTWIDTH);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
