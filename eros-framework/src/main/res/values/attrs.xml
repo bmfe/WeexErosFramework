@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="titleText" format="string" />
+    <attr name="titleTextColor" format="color" />
+    <attr name="backColor" format="color" />
+    <attr name="titleTextSize" format="dimension" />
+    <declare-styleable name="CustomCircleView">
+        <attr name="titleText" />
+        <attr name="titleTextColor" />
+        <attr name="titleTextSize" />
+        <attr name="backColor" />
+    </declare-styleable>
+</resources>

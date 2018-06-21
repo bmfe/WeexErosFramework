@@ -16,6 +16,7 @@ import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.model.RouterModel;
+import com.benmu.framework.model.TabbarBadgeModule;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.view.TableView;
 import com.taobao.weex.WXSDKEngine;
@@ -104,6 +105,23 @@ public class MainActivity extends AbstractWeexActivity {
         } else {
             super.refresh();
         }
+    }
 
+    public void setBadge(TabbarBadgeModule module) {
+        if (tableView != null) {
+            tableView.setBadge(module);
+        }
+    }
+
+    public void hideBadge(int index) {
+        if (tableView != null) {
+            tableView.hideBadge(index);
+        }
+    }
+
+    public void openPage(int index) {
+        if (tableView != null) {
+            tableView.openPage(index);
+        }
     }
 }

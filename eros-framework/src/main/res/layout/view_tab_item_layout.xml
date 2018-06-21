@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +10,6 @@
         android:id="@+id/itemRootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -25,26 +25,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:textSize="12sp"
             android:textColor="@android:color/black"
-            tools:text="首页"/>
+            android:textSize="12sp"
+            tools:text="首页" />
 
-        <com.benmu.widget.view.CellPointTextView
-            android:id="@+id/ivGroupCell"
-            style="@style/CellPointBig"
+
+        <com.benmu.framework.view.CircleTextView
+            android:id="@+id/tb_circleTv"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="-50dp"
+            android:visibility="gone"
+            app:backColor="@color/msg_point_red"
+            app:titleText=" "
+            app:titleTextColor="@android:color/white"
+            app:titleTextSize="12sp" />
+
+        <com.benmu.framework.view.CircleTextView
+            android:id="@+id/tb_circleView"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
             android:layout_marginLeft="14dp"
-            android:layout_marginTop="-45dp"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/ivFindCell"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="-41dp"
-            android:background="@drawable/shape_red_point"
-            android:gravity="center"
-            android:visibility="gone" />
+            android:layout_marginTop="-48dp"
+            android:visibility="gone"
+            app:backColor="@color/msg_point_red"
+            app:titleText=" "
+            app:titleTextColor="@android:color/white"
+            app:titleTextSize="12sp" />
 
     </LinearLayout>
 
