@@ -89,7 +89,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         }
         // 设置 Tab 背景
         if (!TextUtils.isEmpty(tabBar.getBackgroundColor())) {
-            llTabBar.setBackgroundColor(ColorUtils.getColor(tabBar.getBorderColor()));
+            llTabBar.setBackgroundColor(ColorUtils.getColor(tabBar.getBackgroundColor()));
         }
         fragmentAdapter = new MyFragmentAdapter(((AbstractWeexActivity) context).getSupportFragmentManager(), fragments);
         initItem(tabBar);
