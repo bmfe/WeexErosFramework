@@ -279,7 +279,7 @@ public class AxiosManager extends Manager {
         } else {
 
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-            HashMap<String, String> params = parseManager.parseObject(data, HashMap.class);
+            HashMap params = parseManager.parseFetchParams(data);
             OkHttpUtils.post().url(mUrl).params(params).headers(header).build().execute
                     (stringCallback);
         }
