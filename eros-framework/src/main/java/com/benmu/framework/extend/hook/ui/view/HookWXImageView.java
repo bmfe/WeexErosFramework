@@ -27,11 +27,14 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.benmu.framework.extend.hook.ui.components.HookImage;
 import com.taobao.weex.ui.view.IRenderResult;
 import com.taobao.weex.ui.view.IRenderStatus;
@@ -39,10 +42,12 @@ import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.utils.ImageDrawable;
 import com.taobao.weex.utils.WXLogUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 
-public class HookWXImageView extends android.support.v7.widget.AppCompatImageView implements WXGestureObservable,
+public class HookWXImageView extends android.support.v7.widget.AppCompatImageView implements
+        WXGestureObservable,
         IRenderStatus<HookImage>,
         IRenderResult<HookImage>, HookImage.Measurable {
 
@@ -147,7 +152,8 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
                     WXLogUtils.w("WXImageView", "Bitmap on " + drawable.toString() + " is null");
                 }
             } else {
-                WXLogUtils.w("WXImageView", "Not supported drawable type: " + drawable.getClass().getSimpleName());
+                WXLogUtils.w("WXImageView", "Not supported drawable type: " + drawable.getClass()
+                        .getSimpleName());
             }
         }
         return -1;
@@ -167,13 +173,15 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
                     WXLogUtils.w("WXImageView", "Bitmap on " + drawable.toString() + " is null");
                 }
             } else {
-                WXLogUtils.w("WXImageView", "Not supported drawable type: " + drawable.getClass().getSimpleName());
+                WXLogUtils.w("WXImageView", "Not supported drawable type: " + drawable.getClass()
+                        .getSimpleName());
             }
         }
         return -1;
     }
 
     private boolean mOutWindowVisibilityChangedReally;
+
     @Override
     public void dispatchWindowVisibilityChanged(int visibility) {
         mOutWindowVisibilityChangedReally = true;
@@ -184,10 +192,10 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        if(mOutWindowVisibilityChangedReally){
-            if(visibility == View.VISIBLE){
+        if (mOutWindowVisibilityChangedReally) {
+            if (visibility == View.VISIBLE) {
                 autoRecoverImage();
-            }else{
+            } else {
                 autoReleaseImage();
             }
         }
@@ -209,7 +217,7 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
 
 
     @Override
-    public void onStartTemporaryDetach () {
+    public void onStartTemporaryDetach() {
         super.onStartTemporaryDetach();
         autoReleaseImage();
 
@@ -217,7 +225,7 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
 
 
     @Override
-    public void onFinishTemporaryDetach () {
+    public void onFinishTemporaryDetach() {
         super.onFinishTemporaryDetach();
         autoRecoverImage();
     }
@@ -227,8 +235,8 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
         this.enableBitmapAutoManage = enableBitmapAutoManage;
     }
 
-    public void autoReleaseImage(){
-        if(enableBitmapAutoManage) {
+    public void autoReleaseImage() {
+        if (enableBitmapAutoManage) {
             if (!isBitmapReleased) {
                 isBitmapReleased = true;
                 HookImage image = getComponent();
@@ -239,11 +247,11 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
         }
     }
 
-    public void autoRecoverImage(){
-        if(enableBitmapAutoManage){
-            if(isBitmapReleased){
+    public void autoRecoverImage() {
+        if (enableBitmapAutoManage) {
+            if (isBitmapReleased) {
                 HookImage image = getComponent();
-                if(image != null){
+                if (image != null) {
                     image.autoRecoverImage();
                 }
                 isBitmapReleased = false;
@@ -289,26 +297,12 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
         super.onDraw(canvas);
         if (mShowing) {
             drawLoading(canvas);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    invalidate();
-                }
-            }, 100);
         }
         if (mDrawError && mErrorBitmap != null) {
             canvas.drawBitmap(mErrorBitmap, getMeasuredWidth() / 2 - mErrorBitmap.getWidth() / 2,
                     getMeasuredHeight() / 2 - mErrorBitmap.getHeight() / 2, mPaint);
         }
 
-    }
-
-    public boolean ismShowing() {
-        return mShowing;
-    }
-
-    public void setmShowing(boolean mShowing) {
-        this.mShowing = mShowing;
     }
 
     private int mWidth;
@@ -322,16 +316,20 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
     private Rect mRect;
     private int pos = 0;
     private String[] color = {"#bbbbbb", "#aaaaaa", "#999999", "#888888", "#777777", "#666666"};
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     private Bitmap mErrorBitmap;
     private int max = 300;
     private int mEnsrueLength;
     private int mLoadingPadding;
     private String mCurrentUrl;
+    private Canvas mCanvas;
+
     /**
      * 展示菊花的方法
      */
     public void showLoading(int width, int height) {
+        if (mShowing) return;
+        mShowing = true;
         mWidth = width;
         mHeight = height;
         mEnsrueLength = Math.min(mWidth, mHeight);
@@ -341,8 +339,23 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
         mHeightRect = mEnsrueLength / 5;
         mWidthRect = mHeightRect / 6;
         mLoadingPadding = mEnsrueLength / 5;
-        mShowing = true;
-        invalidate();
+        invalidateSafely();
+    }
+
+
+    private void invalidateSafely(long delay) {
+        if (mHandler != null) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    invalidate();
+                }
+            }, delay);
+        }
+    }
+
+    private void invalidateSafely() {
+        invalidateSafely(0);
     }
 
     /**
@@ -351,8 +364,7 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
 
     public void hideLoading() {
         mShowing = false;
-        invalidate();
-        mHandler.removeCallbacksAndMessages(null);
+        invalidateSafely();
     }
 
 
@@ -382,6 +394,8 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
         if (pos > 11) {
             pos = 0;
         }
+
+        invalidateSafely(100);
     }
 
 
@@ -396,18 +410,27 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
     public void drawErrorBitmap(Bitmap bitmap) {
         this.mErrorBitmap = bitmap;
         mDrawError = true;
-        invalidate();
+        invalidateSafely();
     }
 
     public void hideErrorBitmap() {
+        if (!mDrawError) return;
         this.mErrorBitmap = null;
         mDrawError = false;
-        invalidate();
+        invalidateSafely();
     }
 
     @Override
     public void holdComponent(HookImage component) {
         mWeakReference = new WeakReference<>(component);
+    }
+
+    public void destory() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+        mErrorBitmap = null;
     }
 
 
