@@ -264,6 +264,11 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
                 GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
             }
         }
+        if (!isVisibleToUser) {
+            if (mWXInstance != null) {
+                GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
+            }
+        }
 
     }
 }
