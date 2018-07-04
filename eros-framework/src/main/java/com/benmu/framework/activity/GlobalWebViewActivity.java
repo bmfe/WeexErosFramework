@@ -27,11 +27,13 @@ import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WebViewParamBean;
 import com.benmu.widget.utils.BaseCommonUtil;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -70,7 +72,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
 
         Uri imageUri = Uri.parse(mUrl);
         if (LOCAL_SCHEME.equalsIgnoreCase(imageUri.getScheme())) {
-            mUrl = BMWXEnvironment.loadBmLocal(GlobalWebViewActivity.this, imageUri);
+            mUrl = "file://" + localPath(imageUri);
         }
 
 //        ShareInfoBean shareInfo = mWebViewParams.getShareInfo();
@@ -98,6 +100,13 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
             mWeb.loadUrl(mUrl);
         }
         ModalManager.BmLoading.showLoading(this, "", true);
+    }
+
+    private String localPath(Uri uri) {
+        String path = uri.getHost() + File.separator +
+                uri.getPath();
+        return FileManager.getPathBundleDir(this, "bundle/" + path)
+                .getAbsolutePath();
     }
 
     private static class MyWebViewClient extends WebViewClient {
