@@ -17,6 +17,7 @@ import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
+import com.benmu.framework.extend.hook.ui.components.HookWeb;
 import com.benmu.framework.extend.hook.ui.components.HookWxScroller;
 import com.benmu.framework.extend.mediator.MediatorDocker;
 import com.benmu.framework.extend.hook.ui.components.HookImage;
@@ -39,6 +40,7 @@ import com.taobao.weex.dom.RichTextDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.component.WXBasicComponentType;
+import com.taobao.weex.ui.component.WXWeb;
 
 
 import java.util.HashMap;
@@ -101,6 +103,8 @@ public class BMWXEngine {
                     WXBasicComponentType.SCROLLER
             );
 
+
+            WXSDKEngine.registerComponent(WXBasicComponentType.WEB, HookWeb.class);
         } catch (WXException e) {
             e.printStackTrace();
         }
