@@ -97,7 +97,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
 
     }
 
-    protected void renderPage() {
+    public void renderPage() {
         if (TextUtils.isEmpty(mPageUrl)) {
             return;
         }
@@ -258,6 +258,16 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && GlobalEventManager.TYPE_OPEN.equals(mRouterType)) {
             mRouterType = GlobalEventManager.TYPE_BACK;
+        }
+        if (isVisibleToUser && GlobalEventManager.TYPE_BACK.equals(mRouterType)) {
+            if (mWXInstance != null) {
+                GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
+            }
+        }
+        if (!isVisibleToUser) {
+            if (mWXInstance != null) {
+                GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
+            }
         }
 
     }

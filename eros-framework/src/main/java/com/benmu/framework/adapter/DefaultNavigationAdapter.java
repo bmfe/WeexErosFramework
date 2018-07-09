@@ -3,6 +3,9 @@ package com.benmu.framework.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,8 +26,9 @@ import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.BaseToolBar;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.utils.WXUtils;
 
@@ -68,15 +72,17 @@ public class DefaultNavigationAdapter {
 
 
     private static void setImage(Context context, String url, final ImageView image) {
-        BMHookGlide.load(context, url).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into
-                (new SimpleTarget<Bitmap>() {
+        BMHookGlide.load(context, url).apply(new RequestOptions().diskCacheStrategy
+                (DiskCacheStrategy.ALL)).into
+                (new SimpleTarget<Drawable>() {
 
                     @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap>
-                            glideAnimation) {
-                        image.setImageBitmap(resource);
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<?
+                            super Drawable> transition) {
+                        image.setImageDrawable(resource);
                         image.setVisibility(View.VISIBLE);
                     }
+
                 });
     }
 
@@ -147,7 +153,8 @@ public class DefaultNavigationAdapter {
         navigationBar.setVisibility(navigatorModel.isNavShow() ? View.VISIBLE : View.GONE);
         if (navigationBar.getVisibility() == View.GONE) return;
         navigationBar.getTitleTextView().setText(navigatorModel.getTitle());
-        if (navigatorModel.getStatusBarStyle() == null || "".equals(navigatorModel.getStatusBarStyle()) || "Default".equals(navigatorModel.getStatusBarStyle())) {
+        if (navigatorModel.getStatusBarStyle() == null || "".equals(navigatorModel
+                .getStatusBarStyle()) || "Default".equals(navigatorModel.getStatusBarStyle())) {
             navigationBar.getTitleTextView().setTextColor(ColorUtils.getColor("#000000"));
         } else {
             navigationBar.getTitleTextView().setTextColor(ColorUtils.getColor("#ffffff"));
@@ -186,7 +193,8 @@ public class DefaultNavigationAdapter {
 
             RouterModel routerModel = ((AbstractWeexActivity) activity).getRouterParam();
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
-            NatigatorModel model = parseManager.parseObject(navigatorModel.navigatorModel, NatigatorModel
+            NatigatorModel model = parseManager.parseObject(navigatorModel.navigatorModel,
+                    NatigatorModel
                     .class);
             routerModel.navShow = model.isNavShow();
             routerModel.navTitle = model.getTitle();

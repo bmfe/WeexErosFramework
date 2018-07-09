@@ -62,6 +62,10 @@ public class StatusBarManager {
                 //support
                 setStatusBarColor(activity, BaseCommonUtil.getHexColor(defaultColor), 0, activity
                         .getRootView());
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+                    View root = activity.getRootView();
+                    setOffset(activity, root, true);
+                }
             } else {
                 //unSupport
 

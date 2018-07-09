@@ -162,33 +162,45 @@ package com.benmu.framework.extend.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.R;
 import com.benmu.framework.extend.hook.ui.components.HookImage;
 import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
+import com.benmu.framework.module.glide.GlideApp;
+import com.benmu.framework.module.glide.ImageRequestListener;
 import com.benmu.framework.utils.BMHookGlide;
 import com.benmu.framework.utils.ImageUtil;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.WXCommonUtil;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.load.resource.gif.GifDrawableTransformation;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.taobao.weex.WXEnvironment;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXImageQuality;
+
+import java.security.MessageDigest;
+
 public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     private static final String PLACEHOLDER_DEFAULT = "default";
     private Bitmap mErrorBitmap;
@@ -196,31 +208,103 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     public DefaultWXImageAdapter() {
     }
 
-
-    private boolean validatePlaceHolder(WXImageStrategy strategy) {
-        return true;
-    }
-
     @Override
-    public void setImage(String url, final ImageView view,
+    public void setImage(final String url, final ImageView view,
                          WXImageQuality quality, final WXImageStrategy strategy) {
         if (view == null || !(view instanceof HookWXImageView)) return;
-        HookWXImageView wxImageView = (HookWXImageView) view;
-        wxImageView.setImageBitmap(null);
-        if (TextUtils.isEmpty(url)) {
-            handleError((HookWXImageView) view);
+        final String loadUri = url;
+        if (HookImage.AUTORECYCLE_URL.equals(loadUri)) {
+            //wximage被回收
+            view.setImageBitmap(null);
+            return;
+        }
+
+        final HookWXImageView wxImageView = (HookWXImageView) view;
+        if (TextUtils.isEmpty(loadUri)) {
+            //设置的src为null
+            wxImageView.setImageBitmap(null);
+            handleError(wxImageView);
             if (strategy != null && strategy.getImageListener() != null) {
-                strategy.getImageListener().onImageFinish(url, view, true, null);
+                strategy.getImageListener().onImageFinish(loadUri, view, true, null);
             }
             return;
         }
-        wxImageView.setCurrentUrl(url);
-        BMHookGlide.load(WXEnvironment.getApplication(), url).diskCacheStrategy(DiskCacheStrategy
-                .ALL).into(new BMDesignSimpleTarget
-                (wxImageView, strategy, validatePlaceHolder
-                        (strategy), url));
+
+        wxImageView.hideErrorBitmap();
+
+        //set placeHolder
+        if (isDefaultPlaceHolder(strategy)) {
+            int[] wh = WXCommonUtil.getComponentWH(wxImageView.getComponent());
+            wxImageView.showLoading(wh[0], wh[1]);
+        } else if (isCustomPlaceHolder(strategy)) {
+            //customer placeHolder
+            BMHookGlide.load(BMWXApplication.getWXApplication(), strategy.placeHolder).apply(new
+                    RequestOptions().fitCenter().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)).into
+                    (wxImageView);
+        } else {
+            //no placeHolder
+            wxImageView.hideLoading(); //防止复用出现的问题
+        }
+
+
+        BMHookGlide.load(BMWXApplication.getWXApplication(), loadUri).apply(new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).transforms(new CenterCrop(), new
+                        BMRadiusTransfer(BMWXApplication.getWXApplication(), wxImageView)))
+                .listener(new ImageRequestListener() {
+
+                            @Override
+                            public void onReady(Object resource, Object model, Target target,
+                                                DataSource
+                                                        dataSource, boolean isFirstResource) {
+                                    if (strategy != null && strategy.getImageListener() != null) {
+                                        strategy.getImageListener().onImageFinish(loadUri,
+                                                wxImageView,
+                                                true,
+                                                null);
+                                    }
+
+                                    if (isDefaultPlaceHolder(strategy)) {
+                                        wxImageView.hideLoading();
+                                    }
+                            }
+
+                            @Override
+                            public void onFailed(GlideException e, Object model, Target target,
+                                                 boolean isFirstResource) {
+                                    handleError((HookWXImageView) wxImageView);
+                                    if (strategy != null && strategy.getImageListener() != null) {
+                                        strategy.getImageListener().onImageFinish(loadUri,
+                                                wxImageView,
+                                                true,
+                                                null);
+                                    }
+
+                                    if (isDefaultPlaceHolder(strategy)) {
+                                        wxImageView.hideLoading();
+                                    }
+                            }
+
+                            @Override
+                            public void onLoading(String imageUrl, long bytesRead, long totalBytes,
+                                                  boolean isDone, Exception exception) {
+                                //do something
+                            }
+                        }).into(wxImageView);
+
 
     }
+
+
+    private boolean isDefaultPlaceHolder(WXImageStrategy strategy) {
+        return !TextUtils.isEmpty(strategy.placeHolder) && PLACEHOLDER_DEFAULT.equals(strategy
+                .placeHolder);
+    }
+
+    private boolean isCustomPlaceHolder(WXImageStrategy strategy) {
+        return !TextUtils.isEmpty(strategy.placeHolder) && !PLACEHOLDER_DEFAULT.equals(strategy
+                .placeHolder);
+    }
+
 
     private Bitmap getErrorBitmap(Context context) {
         if (mErrorBitmap == null) {
@@ -247,85 +331,10 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     }
 
 
-    private class BMDesignSimpleTarget extends SimpleTarget<GlideDrawable> {
-        private HookWXImageView mView;
-        private WXImageStrategy mStrategy;
-        private boolean mPlaceHolder;
-        private String mUrl;
-
-        private BMDesignSimpleTarget(HookWXImageView wxImageView, WXImageStrategy strategy, boolean
-                placeHolder, String url) {
-            this.mView = wxImageView;
-            this.mStrategy = strategy;
-            this.mPlaceHolder = placeHolder;
-            this.mUrl = url;
-        }
-
-        @Override
-        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable>
-                glideAnimation) {
-            if (denyPreviousRequest(mUrl, mView)) return;
-            mView.hideLoading();
-            mView.hideErrorBitmap();
-
-            if (resource instanceof GifDrawable) {
-                //加载图片为动图
-                showAndCropGif(mUrl, mView, mStrategy);
-            } else if (resource instanceof GlideBitmapDrawable) {
-                GlideBitmapDrawable bitmapDrawable = (GlideBitmapDrawable) resource;
-                mView.setImageBitmap(bitmapDrawable.getBitmap());
-
-                if (mStrategy != null && mStrategy.getImageListener() != null) {
-                    mStrategy.getImageListener().onImageFinish(mUrl, mView, true, null);
-                }
-            } else {
-                L.e("ImageAdapter", "无法处理的图片类型");
-                if (mStrategy != null && mStrategy.getImageListener() != null) {
-                    mStrategy.getImageListener().onImageFinish(mUrl, mView, true, null);
-                }
-            }
-        }
-
-        @Override
-        public void onLoadStarted(Drawable placeholder) {
-            super.onLoadStarted(placeholder);
-            int[] wh = WXCommonUtil.getComponentWH(mView.getComponent());
-            Log.e("onLoadStarted", " mStrategy.placeHolder -> " + mStrategy.placeHolder);
-            if (PLACEHOLDER_DEFAULT.equals(mStrategy.placeHolder)) {
-                mView.showLoading(wh[0], wh[1]);
-            }
-            mView.hideErrorBitmap();
-        }
-
-        @Override
-        public void onLoadFailed(Exception e, Drawable errorDrawable) {
-            super.onLoadFailed(e, errorDrawable);
-            if (denyPreviousRequest(mUrl, mView)) return;
-            mView.hideLoading();
-            handleError((HookWXImageView) mView);
-            if (mStrategy != null && mStrategy.getImageListener() != null) {
-                mStrategy.getImageListener().onImageFinish(mUrl, mView, true, null);
-            }
-        }
-    }
-
-
     private boolean denyPreviousRequest(String url, View imageView) {
         return !url.equals(((HookWXImageView) imageView).getCurrentUrl());
     }
 
-
-    private void showAndCropGif(String url, HookWXImageView view, WXImageStrategy mStrategy) {
-        BMRadiusTransfer radiusTransfer = new BMRadiusTransfer(WXEnvironment.getApplication(),
-                view);
-        BitmapPool bitmapPool = Glide.get(WXEnvironment.getApplication()).getBitmapPool();
-        BMHookGlide.load(WXEnvironment.getApplication(), url).asGif().transform(new
-                GifDrawableTransformation(radiusTransfer, bitmapPool)).into(view);
-
-        if (mStrategy != null && mStrategy.getImageListener() != null) {
-            mStrategy.getImageListener().onImageFinish(url, view, true, null);
-        }
-    }
 
     private static class BMRadiusTransfer extends BitmapTransformation {
 
@@ -336,7 +345,7 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
         }
 
         BMRadiusTransfer(Context context, HookWXImageView imageView) {
-            super(context);
+            super();
             this.mView = imageView;
         }
 
@@ -354,9 +363,10 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
             return roundDrawable == null ? source : ImageUtil.drawableToBitmap(roundDrawable);
         }
 
+
         @Override
-        public String getId() {
-            return getClass().getName();
+        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
         }
     }
 

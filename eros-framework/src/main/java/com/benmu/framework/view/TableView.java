@@ -26,6 +26,7 @@ import com.benmu.framework.fragment.MainWeexFragment;
 import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.PlatformConfigBean;
+import com.benmu.framework.model.TabbarBadgeModule;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.widget.utils.ColorUtils;
 import com.taobao.weex.WXSDKInstance;
@@ -33,6 +34,7 @@ import com.taobao.weex.bridge.JSCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 首页 tebView
@@ -87,7 +89,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         }
         // 设置 Tab 背景
         if (!TextUtils.isEmpty(tabBar.getBackgroundColor())) {
-            llTabBar.setBackgroundColor(ColorUtils.getColor(tabBar.getBorderColor()));
+            llTabBar.setBackgroundColor(ColorUtils.getColor(tabBar.getBackgroundColor()));
         }
         fragmentAdapter = new MyFragmentAdapter(((AbstractWeexActivity) context).getSupportFragmentManager(), fragments);
         initItem(tabBar);
@@ -121,12 +123,38 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewpager.setCurrentItem(((TableItemView) v).getIndex());
+                    viewpager.setCurrentItem(((TableItemView) v).getIndex(), false);
                 }
             });
             // new fragment
             initFragment(item, i);
         }
+    }
+
+    public void setBadge(TabbarBadgeModule module) {
+        TableItemView itemView = (TableItemView) llTabBar.getChildAt(module.getIndex());
+        if (!TextUtils.isEmpty(module.getTextColor())) {
+            itemView.setCircTextColor(module.getTextColor());
+        }
+        if (!TextUtils.isEmpty(module.getBgColor())) {
+            itemView.setBgColor(module.getBgColor());
+        }
+        if (module.getValue() == 0) {
+            itemView.showPoint(true);
+        } else {
+            itemView.setCircText(String.valueOf(module.getValue()));
+        }
+
+    }
+
+    public void hideBadge(int index) {
+        TableItemView itemView = (TableItemView) llTabBar.getChildAt(index);
+        itemView.showPoint(false);
+        itemView.showCircText(false);
+    }
+
+    public void openPage(int index) {
+        viewpager.setCurrentItem(index);
     }
 
     /**
@@ -192,7 +220,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         int currentIndex = viewpager.getCurrentItem();
 
         for (int i = 0; i < fragments.size(); i++) {
-            MainWeexFragment fragment = (MainWeexFragment) fragments.get(i);
+            MainWeexFragment fragment = fragments.get(i);
             if (fragment.getWxInstanseHasCode() == (int) weexEventBean.getExpand()) {
                 NavigatorModel navigatorModel = navigatorArray.get(i);
                 switch (type) {
@@ -273,6 +301,11 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         public int getItemPosition(Object object) {
             return super.getItemPosition(object);
         }
+    }
+
+    private int getRandom() {
+        Random rand = new Random();
+        return rand.nextInt(160);
     }
 
 

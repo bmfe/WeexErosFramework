@@ -12,6 +12,7 @@ import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.extend.hook.TypeFaceHandler;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.AxiosManager;
 import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.PersistentManager;
@@ -260,79 +261,31 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
 
     private void fetchUrl(final WXRequest request, final OnHttpListener listener) {
-        final WXResponse wxResponse = new WXResponse();
-        String method = request.method == null ? "GET" : request.method.toUpperCase();
-        String requestBodyString = request.body == null ? "{}" : request.body;
-
-        RequestBody body = null;
-        if (request.paramMap != null && request.paramMap.containsKey("Content-Type")) {
-            body = HttpMethod.requiresRequestBody(method)
-                    ? RequestBody.create(MediaType.parse(request.paramMap.get("Content-Type")),
-                    requestBodyString) : null;
-        } else {
-            body = HttpMethod.requiresRequestBody(method)
-                    ? RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;" +
-                    "charset=UTF-8"), requestBodyString) : null;
-        }
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(request.url)
-                .method(method, body);
-        if (request.paramMap != null) {
-            for (Map.Entry<String, String> param : request.paramMap.entrySet()) {
-                requestBuilder.addHeader(param.getKey(), TextUtil.toHumanReadableAscii(param
-                        .getValue()));
-            }
-        }
-
-        client.newCall(requestBuilder.build()).enqueue(new Callback() {
+        AxiosManager axiosManager = ManagerFactory.getManagerService(AxiosManager.class);
+        axiosManager.loadJSBundle(request, new JSBundleCallback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                wxResponse.errorMsg = e.getMessage();
-                wxResponse.errorCode = "-1";
-                wxResponse.statusCode = "-1";
+            public void onFailure(WXResponse wxResponse) {
                 if (listener != null) {
                     listener.onHttpFinish(wxResponse);
                 }
             }
 
             @Override
-            public void onResponse(Call call, Response response) {
-                byte[] responseBody = new byte[0];
-                try {
-                    responseBody = response.body().bytes();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    wxResponse.errorMsg = e.getMessage();
-                    wxResponse.errorCode = "-1";
-                    wxResponse.statusCode = "-1";
+            public void onResponse(WXResponse wxResponse) {
+                if (isInterceptor(request.url)) {
+                    appendBaseJs(wxResponse, listener);
                     if (listener != null) {
                         listener.onHttpFinish(wxResponse);
-                    }
-                }
-                wxResponse.data = new String(responseBody);
-                wxResponse.statusCode = String.valueOf(response.code());
-                wxResponse.originalData = responseBody;
-                wxResponse.extendParams = new HashMap<>();
-                for (Map.Entry<String, List<String>> entry : response.headers().toMultimap()
-                        .entrySet()) {
-                    wxResponse.extendParams.put(entry.getKey(), entry.getValue());
-                }
-
-                if (response.code() < 200 || response.code() > 299) {
-                    wxResponse.errorMsg = response.message();
-                    if (listener != null) {
-                        listener.onHttpFinish(wxResponse);
-                    }
-                } else {
-                    if (isInterceptor(request.url)) {
-                        appendBaseJs(wxResponse, listener);
-                        if (listener != null) {
-                            listener.onHttpFinish(wxResponse);
-                        }
                     }
                 }
             }
         });
+    }
+
+    public static interface JSBundleCallback {
+        void onFailure(WXResponse wxResponse);
+
+        void onResponse(WXResponse wxResponse);
     }
 
 }

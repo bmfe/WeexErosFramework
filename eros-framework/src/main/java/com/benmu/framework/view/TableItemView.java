@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.benmu.framework.R;
 import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.utils.BMHookGlide;
+import com.benmu.framework.utils.ResourceUtil;
 import com.benmu.widget.view.CellPointTextView;
+import com.taobao.weex.utils.WXResourceUtils;
 
 /**
  * tabView  下面的 item
@@ -27,12 +29,12 @@ public class TableItemView extends LinearLayout {
     private LayoutInflater inflater;
     private View view;
     private LinearLayout itemRootLayout;
-    private ImageView itemIconIv, ivFindCell;
+    private ImageView itemIconIv;
     private TextView itemNameTv;
-    private CellPointTextView ivGroupCell;
     private int index = -1;
     private String textColor, textSelectColor; // 选中和未选择时的 text 背景颜色
     private String icon, selectedIcon; // 选中和未选择时的 图片地址
+    private CircleTextView tb_circleView, tb_circlePoint;
 
     public TableItemView(Context context) {
         super(context);
@@ -55,9 +57,9 @@ public class TableItemView extends LinearLayout {
         view = inflater.inflate(R.layout.view_tab_item_layout, this);
         itemRootLayout = (LinearLayout) view.findViewById(R.id.itemRootLayout);
         itemIconIv = (ImageView) view.findViewById(R.id.itemIconIv);
-        ivFindCell = (ImageView) view.findViewById(R.id.ivFindCell);
         itemNameTv = (TextView) view.findViewById(R.id.itemNameTv);
-        ivGroupCell = (CellPointTextView) view.findViewById(R.id.ivGroupCell);
+        tb_circleView = (CircleTextView) view.findViewById(R.id.tb_circleTv);
+        tb_circlePoint = (CircleTextView) view.findViewById(R.id.tb_circleView);
     }
 
     public void setData(PlatformConfigBean.TabItem item) {
@@ -81,6 +83,43 @@ public class TableItemView extends LinearLayout {
         }
     }
 
+    public void showPoint(boolean show) {
+        if (show) {
+            tb_circlePoint.setVisibility(View.VISIBLE);
+            tb_circleView.setVisibility(View.GONE);
+        } else {
+            tb_circlePoint.setVisibility(View.GONE);
+
+        }
+    }
+
+    public void setCircText(String text) {
+        tb_circlePoint.setVisibility(View.GONE);
+        tb_circleView.setVisibility(View.VISIBLE);
+        tb_circleView.setText(text);
+
+    }
+
+    public void showCircText(boolean show) {
+        int vis = show ? View.VISIBLE : View.GONE;
+        tb_circleView.setVisibility(vis);
+    }
+
+    public void setCircTextColor(String color) {
+        tb_circleView.setTextColor(WXResourceUtils.getColor(color));
+    }
+
+    public void setBgColor(String color) {
+        tb_circleView.setBackColor(WXResourceUtils.getColor(color));
+        tb_circlePoint.setBackColor(WXResourceUtils.getColor(color));
+    }
+
+
+    /**
+     * 设置 icon 颜色
+     *
+     * @param index
+     */
     public void setSelector(int index) {
         if (this.index == index) {
             if (!TextUtils.isEmpty(selectedIcon)) {
@@ -100,6 +139,12 @@ public class TableItemView extends LinearLayout {
         }
     }
 
+    /**
+     * 设置 文字颜色
+     *
+     * @param textColor
+     * @param textSelectColor
+     */
     public void setTextColor(String textColor, String textSelectColor) {
         this.textColor = textColor;
         this.textSelectColor = textSelectColor;

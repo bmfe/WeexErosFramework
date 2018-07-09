@@ -1,6 +1,11 @@
 package com.benmu.framework.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -11,27 +16,46 @@ import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.model.RouterModel;
+import com.benmu.framework.model.TabbarBadgeModule;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.framework.view.TableView;
+import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 
 public class MainActivity extends AbstractWeexActivity {
     private FrameLayout layout_container;
     private ViewStub viewStub_tabView;
     private TableView tableView;
+    private BroadcastReceiver mReloadReceiver;
+    private RouterModel routerModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RouterModel tabble = (RouterModel) getIntent().getSerializableExtra(Constant.ROUTERPARAMS);
-        if (Constant.TABBAR.equals(tabble.url)) {
+        routerModel = (RouterModel) getIntent().getSerializableExtra(Constant.ROUTERPARAMS);
+        if (Constant.TABBAR.equals(routerModel.url)) {
             initTabView();
         } else {
             layout_container = (FrameLayout) findViewById(R.id.layout_container);
             initView();
             renderPage();
         }
+        initReloadReceiver();
+    }
+
+
+    private void initReloadReceiver() {
+        mReloadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!Constant.TABBAR.equals(routerModel.url)) {
+                    renderPage();
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
+                IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
     }
 
     private void initView() {
@@ -81,6 +105,23 @@ public class MainActivity extends AbstractWeexActivity {
         } else {
             super.refresh();
         }
+    }
 
+    public void setBadge(TabbarBadgeModule module) {
+        if (tableView != null) {
+            tableView.setBadge(module);
+        }
+    }
+
+    public void hideBadge(int index) {
+        if (tableView != null) {
+            tableView.hideBadge(index);
+        }
+    }
+
+    public void openPage(int index) {
+        if (tableView != null) {
+            tableView.openPage(index);
+        }
     }
 }
