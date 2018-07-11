@@ -47,6 +47,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     protected WXAnalyzerDelegate mWxAnalyzerDelegate;
     private DebugErrorDialog errorDialog;
     private String mRouterType;
+    private boolean isFirstRun = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,15 +68,16 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onResume() {
         super.onResume();
-        if (mWXInstance != null) {
+        if (mWXInstance != null && isViewDid()) {
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
+        isFirstRun = false;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (mWXInstance != null) {
+        if (mWXInstance != null && isViewDid()) {
             GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
         }
     }
@@ -83,7 +85,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onPause() {
         super.onPause();
-        if (mWXInstance != null) {
+        if (mWXInstance != null && isViewDid()) {
             GlobalEventManager.onViewWillDisappear(mWXInstance, mRouterType);
         }
     }
@@ -91,9 +93,10 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void onStop() {
         super.onStop();
-        if (mWXInstance != null) {
+        if (mWXInstance != null && isViewDid()) {
             GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
         }
+        mRouterType = GlobalEventManager.TYPE_BACK;
 
     }
 
@@ -256,9 +259,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && GlobalEventManager.TYPE_OPEN.equals(mRouterType)) {
-            mRouterType = GlobalEventManager.TYPE_BACK;
-        }
+
         if (isVisibleToUser && GlobalEventManager.TYPE_BACK.equals(mRouterType)) {
             if (mWXInstance != null) {
                 GlobalEventManager.onViewWillAppear(mWXInstance, mRouterType);
@@ -269,6 +270,15 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
                 GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
             }
         }
+    }
 
+    private boolean isViewDid() {
+        if (GlobalEventManager.TYPE_OPEN.endsWith(mRouterType)) {
+            return true;
+        }
+        if (getUserVisibleHint() && GlobalEventManager.TYPE_BACK.endsWith(mRouterType)) {
+            return true;
+        }
+        return false;
     }
 }
