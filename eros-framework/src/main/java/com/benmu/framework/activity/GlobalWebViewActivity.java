@@ -104,7 +104,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
 
     private String localPath(Uri uri) {
         String path = uri.getHost() + File.separator +
-                uri.getPath();
+                uri.getPath()+"?"+uri.getQuery();
         return FileManager.getPathBundleDir(this, "bundle/" + path)
                 .getAbsolutePath();
     }
