@@ -204,6 +204,8 @@ public class BMWXEngine {
 
         insideEnv.put(Constant.CustomOptions.CUSTOM_NAVBARHEIGHT, BaseCommonUtil
                 .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 44)) + "");
+        insideEnv.put(Constant.CustomOptions.CUSTOM_TABBARHEIGHT, BaseCommonUtil
+                .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 55)) + "");
         insideEnv.put(Constant.CustomOptions.CUSTOM_JSVERSION, AppUtils.getJsVersion(context));
         insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEID, AppUtils.getDeviceId(context));
         String fontSize = SharePreferenceUtil.getAppFontSizeOption(context);

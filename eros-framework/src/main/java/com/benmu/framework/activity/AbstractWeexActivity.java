@@ -332,6 +332,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     }
 
     public void refresh() {
+        if (mWXInstance == null) return;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
