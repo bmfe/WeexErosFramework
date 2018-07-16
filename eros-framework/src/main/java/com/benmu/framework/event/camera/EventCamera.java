@@ -46,6 +46,8 @@ public class EventCamera extends EventGate {
             openCamera(params, context, weexEventBean.getJscallback());
         } else if (WXEventCenter.EVENT_CAMERA.equals(type)) {
             scan(weexEventBean.getJscallback(), context);
+        } else if (WXEventCenter.EVENT_CAMERA_CHOOSEIMAGE.equals(type)) {
+            chooseImage(params, context, weexEventBean.getJscallback());
         }
     }
 
@@ -123,4 +125,21 @@ public class EventCamera extends EventGate {
                 .ImageConstants.UPLOAD_IMAGE_BEAN);
     }
 
+    public void chooseImage(String json, Context context, JSCallback jsCallback) {
+        if (!PermissionUtils.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            return;
+        }
+        mUploadAvatar = jsCallback;
+        mUploadContext = context;
+        UploadImageBean bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
+                (json, UploadImageBean.class);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
+        ImageManager imageManager = ManagerFactory.getManagerService(ImageManager.class);
+        if (bean.allowCrop && bean.maxCount == 1) {
+            //上传头像
+            imageManager.pickAvatar(context, bean, Constant.ImageConstants.IMAGE_NOT_UPLOADER_PICKER);
+        } else if (bean.maxCount > 0) {
+            imageManager.pickPhoto(context, bean, Constant.ImageConstants.IMAGE_NOT_UPLOADER_PICKER);
+        }
+    }
 }

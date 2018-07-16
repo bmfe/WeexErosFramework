@@ -64,4 +64,24 @@ public class ImageModule extends WXModule {
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
     }
 
+    @JSMethod
+    public void chooseImage(String params, JSCallback jsCallback) {
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXEventCenter.EVENT_CAMERA_CHOOSEIMAGE);
+        eventBean.setJsParams(params);
+        eventBean.setJscallback(jsCallback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
+    }
+
+    @JSMethod
+    public void scanImage(String params, JSCallback jsCallback){
+        WeexEventBean eventBean = new WeexEventBean();
+        eventBean.setContext(mWXSDKInstance.getContext());
+        eventBean.setKey(WXEventCenter.EVENT_IMAGE_SCAN);
+        eventBean.setJsParams(params);
+        eventBean.setJscallback(jsCallback);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(eventBean);
+    }
+
 }
