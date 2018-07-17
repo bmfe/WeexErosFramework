@@ -2,14 +2,17 @@ package com.benmu.framework.proxy;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.VersionManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
+import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.WeexEventBean;
 
@@ -71,6 +74,7 @@ public class SplashActivityProxy extends ActivityProxy {
                 }, 1500 - prepareTime);
             }
         }).start();
+        initTabbar(activity);
 
 
     }
@@ -89,5 +93,15 @@ public class SplashActivityProxy extends ActivityProxy {
         eventBean.setContext(activity);
         dispatchEventManager.getBus().post(eventBean);
         activity.finish();
+    }
+
+    private void initTabbar(Activity activity) {
+        StorageManager storageManager = ManagerFactory.getManagerService(StorageManager.class);
+        String bar = storageManager.getData(activity, Constant.SP.SP_TABBAR_JSON);
+        if (!TextUtils.isEmpty(bar)) {
+            PlatformConfigBean.TabBar bean = ManagerFactory.getManagerService(ParseManager.class).parseObject
+                    (bar, PlatformConfigBean.TabBar.class);
+            BMWXEnvironment.mPlatformConfig.setTabBar(bean);
+        }
     }
 }

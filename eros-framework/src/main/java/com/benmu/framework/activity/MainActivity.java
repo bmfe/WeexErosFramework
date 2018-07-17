@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.event.TabbarEvent;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.TabbarBadgeModule;
@@ -122,6 +123,25 @@ public class MainActivity extends AbstractWeexActivity {
     public void openPage(int index) {
         if (tableView != null) {
             tableView.openPage(index);
+        }
+    }
+
+    public int getPageIndex() {
+        if (tableView != null) {
+            tableView.getCurrentIndex();
+        }
+        return -1;
+    }
+
+    public void watchIndex(TabbarEvent.TabbarListen tabbarListen) {
+        if (tableView != null) {
+            tableView.setTabbarListen(tabbarListen);
+        }
+    }
+
+    public void clearTabbarInfo() {
+        if (tableView != null) {
+            tableView.clearTabbarInfo();
         }
     }
 }

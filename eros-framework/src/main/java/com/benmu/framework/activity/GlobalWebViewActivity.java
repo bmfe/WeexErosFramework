@@ -2,6 +2,7 @@ package com.benmu.framework.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,18 +19,31 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXEventCenter;
+import com.benmu.framework.event.mediator.EventCenter;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WebViewParamBean;
 import com.benmu.widget.utils.BaseCommonUtil;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * Created by Carry on 2017/8/25.
  */
 
 public class GlobalWebViewActivity extends AbstractWeexActivity {
+
+    private final String LOCAL_SCHEME = "bmlocal";
+
     private View rl_refresh;
     private ProgressBar mProgressBar;
     private WebView mWeb;
@@ -55,6 +69,12 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         Intent data = getIntent();
         mWebViewParams = (WebViewParamBean) data.getSerializableExtra(Constant.WEBVIEW_PARAMS);
         String mUrl = mWebViewParams.getUrl();
+
+        Uri imageUri = Uri.parse(mUrl);
+        if (LOCAL_SCHEME.equalsIgnoreCase(imageUri.getScheme())) {
+            mUrl = "file://" + localPath(imageUri);
+        }
+
 //        ShareInfoBean shareInfo = mWebViewParams.getShareInfo();
 //        if (shareInfo != null) {
 //            getNavigationBar().setRightIcon(R.drawable.icon_share);
@@ -80,6 +100,13 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
             mWeb.loadUrl(mUrl);
         }
         ModalManager.BmLoading.showLoading(this, "", true);
+    }
+
+    private String localPath(Uri uri) {
+        String path = uri.getHost() + File.separator +
+                uri.getPath()+"?"+uri.getQuery();
+        return FileManager.getPathBundleDir(this, "bundle/" + path)
+                .getAbsolutePath();
     }
 
     private static class MyWebViewClient extends WebViewClient {
@@ -131,6 +158,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
                 getNavigationBar().setTitle(title);
             }
         }
+
         @Override
 
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
@@ -160,7 +188,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
     }
 
 
-    public class JSMethod {
+    public static class JSMethod {
         private Context mContext;
 
         public JSMethod(Context mContext) {
@@ -171,6 +199,15 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         public void closePage() {
             //关闭当前页面
             RouterTracker.popActivity();
+        }
+
+        @JavascriptInterface
+        public void fireEvent(String eventName, String param) {
+            if (!TextUtils.isEmpty(eventName)) {
+                Intent emit = new Intent(WXEventCenter.EVENT_JS_EMIT);
+                emit.putExtra("data", new EventCenter.Emit(eventName, param));
+                ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(emit);
+            }
         }
     }
 }

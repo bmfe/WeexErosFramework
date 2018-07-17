@@ -80,10 +80,10 @@ public class MainWeexFragment extends AbstractWeexFragment {
             DefaultNavigationAdapter.setLeftItem(navigatorModel.leftNavigatorbarModel, navigatorModel.leftItemJsCallback);
         }
         if (!TextUtils.isEmpty(navigatorModel.rightNavigatorbarModel)) {
-            DefaultNavigationAdapter.setLeftItem(navigatorModel.rightNavigatorbarModel, navigatorModel.rightItemJsCallback);
+            DefaultNavigationAdapter.setRightItem(navigatorModel.rightNavigatorbarModel, navigatorModel.rightItemJsCallback);
         }
         if (!TextUtils.isEmpty(navigatorModel.centerNavigatorBarModel)) {
-            DefaultNavigationAdapter.setLeftItem(navigatorModel.centerNavigatorBarModel, navigatorModel.centerItemJsCallback);
+            DefaultNavigationAdapter.setCenterItem(navigatorModel.centerNavigatorBarModel, navigatorModel.centerItemJsCallback);
         }
         DefaultNavigationAdapter.setTabbarNavigation(getActivity(), navigatorModel);
     }

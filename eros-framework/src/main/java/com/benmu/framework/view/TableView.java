@@ -22,6 +22,7 @@ import com.benmu.framework.R;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.DefaultNavigationAdapter;
 import com.benmu.framework.constant.WXEventCenter;
+import com.benmu.framework.event.TabbarEvent;
 import com.benmu.framework.fragment.MainWeexFragment;
 import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorModel;
@@ -53,6 +54,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     private MyFragmentAdapter fragmentAdapter;
     private SparseArray<NavigatorModel> navigatorArray;
     private Activity activity;
+    private TabbarEvent.TabbarListen tabbarListen;
 
     public TableView(Context context) {
         super(context);
@@ -269,6 +271,9 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     @Override
     public void onPageSelected(int position) {
         setCurrentItem(position);
+        if (tabbarListen != null) {
+            tabbarListen.onPageSelected(position);
+        }
     }
 
     @Override
@@ -308,5 +313,16 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         return rand.nextInt(160);
     }
 
+    public int getCurrentIndex() {
+        return viewpager.getCurrentItem();
+    }
+
+    public void setTabbarListen(TabbarEvent.TabbarListen tabbarListen) {
+        this.tabbarListen = tabbarListen;
+    }
+
+    public void clearTabbarInfo() {
+        this.tabbarListen = null;
+    }
 
 }
