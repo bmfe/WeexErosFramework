@@ -35,7 +35,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.benmu.framework.extend.adapter.image.CornerRadiusTransformation;
 import com.benmu.framework.extend.hook.ui.components.HookImage;
+import com.benmu.framework.utils.ImageUtil;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.taobao.weex.ui.view.IRenderResult;
 import com.taobao.weex.ui.view.IRenderStatus;
 import com.taobao.weex.ui.view.gesture.WXGesture;
@@ -44,6 +51,7 @@ import com.taobao.weex.utils.ImageDrawable;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.lang.ref.WeakReference;
+import java.security.MessageDigest;
 import java.util.Arrays;
 
 public class HookWXImageView extends android.support.v7.widget.AppCompatImageView implements
@@ -57,7 +65,8 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
     private boolean gif;
     private boolean isBitmapReleased = false;
     private boolean enableBitmapAutoManage = true;
-
+    private float[] mGifBorderRadius;
+    private CornerRadiusTransformation cornerRadiusTransformation;
 
     public HookWXImageView(Context context) {
         super(context);
@@ -85,6 +94,17 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
                     imageDrawable.setCornerRadii(borderRadius);
                 }
             }
+            if (wrapDrawable instanceof GifDrawable) {
+                if (mGifBorderRadius == null) {
+                    mGifBorderRadius = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
+                }
+                if (!Arrays.equals(borderRadius, mGifBorderRadius)) {
+                    mGifBorderRadius = borderRadius;
+                    setGifCornerRadii((GifDrawable) wrapDrawable);
+                }
+
+            }
+
             super.setImageDrawable(wrapDrawable);
             if (mWeakReference != null) {
                 HookImage component = mWeakReference.get();
@@ -95,9 +115,33 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
         }
     }
 
+
+    private void setGifCornerRadii(GifDrawable gifDrawable) {
+        Bitmap firstFrame = gifDrawable.getFirstFrame();
+        if (firstFrame != null) {
+            if (cornerRadiusTransformation == null) {
+                cornerRadiusTransformation = new CornerRadiusTransformation(mGifBorderRadius);
+                gifDrawable.setFrameTransformation(cornerRadiusTransformation,
+                        firstFrame);
+            } else {
+                cornerRadiusTransformation.updateCornerRadius(mGifBorderRadius);
+            }
+
+        }
+    }
+
+
     @Override
     public void setImageDrawable(@Nullable Drawable drawable) {
+
         setImageDrawable(drawable, false);
+    }
+
+    public void collateBorderRadius(float[] change) {
+        if (!Arrays.equals(borderRadius, change)) {
+            this.borderRadius = change;
+            setImageDrawable(getDrawable(), gif);
+        }
     }
 
     @Override
@@ -121,6 +165,10 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
 
     public void setBorderRadius(@NonNull float[] borderRadius) {
         this.borderRadius = borderRadius;
+        //手动调整动图圆角弧度
+        if (cornerRadiusTransformation != null) {
+            cornerRadiusTransformation.updateCornerRadius(this.borderRadius);
+        }
     }
 
     @Override
@@ -151,6 +199,11 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
                 } else {
                     WXLogUtils.w("WXImageView", "Bitmap on " + drawable.toString() + " is null");
                 }
+            } else if (drawable instanceof GifDrawable) {
+                Bitmap firstFrame = ((GifDrawable) drawable).getFirstFrame();
+                if (firstFrame != null) {
+                    return firstFrame.getWidth();
+                }
             } else {
                 WXLogUtils.w("WXImageView", "Not supported drawable type: " + drawable.getClass()
                         .getSimpleName());
@@ -171,6 +224,11 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
                     return bitmap.getHeight();
                 } else {
                     WXLogUtils.w("WXImageView", "Bitmap on " + drawable.toString() + " is null");
+                }
+            } else if (drawable instanceof GifDrawable) {
+                Bitmap firstFrame = ((GifDrawable) drawable).getFirstFrame();
+                if (firstFrame != null) {
+                    return firstFrame.getHeight();
                 }
             } else {
                 WXLogUtils.w("WXImageView", "Not supported drawable type: " + drawable.getClass()
