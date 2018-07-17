@@ -34,7 +34,7 @@ import com.taobao.weex.bridge.JSCallback;
  * Created by liuyuanxiao on 18/1/4.
  */
 
-public class EventImage extends EventGate{
+public class EventImage extends EventGate {
     private JSCallback mPickCallback;
 
     @Override
@@ -81,10 +81,10 @@ public class EventImage extends EventGate{
         // 获取bitmap的宽高，像素矩阵
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        int[] pixels = new int[width*height];
-        bitmap.getPixels(pixels,0,width,0,0,width,height);
+        int[] pixels = new int[width * height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
 
-        RGBLuminanceSource source = new RGBLuminanceSource(width,height,pixels);
+        RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
         BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
         Reader reader = new MultiFormatReader();
 
@@ -93,7 +93,8 @@ public class EventImage extends EventGate{
         try {
 
             result = reader.decode(binaryBitmap).getText();
-
+            JsPoster.postSuccess(result, jsCallback);
+            return;
         } catch (NotFoundException e) {
 
             e.printStackTrace();
@@ -107,8 +108,9 @@ public class EventImage extends EventGate{
             e.printStackTrace();
 
         }
+        JsPoster.postFailed(jsCallback);
 
-        JsPoster.postSuccess(result, jsCallback);
+
     }
 
     @Subscribe
