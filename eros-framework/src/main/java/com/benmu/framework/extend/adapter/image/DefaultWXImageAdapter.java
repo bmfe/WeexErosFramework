@@ -284,52 +284,6 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
         BMHookGlide.load(BMWXApplication.getWXApplication(), loadUri).apply(new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).transforms(new CenterCrop())).into(viewTarget);
 
-//        BMHookGlide.load(BMWXApplication.getWXApplication(), loadUri).apply(new RequestOptions()
-//                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).transforms(new CenterCrop(), new
-//                        BMRadiusTransfer(BMWXApplication.getWXApplication(), wxImageView)))
-//                .listener(new ImageRequestListener() {
-//
-//                    @Override
-//                    public void onReady(Object resource, Object model, Target target,
-//                                        DataSource
-//                                                dataSource, boolean isFirstResource) {
-//                        if (strategy != null && strategy.getImageListener() != null) {
-//                            strategy.getImageListener().onImageFinish(loadUri,
-//                                    wxImageView,
-//                                    true,
-//                                    null);
-//                        }
-//
-//                        if (isDefaultPlaceHolder(strategy)) {
-//                            wxImageView.hideLoading();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailed(GlideException e, Object model, Target target,
-//                                         boolean isFirstResource) {
-//                        handleError((HookWXImageView) wxImageView);
-//                        if (strategy != null && strategy.getImageListener() != null) {
-//                            strategy.getImageListener().onImageFinish(loadUri,
-//                                    wxImageView,
-//                                    true,
-//                                    null);
-//                        }
-//
-//                        if (isDefaultPlaceHolder(strategy)) {
-//                            wxImageView.hideLoading();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onLoading(String imageUrl, long bytesRead, long
-//                            totalBytes,
-//                                          boolean isDone, Exception exception) {
-//                        //do something
-//                    }
-//                }).into(wxImageView);
-
-
     }
 
 

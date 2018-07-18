@@ -62,7 +62,7 @@ public class MediatorDocker implements IWXRenderListener {
             //do nothing
         } else {
             //create instance and render
-            destoryInstance();
+            destroyInstance();
             mInstance = new MediatorInstance(BMWXEnvironment.mApplicationContext);
             render();
         }
@@ -70,10 +70,10 @@ public class MediatorDocker implements IWXRenderListener {
 
     }
 
-    private void destoryInstance() {
+    private void destroyInstance() {
         mInstance.destory();
         mInstance = null;
-        Log.e("MediatorDocker", "destoryInstance>>>>>");
+        Log.e("MediatorDocker", "destroyInstance>>>>>");
     }
 
     private void render() {
@@ -135,6 +135,11 @@ public class MediatorDocker implements IWXRenderListener {
         } else if (WXConstant.MEDIATOR_INIT.equals(intent.getAction())) {
             //init
             active();
+        } else if (WXConstant.MEDIATOR_DESTROY.equals(intent.getAction())) {
+            //destroy mediator
+            if (mInstance != null && !mInstance.getmInstance().isDestroy()) {
+                destroyInstance();
+            }
         }
 
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.support.multidex.MultiDex;
 
 import com.benmu.framework.activity.AbstractWeexActivity;
@@ -38,7 +39,6 @@ public class BMWXApplication extends Application {
             initWeex();
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
-//            initShare();
             initDebugSocket();
         }
     }
