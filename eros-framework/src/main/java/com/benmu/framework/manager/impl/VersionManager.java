@@ -117,10 +117,10 @@ public class VersionManager extends Manager {
 
     public boolean isCoverByAssetsZip(Context context, JsVersionInfoBean assets,
                                       JsVersionInfoBean current) {
-        if (AppUtils.compareVersion(BaseCommonUtil.getVersionName(context), current.getAndroid())
-                < 0) {
-            return true;
-        }
+//        if (AppUtils.compareVersion(BaseCommonUtil.getVersionName(context), current.getAndroid())
+//                < 0) {
+//            return true;
+//        }
         if (assets.getJsVersion().equals(current.getJsVersion()) && assets.getTimestamp().equals
                 (current.getTimestamp())) {
             //版本号和时间戳都相同
