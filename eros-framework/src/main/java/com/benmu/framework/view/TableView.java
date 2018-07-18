@@ -48,7 +48,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     private View view;
     private LinearLayout llTabBar;
     private ImageView borderLine;
-    private ViewPager viewpager;
+    private NoScrollViewPager viewpager;
     private PlatformConfigBean.TabBar tabBarBean;
     private List<MainWeexFragment> fragments;
     private MyFragmentAdapter fragmentAdapter;
@@ -79,7 +79,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         view = inflater.inflate(R.layout.view_tab_layout, this);
         llTabBar = (LinearLayout) view.findViewById(R.id.llTabBar);
         borderLine = (ImageView) view.findViewById(R.id.borderLine);
-        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewpager = (NoScrollViewPager) view.findViewById(R.id.viewpager);
     }
 
     public void setData(PlatformConfigBean.TabBar tabBar) {
