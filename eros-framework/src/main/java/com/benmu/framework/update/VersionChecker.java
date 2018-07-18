@@ -1,17 +1,26 @@
 package com.benmu.framework.update;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.benmu.framework.BMWXEnvironment;
+import com.benmu.framework.R;
+import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
+import com.benmu.framework.constant.WXConstant;
 import com.benmu.framework.http.okhttp.callback.FileCallBack;
 import com.benmu.framework.http.okhttp.callback.StringCallback;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.FileManager;
+import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.VersionManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.JsVersionInfoBean;
 import com.benmu.framework.model.Md5MapperModel;
 import com.benmu.framework.model.VersionBean;
@@ -49,11 +58,36 @@ public class VersionChecker {
     }
 
 
+    public void notifyUpdate() {
+        final Activity activity = RouterTracker.peekActivity();
+        ModalManager.BmAlert.showAlert(activity, mContext.getResources()
+                .getString(R.string.str_update_title), mContext.getResources()
+                .getString(R.string.str_update_tips), mContext.getResources().getString(R.string
+                .str_ensure), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //销毁中介者
+                ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
+                        Intent(WXConstant.MEDIATOR_DESTROY));
+                //重启应用
+                Intent intent = activity.getPackageManager()
+                        .getLaunchIntentForPackage(activity.getApplication().getPackageName());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent
+                        .FLAG_ACTIVITY_CLEAR_TASK);
+                activity.startActivity(intent);
+                Process.killProcess(Process.myPid());
+                activity.finish();
+            }
+        }, null, null, null, null, false);
+    }
+
+
     private void readyUpdate() {
         mUpdateUrl = BMWXEnvironment.mPlatformConfig.getUrl().getBundleUpdate();
         if (TextUtils.isEmpty(mUpdateUrl)) return;
 
-        if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(mContext))) {
+        if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(mContext)
+        )) {
             mCurrentStatus = Constant.Version.UPDATING;
             VersionManager versionManager = ManagerFactory.getManagerService(VersionManager.class);
             versionManager.checkBundleUpdate(mContext, mUpdateUrl,
@@ -178,6 +212,7 @@ public class VersionChecker {
                                             .toJsonString(newVersion));
                             newVersion = null;
                             mCurrentStatus = Constant.Version.SLEEP;
+                            notifyUpdate();
                         } else {
                             L.e(TAG, "更新包md5校验失败，更新失败");
                             FileManager.deleteFile(new File(FileManager.getTempBundleDir
@@ -270,6 +305,7 @@ public class VersionChecker {
                                 .getManagerService(ParseManager.class).toJsonString(newVersion));
                         newVersion = null;
                         mCurrentStatus = Constant.Version.SLEEP;
+                        notifyUpdate();
                     } else {
                         L.e("version", "下载patch md5校验出错");
                         //删除生成的新包和patch包

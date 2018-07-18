@@ -31,9 +31,10 @@ public class ModalManager extends Manager {
         public static void showAlert(Context context, String title, String message, String okBtn,
                                      DialogInterface.OnClickListener okListenner, String cancelBtn,
                                      DialogInterface.OnClickListener cancelListenner, String
-                                             titleAlign, String contentAlign) {
+                                             titleAlign, String contentAlign, boolean cancel) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(title).setMessage(message).setPositiveButton(okBtn, okListenner);
+            builder.setTitle(title).setMessage(message).setPositiveButton(okBtn, okListenner)
+                    .setCancelable(cancel);
             if (!TextUtils.isEmpty(cancelBtn)) {
                 builder.setNegativeButton(cancelBtn, cancelListenner);
             }
@@ -42,10 +43,17 @@ public class ModalManager extends Manager {
                 mBmAlert.show();
             }
         }
+
+        public static void showAlert(Context context, String title, String message, String okBtn,
+                                     DialogInterface.OnClickListener okListenner, String cancelBtn,
+                                     DialogInterface.OnClickListener cancelListenner, String
+                                             titleAlign, String contentAlign) {
+            showAlert(context, title, message, okBtn, okListenner, cancelBtn, cancelListenner,
+                    titleAlign, contentAlign, true);
+        }
     }
 
     public static class BmLoading {
-        private static BMLoding mBmLoading = null;
 
         public static void showLoading(Context context, final String message, boolean
                 canWatchOutsideTouch) {

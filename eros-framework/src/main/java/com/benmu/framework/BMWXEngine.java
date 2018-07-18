@@ -15,7 +15,7 @@ import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
-import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
+import com.benmu.framework.extend.adapter.image.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
 import com.benmu.framework.extend.hook.ui.components.HookWeb;
 import com.benmu.framework.extend.hook.ui.components.HookWxScroller;

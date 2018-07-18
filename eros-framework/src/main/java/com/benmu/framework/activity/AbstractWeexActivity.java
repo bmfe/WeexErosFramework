@@ -150,6 +150,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
         mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
         mWxAnalyzerDelegate.onCreate();
+
     }
 
 
