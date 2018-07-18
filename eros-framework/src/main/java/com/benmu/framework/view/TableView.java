@@ -321,7 +321,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         this.tabbarListen = tabbarListen;
     }
 
-    public void clearTabbarInfo() {
+    public void clearWatch() {
         this.tabbarListen = null;
     }
 

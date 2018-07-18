@@ -34,6 +34,8 @@ public class TabbarEvent extends EventGate {
             watchIndex(eventBean);
         } else if (WXEventCenter.EVENT_TABBAR_CLEARTABBARINFO.equals(type)) {
             clearTabbarInfo(eventBean);
+        } else if (WXEventCenter.EVENT_TABBAR_CLEARWATCH.equals(type)) {
+            clearWatch(eventBean);
         }
 
     }
@@ -77,11 +79,16 @@ public class TabbarEvent extends EventGate {
         }
     }
 
-    private void clearTabbarInfo(WeexEventBean weexEventBean) {
+    private void clearWatch(WeexEventBean weexEventBean) {
         Context context = weexEventBean.getContext();
         if (context instanceof MainActivity) {
-            ((MainActivity) context).clearTabbarInfo();
+            ((MainActivity) context).clearWatch();
         }
+    }
+
+    private void clearTabbarInfo(WeexEventBean weexEventBean) {
+        weexEventBean.setJsParams("");
+        setTabbar(weexEventBean);
     }
 
     public static class TabbarListen implements TabbarListener {
@@ -94,7 +101,7 @@ public class TabbarEvent extends EventGate {
         @Override
         public void onPageSelected(int index) {
             if (callback != null) {
-                callback.invoke(index);
+                callback.invokeAndKeepAlive(index);
             }
         }
     }
