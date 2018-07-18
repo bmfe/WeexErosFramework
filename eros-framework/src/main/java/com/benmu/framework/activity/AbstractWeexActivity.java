@@ -330,6 +330,9 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         } else {
             onAttach(this);
         }
+        //发出入栈通知
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new Intent
+                (WXConstant.ACTION_ACTIVITY_ATTACH));
     }
 
     public void refresh() {

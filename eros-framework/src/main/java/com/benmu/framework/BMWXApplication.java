@@ -120,4 +120,8 @@ public class BMWXApplication extends Application {
     public static BMWXApplication getWXApplication() {
         return mInstance;
     }
+
+    public VersionChecker getVersionChecker() {
+        return mVersionChecker;
+    }
 }

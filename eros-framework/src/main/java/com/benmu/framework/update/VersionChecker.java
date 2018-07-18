@@ -27,6 +27,7 @@ import com.benmu.framework.model.VersionBean;
 import com.benmu.framework.utils.L;
 import com.benmu.framework.utils.Md5Util;
 import com.benmu.framework.utils.SharePreferenceUtil;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -47,43 +48,100 @@ public class VersionChecker {
     private String mUpdateUrl;
     private Context mContext;
     private int mCurrentStatus = Constant.Version.SLEEP;
+    private boolean mCustomerUpdate;
+    private boolean mDownloadCompleted;
 
     public VersionChecker(Context context) {
         this.mContext = context;
+        mCustomerUpdate = BMWXEnvironment.mPlatformConfig.isCustomBundleUpdate();
     }
 
     public void checkVersion() {
-        if (mCurrentStatus == Constant.Version.UPDATING) return;
-        readyUpdate();
+        if (mCurrentStatus == Constant.Version.UPDATING || mCustomerUpdate) return;
+        readyUpdate(null, true);
     }
 
 
     public void notifyUpdate() {
-        final Activity activity = RouterTracker.peekActivity();
-        ModalManager.BmAlert.showAlert(activity, mContext.getResources()
-                .getString(R.string.str_update_title), mContext.getResources()
-                .getString(R.string.str_update_tips), mContext.getResources().getString(R.string
-                .str_ensure), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //销毁中介者
-                ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
-                        Intent(WXConstant.MEDIATOR_DESTROY));
-                //重启应用
-                Intent intent = activity.getPackageManager()
-                        .getLaunchIntentForPackage(activity.getApplication().getPackageName());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent
-                        .FLAG_ACTIVITY_CLEAR_TASK);
-                activity.startActivity(intent);
-                Process.killProcess(Process.myPid());
-                activity.finish();
-            }
-        }, null, null, null, null, false);
+        mDownloadCompleted = true;
+        if (mCustomerUpdate) {
+            postSuccess("更新包准备完成");
+        } else {
+            showUpdateDialig();
+        }
     }
 
 
-    private void readyUpdate() {
+    public void restartApp() {
+        if (!mDownloadCompleted) return;
+        Activity activity = RouterTracker.peekActivity();
+        if (activity == null) return;
+        //销毁中介者
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new
+                Intent(WXConstant.MEDIATOR_DESTROY));
+        //重启应用
+        Intent intent = activity.getPackageManager()
+                .getLaunchIntentForPackage(activity.getApplication().getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent
+                .FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+        Process.killProcess(Process.myPid());
+        activity.finish();
+    }
+
+    private void showUpdateDialig() {
+        Activity activity = RouterTracker.peekActivity();
+        //此时说明栈中没有可用activity 监听入栈事件
+        if (activity != null) {
+            ModalManager.BmAlert.showAlert(activity, mContext.getResources()
+                    .getString(R.string.str_update_title), mContext.getResources()
+                    .getString(R.string.str_update_tips), mContext.getResources().getString(R.string
+                    .str_ensure), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    restartApp();
+                }
+            }, null, null, null, null, false);
+        } else {
+            ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
+        }
+    }
+
+    @Subscribe
+    public void onActivityAttach(Intent intent) {
+        if (WXConstant.ACTION_ACTIVITY_ATTACH.equals(intent.getAction())) {
+            //有activity入栈 展示弹窗
+            showUpdateDialig();
+            ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
+        }
+    }
+
+    public void checkVersion(String url, boolean diff) {
+        if (mCurrentStatus == Constant.Version.UPDATING) return;
+        readyUpdate(url, diff);
+    }
+
+    private void postSuccess(String msg) {
+        post(0, msg);
+    }
+
+    private void post(int code, String msg) {
+        Intent intent = new Intent(WXConstant.ACTION_BUNDLE_DOWNLOADED);
+        intent.putExtra("code", code);
+        intent.putExtra("msg", msg);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(intent);
+    }
+
+    private void postFailed(String msg) {
+        post(9, msg);
+    }
+
+    private void readyUpdate(String path, boolean diff) {
         mUpdateUrl = BMWXEnvironment.mPlatformConfig.getUrl().getBundleUpdate();
+        if (!TextUtils.isEmpty(path)) {
+            mUpdateUrl = path;
+        }
+
         if (TextUtils.isEmpty(mUpdateUrl)) return;
 
         if (Constant.INTERCEPTOR_ACTIVE.equals(SharePreferenceUtil.getInterceptorActive(mContext)
@@ -91,10 +149,11 @@ public class VersionChecker {
             mCurrentStatus = Constant.Version.UPDATING;
             VersionManager versionManager = ManagerFactory.getManagerService(VersionManager.class);
             versionManager.checkBundleUpdate(mContext, mUpdateUrl,
-                    true, new StringCallback() {
+                    diff, new StringCallback() {
                         @Override
                         public void onError(Call call, Exception e, int id) {
                             Log.e(TAG, "获取更新失败");
+                            postFailed("获取更新失败");
                             mCurrentStatus = Constant.Version.SLEEP;
                         }
 
@@ -106,6 +165,7 @@ public class VersionChecker {
                                             .class);
                             if (version == null) {
                                 Log.e(TAG, "返回结果异常");
+                                postFailed("返回结果异常");
                                 mCurrentStatus = Constant.Version.SLEEP;
                                 return;
                             }
@@ -129,14 +189,17 @@ public class VersionChecker {
                                     break;
                                 case 401:
                                     Log.e(TAG, "JS文件查询失败!");
+                                    postFailed("JS文件查询失败");
                                     mCurrentStatus = Constant.Version.SLEEP;
                                     break;
                                 case 4000:
                                     Log.e(TAG, "当前版本已是最新!");
+                                    postFailed("当前版本已是最新");
                                     mCurrentStatus = Constant.Version.SLEEP;
                                     break;
                                 default:
                                     Log.e(TAG, "resCode:" + version.resCode);
+                                    postFailed("resCode:" + version.resCode);
                                     mCurrentStatus = Constant.Version.SLEEP;
                                     break;
 
@@ -158,6 +221,8 @@ public class VersionChecker {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         L.e(TAG, "检查全量包失败!，更新失败");
+                        mCurrentStatus = Constant.Version.SLEEP;
+                        postFailed("检查全量包失败!，更新失败");
                     }
 
                     @Override
@@ -192,6 +257,7 @@ public class VersionChecker {
                     if (!complete) {
                         downloadCompleteZip();
                     } else {
+                        postFailed("下载全量包失败");
                         mCurrentStatus = Constant.Version.SLEEP;
                     }
                 }
@@ -219,6 +285,7 @@ public class VersionChecker {
                                     (mContext), FileManager.TEMP_BUNDLE_NAME));
                             newVersion = null;
                             mCurrentStatus = Constant.Version.SLEEP;
+                            postFailed("更新包md5校验失败，更新失败");
                         }
                     }
 
@@ -315,6 +382,7 @@ public class VersionChecker {
                                 (mContext), FileManager.TEMP_BUNDLE_NAME));
                         newVersion = null;
                         mCurrentStatus = Constant.Version.SLEEP;
+                        postFailed("更新包md5校验失败，更新失败");
                     }
 
 
@@ -328,6 +396,7 @@ public class VersionChecker {
                     FileManager.deleteFile(new File(FileManager.getTempBundleDir
                             (mContext), FileManager.TEMP_BUNDLE_NAME));
                     mCurrentStatus = Constant.Version.SLEEP;
+                    postFailed("path命令失败");
                 }
             });
         }
