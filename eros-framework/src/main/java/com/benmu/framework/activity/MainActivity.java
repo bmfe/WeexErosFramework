@@ -128,7 +128,7 @@ public class MainActivity extends AbstractWeexActivity {
 
     public int getPageIndex() {
         if (tableView != null) {
-            tableView.getCurrentIndex();
+            return tableView.getCurrentIndex();
         }
         return -1;
     }
@@ -139,9 +139,9 @@ public class MainActivity extends AbstractWeexActivity {
         }
     }
 
-    public void clearTabbarInfo() {
+    public void clearWatch() {
         if (tableView != null) {
-            tableView.clearTabbarInfo();
+            tableView.clearWatch();
         }
     }
 }
