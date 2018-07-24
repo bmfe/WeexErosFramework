@@ -3,6 +3,7 @@ package com.benmu.framework.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
@@ -23,6 +25,8 @@ import com.benmu.framework.model.NavigatorBarModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.utils.BMHookGlide;
+import com.benmu.framework.utils.ImageUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.BaseToolBar;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -79,7 +83,7 @@ public class DefaultNavigationAdapter {
     }
 
 
-    private static void setImage(Context context, String url, final ImageView image) {
+    private static void setImage(final Context context, String url, final ImageView image) {
         BMHookGlide.load(context, url).apply(new RequestOptions().diskCacheStrategy
                 (DiskCacheStrategy.ALL)).into
                 (new SimpleTarget<Drawable>() {
@@ -87,8 +91,15 @@ public class DefaultNavigationAdapter {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<?
                             super Drawable> transition) {
-                        image.setImageDrawable(resource);
-                        image.setVisibility(View.VISIBLE);
+                        if (resource instanceof BitmapDrawable) {
+                            Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                            Bitmap scaleBitmap = ImageUtil.zooImage(context, bitmap,
+                                    BaseCommonUtil.getImageScale(context));
+                            if (scaleBitmap != null) {
+                                image.setImageBitmap(scaleBitmap);
+                                image.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
 
                 });

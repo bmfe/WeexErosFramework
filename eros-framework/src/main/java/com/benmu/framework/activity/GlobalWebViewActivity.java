@@ -1,6 +1,8 @@
 package com.benmu.framework.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -75,11 +77,6 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
             mUrl = "file://" + localPath(imageUri);
         }
 
-//        ShareInfoBean shareInfo = mWebViewParams.getShareInfo();
-//        if (shareInfo != null) {
-//            getNavigationBar().setRightIcon(R.drawable.icon_share);
-//        }
-
         rl_refresh = findViewById(R.id.rl_refresh);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_progress);
         mWeb = (WebView) findViewById(R.id.webView);
@@ -104,22 +101,45 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
 
     private String localPath(Uri uri) {
         String path = uri.getHost() + File.separator +
-                uri.getPath()+"?"+uri.getQuery();
+                uri.getPath() + "?" + uri.getQuery();
         return FileManager.getPathBundleDir(this, "bundle/" + path)
                 .getAbsolutePath();
     }
 
-    private static class MyWebViewClient extends WebViewClient {
+
+    //遇到ssl错误提示用户
+    private void handleSSLError(final SslErrorHandler handler) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.str_error_ssl_cert_invalid);
+        builder.setPositiveButton(getResources().getString(R.string.str_ensure), new
+                DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+        builder.setNegativeButton(getResources().getString(R.string.str_cancel), new
+                DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    private class MyWebViewClient extends WebViewClient {
         GlobalWebViewActivity activity;
 
         public MyWebViewClient(GlobalWebViewActivity activity) {
-            Log.d("SVProgressHUD", "MyWebViewClient hasCode -> " + activity.hashCode());
             this.activity = activity;
         }
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
+            handleSSLError(handler);
         }
 
 
