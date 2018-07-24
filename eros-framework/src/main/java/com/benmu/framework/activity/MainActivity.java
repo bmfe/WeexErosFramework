@@ -84,7 +84,7 @@ public class MainActivity extends AbstractWeexActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             if (isHomePage() && BMWXEnvironment.mPlatformConfig.isAndroidIsListenHomeBack()) {
-                WXSDKInstance wxsdkInstance = getWXSDK();
+                WXSDKInstance wxsdkInstance = getWXSDkInstance();
                 if (wxsdkInstance != null) {
                     GlobalEventManager.homeBack(wxsdkInstance);
                     return true;
@@ -94,8 +94,9 @@ public class MainActivity extends AbstractWeexActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private WXSDKInstance getWXSDK() {
-        return (tableView != null) ? tableView.getWXSDKInstance() : getWXSDkInstance();
+    @Override
+    public WXSDKInstance getWXSDkInstance() {
+        return (tableView != null) ? tableView.getWXSDKInstance() : super.getWXSDkInstance();
 
     }
 
