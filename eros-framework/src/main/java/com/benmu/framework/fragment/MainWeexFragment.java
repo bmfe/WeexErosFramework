@@ -54,7 +54,7 @@ public class MainWeexFragment extends AbstractWeexFragment {
         mReloadReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(getUserVisibleHint()){
+                if (getUserVisibleHint()) {
                     renderPage();
 
                 }
@@ -73,15 +73,9 @@ public class MainWeexFragment extends AbstractWeexFragment {
 
 
     public void setNavigator(NavigatorModel navigatorModel) {
-        if (!TextUtils.isEmpty(navigatorModel.navigatorModel)) {
-            DefaultNavigationAdapter.setNavigationInfo(navigatorModel.navigatorModel, navigatorModel.centerItemJsCallback);
-        }
-        if (!TextUtils.isEmpty(navigatorModel.leftNavigatorbarModel)) {
-            DefaultNavigationAdapter.setLeftItem(navigatorModel.leftNavigatorbarModel, navigatorModel.leftItemJsCallback);
-        }
-        if (!TextUtils.isEmpty(navigatorModel.rightNavigatorbarModel)) {
-            DefaultNavigationAdapter.setRightItem(navigatorModel.rightNavigatorbarModel, navigatorModel.rightItemJsCallback);
-        }
+        DefaultNavigationAdapter.setNavigationInfo(navigatorModel.navigatorModel, navigatorModel.centerItemJsCallback);
+        DefaultNavigationAdapter.setLeftItem(navigatorModel.leftNavigatorbarModel, navigatorModel.leftItemJsCallback);
+        DefaultNavigationAdapter.setRightItem(navigatorModel.rightNavigatorbarModel, navigatorModel.rightItemJsCallback);
         if (!TextUtils.isEmpty(navigatorModel.centerNavigatorBarModel)) {
             DefaultNavigationAdapter.setCenterItem(navigatorModel.centerNavigatorBarModel, navigatorModel.centerItemJsCallback);
         }

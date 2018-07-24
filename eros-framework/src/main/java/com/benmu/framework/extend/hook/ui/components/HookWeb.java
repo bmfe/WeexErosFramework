@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.benmu.framework.manager.impl.FileManager;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.Component;
 import com.taobao.weex.adapter.URIAdapter;
@@ -19,6 +20,7 @@ import com.taobao.weex.ui.view.IWebView;
 import com.taobao.weex.ui.view.WXWebView;
 import com.taobao.weex.utils.WXUtils;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ import java.util.Map;
  */
 @Component(lazyload = false)
 public class HookWeb extends WXComponent {
-
+    private final String LOCAL_SCHEME = "bmlocal";
     public static final String GO_BACK = "goBack";
     public static final String GO_FORWARD = "goForward";
     public static final String RELOAD = "reload";
@@ -123,8 +125,22 @@ public class HookWeb extends WXComponent {
             return;
         }
         if (!TextUtils.isEmpty(url)) {
-            loadUrl(getInstance().rewriteUri(Uri.parse(url), URIAdapter.WEB).toString());
+            Uri ul = getInstance().rewriteUri(Uri.parse(url), URIAdapter.WEB);
+            if (LOCAL_SCHEME.equalsIgnoreCase(ul.getScheme())) {
+                String mUrl = "file://" + localPath(ul);
+                loadUrl(mUrl);
+            } else {
+                loadUrl(ul.toString());
+            }
         }
+    }
+
+
+    private String localPath(Uri uri) {
+        String path = uri.getHost() + File.separator +
+                uri.getPath() + "?" + uri.getQuery();
+        return FileManager.getPathBundleDir(getContext(), "bundle/" + path)
+                .getAbsolutePath();
     }
 
     public void setAction(String action) {

@@ -47,7 +47,7 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
     protected WXAnalyzerDelegate mWxAnalyzerDelegate;
     private DebugErrorDialog errorDialog;
     private String mRouterType;
-    private boolean isFirstRun = true;
+    private boolean isVisibleToUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +71,6 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
         if (mWXInstance != null && isViewDid()) {
             GlobalEventManager.onViewDidAppear(mWXInstance, mRouterType);
         }
-        isFirstRun = false;
     }
 
     @Override
@@ -270,6 +269,10 @@ public class AbstractWeexFragment extends Fragment implements IWXRenderListener 
                 GlobalEventManager.onViewDidDisappear(mWXInstance, mRouterType);
             }
         }
+        if (this.isVisibleToUser) {
+            mRouterType = GlobalEventManager.TYPE_BACK;
+        }
+        this.isVisibleToUser = isVisibleToUser;
     }
 
     private boolean isViewDid() {

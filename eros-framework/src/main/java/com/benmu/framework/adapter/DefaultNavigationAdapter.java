@@ -39,10 +39,18 @@ import com.taobao.weex.utils.WXUtils;
 public class DefaultNavigationAdapter {
 
     public static void setLeftItem(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.getLeftTextView().setVisibility(View.GONE);
+            navigationBar.getLeftIcon().setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+        navigationBar = getToolBar();
         if (navigationBar == null) return;
 
         setTextView(navigationBar.getLeftTextView(), navigatorBarModel);
@@ -117,12 +125,19 @@ public class DefaultNavigationAdapter {
     }
 
     public static void setRightItem(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.getRightText().setVisibility(View.GONE);
+            navigationBar.getRightIcon().setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+        navigationBar = getToolBar();
         if (navigationBar == null) return;
-
         setTextView(navigationBar.getRightText(), navigatorBarModel);
 
         if (!TextUtils.isEmpty(navigatorBarModel.getImage())) {
@@ -143,12 +158,19 @@ public class DefaultNavigationAdapter {
     }
 
     public static void setNavigationInfo(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
 //        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
 //                .class);
         NatigatorModel navigatorModel = parseManager.parseObject(params, NatigatorModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+        navigationBar = getToolBar();
         if (navigationBar == null) return;
         navigationBar.setVisibility(navigatorModel.isNavShow() ? View.VISIBLE : View.GONE);
         if (navigationBar.getVisibility() == View.GONE) return;
@@ -169,10 +191,18 @@ public class DefaultNavigationAdapter {
     }
 
     public static void setCenterItem(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.getTitleTextView().setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+
+        navigationBar = getToolBar();
 
         if (navigationBar == null) return;
 
@@ -195,7 +225,7 @@ public class DefaultNavigationAdapter {
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
             NatigatorModel model = parseManager.parseObject(navigatorModel.navigatorModel,
                     NatigatorModel
-                    .class);
+                            .class);
             routerModel.navShow = model.isNavShow();
             routerModel.navTitle = model.getTitle();
             routerModel.canBack = false;
