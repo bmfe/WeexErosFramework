@@ -9,10 +9,12 @@ import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.StorageManager;
 import com.benmu.framework.manager.impl.ParseManager;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.TabbarBadgeModule;
+import com.benmu.framework.model.TabbarWatchBean;
 import com.benmu.framework.model.WeexEventBean;
-import com.benmu.framework.utils.TabbarListener;
 import com.benmu.wxbase.EventGate;
+import com.squareup.otto.Subscribe;
 import com.taobao.weex.bridge.JSCallback;
 
 /**
@@ -20,6 +22,9 @@ import com.taobao.weex.bridge.JSCallback;
  */
 
 public class TabbarEvent extends EventGate {
+
+    private JSCallback watchCallback;
+    private int callBaclKey;
 
     public void perform(Context context, WeexEventBean eventBean, String type) {
         if (WXEventCenter.EVENT_TABBAR_SHOWBADGE.equals(type)) {
@@ -74,16 +79,16 @@ public class TabbarEvent extends EventGate {
 
     private void watchIndex(WeexEventBean weexEventBean) {
         Context context = weexEventBean.getContext();
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).watchIndex(new TabbarListen(weexEventBean.getJscallback()));
-        }
+        watchCallback = weexEventBean.getJscallback();
+        this.callBaclKey = Integer.parseInt(weexEventBean.getExpand().toString());
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().register(this);
     }
 
     private void clearWatch(WeexEventBean weexEventBean) {
-        Context context = weexEventBean.getContext();
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).clearWatch();
-        }
+        TabbarWatchBean bean = new TabbarWatchBean(-1);
+        bean.isClear = true;
+        bean.setHsCode(Integer.parseInt(weexEventBean.getExpand().toString()));
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(bean);
     }
 
     private void clearTabbarInfo(WeexEventBean weexEventBean) {
@@ -91,18 +96,19 @@ public class TabbarEvent extends EventGate {
         setTabbar(weexEventBean);
     }
 
-    public static class TabbarListen implements TabbarListener {
-        private JSCallback callback;
 
-        private TabbarListen(JSCallback callback) {
-            this.callback = callback;
-        }
-
-        @Override
-        public void onPageSelected(int index) {
-            if (callback != null) {
-                callback.invokeAndKeepAlive(index);
+    @Subscribe
+    public void watchIndex(TabbarWatchBean bean) {
+        if (watchCallback != null) {
+            if (bean.index != -1 && !bean.isClear) {
+                watchCallback.invokeAndKeepAlive(bean.index);
+            } else {
+                if (bean.hsCode == callBaclKey) {
+                    watchCallback = null;
+                    ManagerFactory.getManagerService(DispatchEventManager.class).getBus().unregister(this);
+                }
             }
         }
     }
+
 }

@@ -35,6 +35,7 @@ public class MainActivity extends AbstractWeexActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        AndroidBug5497Workaround.assistActivity(this);
         routerModel = (RouterModel) getIntent().getSerializableExtra(Constant.ROUTERPARAMS);
         if (Constant.TABBAR.equals(routerModel.url)) {
             initTabView();

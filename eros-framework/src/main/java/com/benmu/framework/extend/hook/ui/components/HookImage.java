@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
+import com.bumptech.glide.Glide;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
@@ -273,7 +274,7 @@ public class HookImage extends WXComponent<ImageView> {
     @Override
     public void recycled() {
         super.recycled();
-
+        Glide.with(getHostView().getContext()).clear(getHostView());
         if (getInstance().getImgLoaderAdapter() != null) {
             getInstance().getImgLoaderAdapter().setImage(AUTORECYCLE_URL, getHostView(),
                     null, null);
