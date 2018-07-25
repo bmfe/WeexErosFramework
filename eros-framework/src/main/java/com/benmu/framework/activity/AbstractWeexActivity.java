@@ -1,5 +1,6 @@
 package com.benmu.framework.activity;
 
+import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.BuildConfig;
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -150,6 +151,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
 
         mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
         mWxAnalyzerDelegate.onCreate();
+
     }
 
 
@@ -329,9 +331,13 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         } else {
             onAttach(this);
         }
+        //发出入栈通知
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new Intent
+                (WXConstant.ACTION_ACTIVITY_ATTACH));
     }
 
     public void refresh() {
+        if (mWXInstance == null) return;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -564,6 +570,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
         if (mWxAnalyzerDelegate != null) {
             mWxAnalyzerDelegate.onDestroy();
         }
+
+        BMWXApplication.getWXApplication().getWatcher().watch(this);
     }
 
     @Override

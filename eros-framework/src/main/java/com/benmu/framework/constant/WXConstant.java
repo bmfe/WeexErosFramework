@@ -26,9 +26,15 @@ public class WXConstant {
     public static final String ACTION_WEEX_REFRESH = "ACTION_WEEX_REFRESH";
     //拦截器状态发生变化
     public static final String ACTION_INTERCEPTOR_SWTICH = "ACTION_INTERCEPTOR_SWTICH";
-
+    //初始化激活中介者
     public static final String MEDIATOR_INIT = "MEDIATOR_INIT";
-
-    public static final String ACTION_NETWORK_CHANGED="ACTION_NETWORK_CHANGED";
+    //销毁中介者
+    public static final String MEDIATOR_DESTROY = "MEDIATOR_DESTROY";
+    //网络状态变化
+    public static final String ACTION_NETWORK_CHANGED = "ACTION_NETWORK_CHANGED";
+    //更新包下载完成
+    public static final String ACTION_BUNDLE_DOWNLOADED = "ACTION_BUNDLE_DOWNLOADED";
+    //activity入栈广播
+    public static final String ACTION_ACTIVITY_ATTACH = "ACTION_ACTIVITY_PUSH";
 
 }

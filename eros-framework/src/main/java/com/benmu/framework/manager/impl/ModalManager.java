@@ -31,9 +31,10 @@ public class ModalManager extends Manager {
         public static void showAlert(Context context, String title, String message, String okBtn,
                                      DialogInterface.OnClickListener okListenner, String cancelBtn,
                                      DialogInterface.OnClickListener cancelListenner, String
-                                             titleAlign, String contentAlign) {
+                                             titleAlign, String contentAlign, boolean cancel) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(title).setMessage(message).setPositiveButton(okBtn, okListenner);
+            builder.setTitle(title).setMessage(message).setPositiveButton(okBtn, okListenner)
+                    .setCancelable(cancel);
             if (!TextUtils.isEmpty(cancelBtn)) {
                 builder.setNegativeButton(cancelBtn, cancelListenner);
             }
@@ -42,10 +43,17 @@ public class ModalManager extends Manager {
                 mBmAlert.show();
             }
         }
+
+        public static void showAlert(Context context, String title, String message, String okBtn,
+                                     DialogInterface.OnClickListener okListenner, String cancelBtn,
+                                     DialogInterface.OnClickListener cancelListenner, String
+                                             titleAlign, String contentAlign) {
+            showAlert(context, title, message, okBtn, okListenner, cancelBtn, cancelListenner,
+                    titleAlign, contentAlign, true);
+        }
     }
 
     public static class BmLoading {
-        private static BMLoding mBmLoading = null;
 
         public static void showLoading(Context context, final String message, boolean
                 canWatchOutsideTouch) {
@@ -85,23 +93,28 @@ public class ModalManager extends Manager {
     }
 
     public static class BmToast {
-        private static Toast mToast = null;
 
-        private static void makeToast(Context context, String message, int duration) {
+        private static void makeToast(final Context context, final String message, final int
+                duration) {
 
             if (TextUtils.isEmpty(message) || context == null) {
                 return;
             }
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                if (mToast == null) {
-                    mToast = Toast.makeText(context, message, duration);
-                    //mToast.setGravity(Gravity.CENTER, 0, 0);
-                }
+                Toast mToast = Toast.makeText(context, message, duration);
                 mToast.setDuration(duration);
                 mToast.setText(message);
                 mToast.show();
             } else {
                 Log.i("BMModalManager", "toast can not show in child thread");
+                if (context instanceof Activity) {
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            makeToast(context, message, duration);
+                        }
+                    });
+                }
             }
         }
 

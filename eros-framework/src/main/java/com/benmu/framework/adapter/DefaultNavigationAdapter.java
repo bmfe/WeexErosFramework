@@ -3,6 +3,7 @@ package com.benmu.framework.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.ImageManager;
 import com.benmu.framework.manager.impl.ParseManager;
 import com.benmu.framework.manager.impl.status.StatusBarManager;
 import com.benmu.framework.model.BaseResultBean;
@@ -23,6 +25,8 @@ import com.benmu.framework.model.NavigatorBarModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.utils.BMHookGlide;
+import com.benmu.framework.utils.ImageUtil;
+import com.benmu.widget.utils.BaseCommonUtil;
 import com.benmu.widget.utils.ColorUtils;
 import com.benmu.widget.view.BaseToolBar;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -39,10 +43,18 @@ import com.taobao.weex.utils.WXUtils;
 public class DefaultNavigationAdapter {
 
     public static void setLeftItem(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.getLeftTextView().setVisibility(View.GONE);
+            navigationBar.getLeftIcon().setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+        navigationBar = getToolBar();
         if (navigationBar == null) return;
 
         setTextView(navigationBar.getLeftTextView(), navigatorBarModel);
@@ -71,7 +83,7 @@ public class DefaultNavigationAdapter {
     }
 
 
-    private static void setImage(Context context, String url, final ImageView image) {
+    private static void setImage(final Context context, String url, final ImageView image) {
         BMHookGlide.load(context, url).apply(new RequestOptions().diskCacheStrategy
                 (DiskCacheStrategy.ALL)).into
                 (new SimpleTarget<Drawable>() {
@@ -79,8 +91,15 @@ public class DefaultNavigationAdapter {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<?
                             super Drawable> transition) {
-                        image.setImageDrawable(resource);
-                        image.setVisibility(View.VISIBLE);
+                        if (resource instanceof BitmapDrawable) {
+                            Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                            Bitmap scaleBitmap = ImageUtil.zooImage(context, bitmap,
+                                    BaseCommonUtil.getImageScale(context));
+                            if (scaleBitmap != null) {
+                                image.setImageBitmap(scaleBitmap);
+                                image.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
 
                 });
@@ -117,12 +136,19 @@ public class DefaultNavigationAdapter {
     }
 
     public static void setRightItem(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.getRightText().setVisibility(View.GONE);
+            navigationBar.getRightIcon().setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+        navigationBar = getToolBar();
         if (navigationBar == null) return;
-
         setTextView(navigationBar.getRightText(), navigatorBarModel);
 
         if (!TextUtils.isEmpty(navigatorBarModel.getImage())) {
@@ -143,12 +169,19 @@ public class DefaultNavigationAdapter {
     }
 
     public static void setNavigationInfo(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
 //        NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
 //                .class);
         NatigatorModel navigatorModel = parseManager.parseObject(params, NatigatorModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+        navigationBar = getToolBar();
         if (navigationBar == null) return;
         navigationBar.setVisibility(navigatorModel.isNavShow() ? View.VISIBLE : View.GONE);
         if (navigationBar.getVisibility() == View.GONE) return;
@@ -169,10 +202,18 @@ public class DefaultNavigationAdapter {
     }
 
     public static void setCenterItem(String params, final JSCallback jscallback) {
+        BaseToolBar navigationBar;
+        if (TextUtils.isEmpty(params)) {
+            navigationBar = getToolBar();
+            if (navigationBar == null) return;
+            navigationBar.getTitleTextView().setVisibility(View.GONE);
+            return;
+        }
         ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
         NavigatorBarModel navigatorBarModel = parseManager.parseObject(params, NavigatorBarModel
                 .class);
-        BaseToolBar navigationBar = getToolBar();
+
+        navigationBar = getToolBar();
 
         if (navigationBar == null) return;
 
@@ -195,7 +236,7 @@ public class DefaultNavigationAdapter {
             ParseManager parseManager = ManagerFactory.getManagerService(ParseManager.class);
             NatigatorModel model = parseManager.parseObject(navigatorModel.navigatorModel,
                     NatigatorModel
-                    .class);
+                            .class);
             routerModel.navShow = model.isNavShow();
             routerModel.navTitle = model.getTitle();
             routerModel.canBack = false;

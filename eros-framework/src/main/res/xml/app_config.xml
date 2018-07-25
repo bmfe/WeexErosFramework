@@ -29,5 +29,6 @@
     <module name="bmCommunication">com.benmu.framework.extend.module.CommunicationModule</module>
     <module name="bmCamera">com.benmu.framework.extend.module.CameraModule</module>
     <module name="bmWebSocket">com.benmu.framework.extend.module.WebSocketModule</module>
+    <module name="bmBundleUpdate">com.benmu.framework.extend.module.UpdateModule</module>
 
 </app_config>

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.support.multidex.MultiDex;
+import android.util.DebugUtils;
 
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -15,6 +17,9 @@ import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
 import com.benmu.framework.update.VersionChecker;
+import com.benmu.framework.utils.DebugableUtil;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.taobao.weex.WXSDKInstance;
 
 import java.util.List;
@@ -29,6 +34,7 @@ public class BMWXApplication extends Application {
     private VersionChecker mVersionChecker;
     private DebuggerWebSocket debugSocket;
     private DefaultTypefaceAdapter typefaceAdapter;
+    private RefWatcher mWatcher;
 
     @Override
     public void onCreate() {
@@ -38,9 +44,14 @@ public class BMWXApplication extends Application {
             initWeex();
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
-//            initShare();
             initDebugSocket();
+            mWatcher = DebugableUtil.isDebug() ? LeakCanary.install(this) : RefWatcher.DISABLED;
         }
+    }
+
+
+    public RefWatcher getWatcher() {
+        return mWatcher;
     }
 
     private void initDebugSocket() {
@@ -119,5 +130,9 @@ public class BMWXApplication extends Application {
 
     public static BMWXApplication getWXApplication() {
         return mInstance;
+    }
+
+    public VersionChecker getVersionChecker() {
+        return mVersionChecker;
     }
 }

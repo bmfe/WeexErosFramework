@@ -22,11 +22,15 @@ import com.benmu.framework.R;
 import com.benmu.framework.activity.AbstractWeexActivity;
 import com.benmu.framework.adapter.DefaultNavigationAdapter;
 import com.benmu.framework.constant.WXEventCenter;
+import com.benmu.framework.event.TabbarEvent;
 import com.benmu.framework.fragment.MainWeexFragment;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.model.TabbarBadgeModule;
+import com.benmu.framework.model.TabbarWatchBean;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.widget.utils.ColorUtils;
 import com.taobao.weex.WXSDKInstance;
@@ -47,7 +51,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     private View view;
     private LinearLayout llTabBar;
     private ImageView borderLine;
-    private ViewPager viewpager;
+    private NoScrollViewPager viewpager;
     private PlatformConfigBean.TabBar tabBarBean;
     private List<MainWeexFragment> fragments;
     private MyFragmentAdapter fragmentAdapter;
@@ -77,7 +81,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         view = inflater.inflate(R.layout.view_tab_layout, this);
         llTabBar = (LinearLayout) view.findViewById(R.id.llTabBar);
         borderLine = (ImageView) view.findViewById(R.id.borderLine);
-        viewpager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewpager = (NoScrollViewPager) view.findViewById(R.id.viewpager);
     }
 
     public void setData(PlatformConfigBean.TabBar tabBar) {
@@ -269,6 +273,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     @Override
     public void onPageSelected(int position) {
         setCurrentItem(position);
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new TabbarWatchBean(position));
     }
 
     @Override
@@ -303,9 +308,8 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         }
     }
 
-    private int getRandom() {
-        Random rand = new Random();
-        return rand.nextInt(160);
+    public int getCurrentIndex() {
+        return viewpager.getCurrentItem();
     }
 
 

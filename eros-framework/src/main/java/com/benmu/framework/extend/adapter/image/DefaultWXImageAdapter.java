@@ -157,7 +157,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.benmu.framework.extend.adapter;
+package com.benmu.framework.extend.adapter.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -239,58 +239,50 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
         } else if (isCustomPlaceHolder(strategy)) {
             //customer placeHolder
             BMHookGlide.load(BMWXApplication.getWXApplication(), strategy.placeHolder).apply(new
-                    RequestOptions().fitCenter().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)).into
-                    (wxImageView);
+                    RequestOptions().fitCenter().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC))
+                    .into
+                            (wxImageView);
         } else {
             //no placeHolder
             wxImageView.hideLoading(); //防止复用出现的问题
         }
 
 
+        DefaultImageViewTarget viewTarget = new DefaultImageViewTarget(wxImageView);
+        viewTarget.setImageLoadListener(new DefaultImageViewTarget.ImageLoadListener() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super
+                    Drawable> transition) {
+                if (strategy != null && strategy.getImageListener() != null) {
+                    strategy.getImageListener().onImageFinish(loadUri,
+                            wxImageView,
+                            true,
+                            null);
+                }
+
+                if (isDefaultPlaceHolder(strategy)) {
+                    wxImageView.hideLoading();
+                }
+            }
+
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                handleError((HookWXImageView) wxImageView);
+                if (strategy != null && strategy.getImageListener() != null) {
+                    strategy.getImageListener().onImageFinish(loadUri,
+                            wxImageView,
+                            true,
+                            null);
+                }
+
+                if (isDefaultPlaceHolder(strategy)) {
+                    wxImageView.hideLoading();
+                }
+            }
+        });
+
         BMHookGlide.load(BMWXApplication.getWXApplication(), loadUri).apply(new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).transforms(new CenterCrop(), new
-                        BMRadiusTransfer(BMWXApplication.getWXApplication(), wxImageView)))
-                .listener(new ImageRequestListener() {
-
-                            @Override
-                            public void onReady(Object resource, Object model, Target target,
-                                                DataSource
-                                                        dataSource, boolean isFirstResource) {
-                                    if (strategy != null && strategy.getImageListener() != null) {
-                                        strategy.getImageListener().onImageFinish(loadUri,
-                                                wxImageView,
-                                                true,
-                                                null);
-                                    }
-
-                                    if (isDefaultPlaceHolder(strategy)) {
-                                        wxImageView.hideLoading();
-                                    }
-                            }
-
-                            @Override
-                            public void onFailed(GlideException e, Object model, Target target,
-                                                 boolean isFirstResource) {
-                                    handleError((HookWXImageView) wxImageView);
-                                    if (strategy != null && strategy.getImageListener() != null) {
-                                        strategy.getImageListener().onImageFinish(loadUri,
-                                                wxImageView,
-                                                true,
-                                                null);
-                                    }
-
-                                    if (isDefaultPlaceHolder(strategy)) {
-                                        wxImageView.hideLoading();
-                                    }
-                            }
-
-                            @Override
-                            public void onLoading(String imageUrl, long bytesRead, long totalBytes,
-                                                  boolean isDone, Exception exception) {
-                                //do something
-                            }
-                        }).into(wxImageView);
-
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).transforms(new CenterCrop())).into(viewTarget);
 
     }
 
@@ -334,41 +326,5 @@ public class DefaultWXImageAdapter implements IWXImgLoaderAdapter {
     private boolean denyPreviousRequest(String url, View imageView) {
         return !url.equals(((HookWXImageView) imageView).getCurrentUrl());
     }
-
-
-    private static class BMRadiusTransfer extends BitmapTransformation {
-
-        private HookWXImageView mView;
-
-        public BMRadiusTransfer(Context context) {
-            this(context, null);
-        }
-
-        BMRadiusTransfer(Context context, HookWXImageView imageView) {
-            super();
-            this.mView = imageView;
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int
-                outHeight) {
-            return roundCrop(pool, toTransform);
-        }
-
-        private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-
-            if (source == null || mView == null) return source;
-
-            Drawable roundDrawable = mView.getRoundDrawable(source);
-            return roundDrawable == null ? source : ImageUtil.drawableToBitmap(roundDrawable);
-        }
-
-
-        @Override
-        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-
-        }
-    }
-
 
 }

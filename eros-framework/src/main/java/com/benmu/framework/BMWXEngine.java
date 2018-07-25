@@ -15,7 +15,7 @@ import com.benmu.framework.event.DispatchEventCenter;
 import com.benmu.framework.event.mediator.EventCenter;
 import com.benmu.framework.extend.adapter.DefaultTypefaceAdapter;
 import com.benmu.framework.extend.adapter.DefaultWXHttpAdapter;
-import com.benmu.framework.extend.adapter.DefaultWXImageAdapter;
+import com.benmu.framework.extend.adapter.image.DefaultWXImageAdapter;
 import com.benmu.framework.extend.adapter.LightlyWebSocketFactory;
 import com.benmu.framework.extend.hook.ui.components.HookWeb;
 import com.benmu.framework.extend.hook.ui.components.HookWxScroller;
@@ -204,6 +204,8 @@ public class BMWXEngine {
 
         insideEnv.put(Constant.CustomOptions.CUSTOM_NAVBARHEIGHT, BaseCommonUtil
                 .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 44)) + "");
+        insideEnv.put(Constant.CustomOptions.CUSTOM_TABBARHEIGHT, BaseCommonUtil
+                .transferDimenToFE(context, BaseCommonUtil.dp2px(context, 55)) + "");
         insideEnv.put(Constant.CustomOptions.CUSTOM_JSVERSION, AppUtils.getJsVersion(context));
         insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEID, AppUtils.getDeviceId(context));
         String fontSize = SharePreferenceUtil.getAppFontSizeOption(context);

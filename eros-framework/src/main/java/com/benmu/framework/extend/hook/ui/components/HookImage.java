@@ -31,10 +31,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.benmu.framework.extend.hook.ui.view.HookWXImageView;
+import com.bumptech.glide.Glide;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
@@ -85,11 +87,11 @@ public class HookImage extends WXComponent<ImageView> {
 
     private static SingleFunctionParser.FlatMapper<Integer> BLUR_RADIUS_MAPPER = new
             SingleFunctionParser.FlatMapper<Integer>() {
-        @Override
-        public Integer map(String raw) {
-            return WXUtils.getInteger(raw, 0);
-        }
-    };
+                @Override
+                public Integer map(String raw) {
+                    return WXUtils.getInteger(raw, 0);
+                }
+            };
 
     public static class Ceator implements ComponentCreator {
         public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer
@@ -272,7 +274,7 @@ public class HookImage extends WXComponent<ImageView> {
     @Override
     public void recycled() {
         super.recycled();
-
+        Glide.with(getHostView().getContext()).clear(getHostView());
         if (getInstance().getImgLoaderAdapter() != null) {
             getInstance().getImgLoaderAdapter().setImage(AUTORECYCLE_URL, getHostView(),
                     null, null);
@@ -288,7 +290,8 @@ public class HookImage extends WXComponent<ImageView> {
         if (mAutoRecycle) {
             if (getHostView() != null) {
                 if (getInstance().getImgLoaderAdapter() != null) {
-                    getInstance().getImgLoaderAdapter().setImage(AUTORECYCLE_URL, getHostView(), null, null);
+                    getInstance().getImgLoaderAdapter().setImage(AUTORECYCLE_URL, getHostView(),
+                            null, null);
                 }
             }
         }
@@ -383,6 +386,29 @@ public class HookImage extends WXComponent<ImageView> {
         }
     }
 
+
+    @Override
+    protected void onFinishLayout() {
+        super.onFinishLayout();
+        //校对borderRadius
+        collateBorderRadius();
+    }
+
+
+    private void collateBorderRadius() {
+        if (getHostView() instanceof HookWXImageView) {
+            HookWXImageView hookWXImageView = (HookWXImageView) getHostView();
+            BorderDrawable borderDrawable = WXViewUtils.getBorderDrawable(hookWXImageView);
+            if (borderDrawable != null) {
+                ImmutableDomObject imageDom = getDomObject();
+                RectF borderBox = new RectF(0, 0, WXDomUtils.getContentWidth(imageDom),
+                        WXDomUtils.getContentHeight(imageDom));
+                float[] borderRadius = borderDrawable.getBorderRadius(borderBox);
+                hookWXImageView.collateBorderRadius(borderRadius);
+            }
+        }
+    }
+
     /**
      * Need permission {android.permission.WRITE_EXTERNAL_STORAGE}
      */
@@ -458,9 +484,10 @@ public class HookImage extends WXComponent<ImageView> {
         //wxInstance destroy
         if (getHostView() instanceof HookWXImageView) {
             if (getInstance().getImgLoaderAdapter() != null) {
-                getInstance().getImgLoaderAdapter().setImage(AUTORECYCLE_URL, getHostView(), null, null);
+                getInstance().getImgLoaderAdapter().setImage(AUTORECYCLE_URL, getHostView(),
+                        null, null);
             }
-            ((HookWXImageView)getHostView()).destory();
+            ((HookWXImageView) getHostView()).destory();
         }
         super.destroy();
     }
