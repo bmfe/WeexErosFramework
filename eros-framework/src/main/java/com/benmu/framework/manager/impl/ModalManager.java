@@ -93,23 +93,28 @@ public class ModalManager extends Manager {
     }
 
     public static class BmToast {
-        private static Toast mToast = null;
 
-        private static void makeToast(Context context, String message, int duration) {
+        private static void makeToast(final Context context, final String message, final int
+                duration) {
 
             if (TextUtils.isEmpty(message) || context == null) {
                 return;
             }
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                if (mToast == null) {
-                    mToast = Toast.makeText(context, message, duration);
-                    //mToast.setGravity(Gravity.CENTER, 0, 0);
-                }
+                Toast mToast = Toast.makeText(context, message, duration);
                 mToast.setDuration(duration);
                 mToast.setText(message);
                 mToast.show();
             } else {
                 Log.i("BMModalManager", "toast can not show in child thread");
+                if (context instanceof Activity) {
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            makeToast(context, message, duration);
+                        }
+                    });
+                }
             }
         }
 
