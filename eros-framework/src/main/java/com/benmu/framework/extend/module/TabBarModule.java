@@ -1,5 +1,7 @@
 package com.benmu.framework.extend.module;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.weex.plugin.annotation.WeexModule;
 import com.benmu.framework.BMWXEnvironment;
@@ -73,6 +75,7 @@ public class TabBarModule extends WXModule {
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXEventCenter.EVENT_TABBAR_WATCHINDEX);
         weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setExpand(mWXSDKInstance.hashCode());
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
@@ -82,6 +85,7 @@ public class TabBarModule extends WXModule {
         WeexEventBean weexEventBean = new WeexEventBean();
         weexEventBean.setKey(WXEventCenter.EVENT_TABBAR_CLEARWATCH);
         weexEventBean.setContext(mWXSDKInstance.getContext());
+        weexEventBean.setExpand(mWXSDKInstance.hashCode());
         weexEventBean.setJscallback(callback);
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }

@@ -34,7 +34,7 @@ public class MainActivity extends AbstractWeexActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AndroidBug5497Workaround.assistActivity(this);
+//        AndroidBug5497Workaround.assistActivity(this);
         routerModel = (RouterModel) getIntent().getSerializableExtra(Constant.ROUTERPARAMS);
         if (Constant.TABBAR.equals(routerModel.url)) {
             initTabView();
@@ -135,15 +135,4 @@ public class MainActivity extends AbstractWeexActivity {
         return -1;
     }
 
-    public void watchIndex(TabbarEvent.TabbarListen tabbarListen) {
-        if (tableView != null) {
-            tableView.setTabbarListen(tabbarListen);
-        }
-    }
-
-    public void clearWatch() {
-        if (tableView != null) {
-            tableView.clearWatch();
-        }
-    }
 }

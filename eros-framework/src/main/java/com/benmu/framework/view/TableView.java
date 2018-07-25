@@ -24,10 +24,13 @@ import com.benmu.framework.adapter.DefaultNavigationAdapter;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.event.TabbarEvent;
 import com.benmu.framework.fragment.MainWeexFragment;
+import com.benmu.framework.manager.ManagerFactory;
+import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.NatigatorModel;
 import com.benmu.framework.model.NavigatorModel;
 import com.benmu.framework.model.PlatformConfigBean;
 import com.benmu.framework.model.TabbarBadgeModule;
+import com.benmu.framework.model.TabbarWatchBean;
 import com.benmu.framework.model.WeexEventBean;
 import com.benmu.widget.utils.ColorUtils;
 import com.taobao.weex.WXSDKInstance;
@@ -54,7 +57,6 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     private MyFragmentAdapter fragmentAdapter;
     private SparseArray<NavigatorModel> navigatorArray;
     private Activity activity;
-    private TabbarEvent.TabbarListen tabbarListen;
 
     public TableView(Context context) {
         super(context);
@@ -271,9 +273,7 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
     @Override
     public void onPageSelected(int position) {
         setCurrentItem(position);
-        if (tabbarListen != null) {
-            tabbarListen.onPageSelected(position);
-        }
+        ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(new TabbarWatchBean(position));
     }
 
     @Override
@@ -308,21 +308,9 @@ public class TableView extends RelativeLayout implements ViewPager.OnPageChangeL
         }
     }
 
-    private int getRandom() {
-        Random rand = new Random();
-        return rand.nextInt(160);
-    }
-
     public int getCurrentIndex() {
         return viewpager.getCurrentItem();
     }
 
-    public void setTabbarListen(TabbarEvent.TabbarListen tabbarListen) {
-        this.tabbarListen = tabbarListen;
-    }
-
-    public void clearWatch() {
-        this.tabbarListen = null;
-    }
 
 }
