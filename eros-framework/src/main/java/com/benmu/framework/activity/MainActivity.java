@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 
+import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.constant.Constant;
@@ -56,7 +57,7 @@ public class MainActivity extends AbstractWeexActivity {
                 }
             }
         };
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver, new
+        LocalBroadcastManager.getInstance(BMWXEnvironment.mApplicationContext).registerReceiver(mReloadReceiver, new
                 IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
     }
 
@@ -135,4 +136,21 @@ public class MainActivity extends AbstractWeexActivity {
         return -1;
     }
 
+    public void watchIndex(TabbarEvent.TabbarListen tabbarListen) {
+        if (tableView != null) {
+            tableView.setTabbarListen(tabbarListen);
+        }
+    }
+
+    public void clearWatch() {
+        if (tableView != null) {
+            tableView.clearWatch();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(BMWXEnvironment.mApplicationContext).unregisterReceiver(mReloadReceiver);
+    }
 }
