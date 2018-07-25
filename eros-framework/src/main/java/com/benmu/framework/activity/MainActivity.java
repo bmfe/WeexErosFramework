@@ -136,18 +136,6 @@ public class MainActivity extends AbstractWeexActivity {
         return -1;
     }
 
-    public void watchIndex(TabbarEvent.TabbarListen tabbarListen) {
-        if (tableView != null) {
-            tableView.setTabbarListen(tabbarListen);
-        }
-    }
-
-    public void clearWatch() {
-        if (tableView != null) {
-            tableView.clearWatch();
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
