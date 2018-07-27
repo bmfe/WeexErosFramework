@@ -58,24 +58,8 @@ public class BaseJsInjector {
             insert(origin, listener);
         } else {
             //去本地服务下载后注入
-            if (TextUtils.isEmpty(mBaseJs)) {
-                OkHttpUtils.get().url(REMOTE_URL).build().execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        L.e("BaseJsInjector", "远端base.js请求失败");
-                        if (listener != null) {
-                            listener.onInjectError();
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        mBaseJs = response;
-                        insert(origin, listener);
-                    }
-                });
-            } else {
-                insert(origin, listener);
+            if (listener != null) {
+                listener.onInjectFinish(origin);
             }
         }
     }
@@ -115,6 +99,9 @@ public class BaseJsInjector {
                     (BMWXEnvironment.mApplicationContext)))) {
                 this.mBaseJs = null;
             }
+        } else if (intent != null && WXConstant.MEDIATOR_DESTROY.equals(intent.getAction())) {
+            //更新完成 重制资源
+            mBaseJs = null;
         }
     }
 
