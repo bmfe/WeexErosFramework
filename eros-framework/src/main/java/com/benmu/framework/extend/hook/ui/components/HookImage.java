@@ -489,6 +489,7 @@ public class HookImage extends WXComponent<ImageView> {
             }
             ((HookWXImageView) getHostView()).destory();
         }
+//        Glide.with(getHostView().getContext()).clear(getHostView());
         super.destroy();
     }
 
