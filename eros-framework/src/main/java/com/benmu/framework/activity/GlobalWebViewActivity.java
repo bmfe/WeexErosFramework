@@ -22,6 +22,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.benmu.framework.BMWXApplication;
 import com.benmu.framework.BMWXEnvironment;
 import com.benmu.framework.R;
 import com.benmu.framework.adapter.router.RouterTracker;
@@ -33,6 +34,7 @@ import com.benmu.framework.manager.impl.FileManager;
 import com.benmu.framework.manager.impl.ModalManager;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WebViewParamBean;
+import com.benmu.framework.utils.SharePreferenceUtil;
 import com.benmu.widget.utils.BaseCommonUtil;
 
 import java.io.File;
@@ -60,6 +62,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         init();
+        statusBarHidden(BMWXApplication.getWXApplication().IS_FULL_SCREEN);
     }
 
     @Override
