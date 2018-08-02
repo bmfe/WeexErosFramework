@@ -49,6 +49,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -111,7 +112,6 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public String[] mDebugOptions = new String[]{"调试页面", "刷新", "扫一扫"};
     private RelativeLayout rl_error;
     private ViewGroup mRootView;
-    private boolean isHomePage;
     private ViewGroup decorView;//activity的根View
     private ViewGroup rootView;// mSharedView 的 根View
     private LoadingDialog loadingDialog;
@@ -123,6 +123,8 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     private ImagePicker imagePicker;
 
     protected WXAnalyzerDelegate mWxAnalyzerDelegate;
+
+    private boolean isStatusBarHidden = false;
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -926,4 +928,31 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
     public boolean navigationListenter(WeexEventBean weexEventBean) {
         return false;
     }
+
+    public void statusBarHidden(boolean isFullScreen){
+        if (isFullScreen) {
+            setFullScreen(this);
+        } else {
+            quitFullScreen(this);
+        }
+    }
+
+    private void setFullScreen(Activity activity) {
+        if (!isStatusBarHidden) {
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            isStatusBarHidden = true;
+        }
+    }
+
+
+    private void quitFullScreen(Activity activity) {
+        if (isStatusBarHidden) {
+            final WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
+            attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            activity.getWindow().setAttributes(attrs);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            isStatusBarHidden = false;
+        }
+    }
+
 }

@@ -36,6 +36,11 @@ public class BMWXApplication extends Application {
     private DefaultTypefaceAdapter typefaceAdapter;
     private RefWatcher mWatcher;
 
+    /**
+     *  是否全屏显示
+     */
+    public boolean IS_FULL_SCREEN = false;
+
     @Override
     public void onCreate() {
         super.onCreate();

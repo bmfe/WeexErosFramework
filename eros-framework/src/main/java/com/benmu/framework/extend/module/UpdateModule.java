@@ -4,6 +4,7 @@ import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
 import com.benmu.framework.manager.impl.dispatcher.DispatchEventManager;
 import com.benmu.framework.model.WeexEventBean;
+import com.benmu.framework.utils.AppUtils;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
@@ -27,4 +28,12 @@ public class UpdateModule extends WXModule {
         weexEventBean.setContext(mWXSDKInstance.getContext());
         ManagerFactory.getManagerService(DispatchEventManager.class).getBus().post(weexEventBean);
     }
+
+    @JSMethod(uiThread = true)
+    public void getJsVersion(JSCallback jsCallback) {
+        if (jsCallback != null) {
+            jsCallback.invoke(AppUtils.getJsVersion(mWXSDKInstance.getContext()));
+        }
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -20,6 +21,7 @@ import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.model.RouterModel;
 import com.benmu.framework.model.TabbarBadgeModule;
 import com.benmu.framework.model.WeexEventBean;
+import com.benmu.framework.utils.SharePreferenceUtil;
 import com.benmu.framework.view.TableView;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
@@ -45,6 +47,8 @@ public class MainActivity extends AbstractWeexActivity {
             renderPage();
         }
         initReloadReceiver();
+
+        statusBarHidden(BMWXApplication.getWXApplication().IS_FULL_SCREEN);
     }
 
 

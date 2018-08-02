@@ -54,7 +54,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     private Context mContext;
     private String[] mFileFilter = {".js", ".css", ".html"};
     private String[] mIconFontFilter = {".ttf", ".woff"};
-    private String mBaseJs;
     private BaseJsInjector mInjector;
     private OkHttpClient client;
 
@@ -273,7 +272,6 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             @Override
             public void onResponse(WXResponse wxResponse) {
                 if (isInterceptor(request.url)) {
-                    appendBaseJs(wxResponse, listener);
                     if (listener != null) {
                         listener.onHttpFinish(wxResponse);
                     }
