@@ -18,8 +18,6 @@ import com.benmu.framework.manager.impl.GlobalEventManager;
 import com.benmu.framework.manager.impl.LifecycleManager;
 import com.benmu.framework.update.VersionChecker;
 import com.benmu.framework.utils.DebugableUtil;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.taobao.weex.WXSDKInstance;
 
 import java.util.List;
@@ -34,10 +32,10 @@ public class BMWXApplication extends Application {
     private VersionChecker mVersionChecker;
     private DebuggerWebSocket debugSocket;
     private DefaultTypefaceAdapter typefaceAdapter;
-    private RefWatcher mWatcher;
+//    private RefWatcher mWatcher;
 
     /**
-     *  是否全屏显示
+     * 是否全屏显示
      */
     public boolean IS_FULL_SCREEN = false;
 
@@ -50,14 +48,14 @@ public class BMWXApplication extends Application {
             mVersionChecker = new VersionChecker(this);
             registerLifecycle();
             initDebugSocket();
-            mWatcher = DebugableUtil.isDebug() ? LeakCanary.install(this) : RefWatcher.DISABLED;
+//            mWatcher = DebugableUtil.isDebug() ? LeakCanary.install(this) : RefWatcher.DISABLED;
         }
     }
 
 
-    public RefWatcher getWatcher() {
-        return mWatcher;
-    }
+//    public RefWatcher getWatcher() {
+//        return mWatcher;
+//    }
 
     private void initDebugSocket() {
         debugSocket = new DebuggerWebSocket(this);

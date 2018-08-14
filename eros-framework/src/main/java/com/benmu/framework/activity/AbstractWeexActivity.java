@@ -573,7 +573,7 @@ public class AbstractWeexActivity extends AppCompatActivity implements IWXRender
             mWxAnalyzerDelegate.onDestroy();
         }
 
-        BMWXApplication.getWXApplication().getWatcher().watch(this);
+//        BMWXApplication.getWXApplication().getWatcher().watch(this);
     }
 
     @Override
