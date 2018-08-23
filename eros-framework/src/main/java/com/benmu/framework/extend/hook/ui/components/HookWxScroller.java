@@ -18,6 +18,8 @@ import com.benmu.framework.extend.hook.ui.view.HookBounceScrollerView;
 import com.benmu.framework.extend.hook.ui.view.HookWXHorizontalScrollView;
 import com.benmu.framework.extend.hook.ui.view.refresh.bmrefresh.BMBaseRefresh;
 import com.benmu.framework.extend.hook.ui.view.refresh.bmrefresh.BMLoadingRefresh;
+import com.benmu.framework.extend.hook.ui.view.refresh.loadmore.BaseLoadMore;
+import com.benmu.framework.extend.hook.ui.view.refresh.loadmore.LoadingLoadMore;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
@@ -564,7 +566,7 @@ public class HookWxScroller extends WXScroller implements WXScrollView.WXScrollV
 
     private boolean mPagingEnable;
     private BMBaseRefresh mBMRefresh;
-
+    private BaseLoadMore mLoadMore;
     @WXComponentProp(name = HookConstants.NAME.PAGINGENABLED)
     public void setPagingEnable(boolean pagingEnable) {
         this.mPagingEnable = pagingEnable;
@@ -593,6 +595,30 @@ public class HookWxScroller extends WXScroller implements WXScrollView.WXScrollV
     public void refreshEnd() {
         if (mBMRefresh != null && mBMRefresh.mCurrentState == BMBaseRefresh.STATE_REFRESHING) {
             mBMRefresh.onRefreshComplete();
+        }
+    }
+
+
+
+    @WXComponentProp(name = HookConstants.NAME.SHOW_LOADMORE)    // iCoastline 下拉加载更多
+    public void setLoad(String showLoadMore) {
+        boolean customerLoad = WXUtils.getBoolean(showLoadMore, false);
+        if (customerLoad && mLoadMore == null) {
+            mLoadMore = new LoadingLoadMore(getContext(), this);
+            ((HookBounceScrollerView) this.getHostView()).setOnLoadingListener(mLoadMore);
+            Runnable runnable = WXThread.secure(new Runnable() {
+                public void run() {
+                    ((HookBounceScrollerView) getHostView()).setCustomFootView(mLoadMore);
+                }
+            });
+            this.handler.postDelayed(runnable, 100L);
+        }
+    }
+
+    @JSMethod
+    public void reloadEnd() {    // iCoastline 下拉加载更多
+        if (mLoadMore != null && mLoadMore.mCurrentState == LoadingLoadMore.STATE_REFRESHING) {
+            mLoadMore.onLoadComplete();
         }
     }
 }

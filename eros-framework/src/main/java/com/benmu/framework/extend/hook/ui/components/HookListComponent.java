@@ -7,6 +7,8 @@ import com.benmu.framework.extend.hook.HookConstants;
 import com.benmu.framework.extend.hook.ui.view.HookBounceRecyclerView;
 import com.benmu.framework.extend.hook.ui.view.refresh.bmrefresh.BMBaseRefresh;
 import com.benmu.framework.extend.hook.ui.view.refresh.bmrefresh.BMLoadingRefresh;
+import com.benmu.framework.extend.hook.ui.view.refresh.loadmore.BaseLoadMore;
+import com.benmu.framework.extend.hook.ui.view.refresh.loadmore.LoadingLoadMore;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.Constants;
@@ -26,6 +28,8 @@ public class HookListComponent extends WXListComponent {
     private String TAG = getClass().getName();
     private boolean mAddCustomRefresh;
     private BMBaseRefresh mBMRefresh;
+    private boolean mAddCustomload;
+    private BaseLoadMore mload;
 
     public HookListComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
             instanceId, boolean isLazy) {
@@ -45,6 +49,11 @@ public class HookListComponent extends WXListComponent {
         this.mAddCustomRefresh = WXUtils.getBoolean(showRefresh, false);
     }
 
+    @WXComponentProp(name = HookConstants.NAME.SHOW_LOADMORE)    // iCoastline 下拉加载更多
+    public void setLoadMore(String showLoadMore) {
+        this.mAddCustomload = WXUtils.getBoolean(showLoadMore, false);
+    }
+
 
     @Override
     protected BounceRecyclerView generateListView(Context context, int orientation) {
@@ -61,6 +70,7 @@ public class HookListComponent extends WXListComponent {
     public void addChild(WXComponent child, int index) {
         super.addChild(child, index);
         addCustomRefresh();
+        addCustomLoadMore();
     }
 
 
@@ -82,6 +92,27 @@ public class HookListComponent extends WXListComponent {
     public void refreshEnd() {
         if (mBMRefresh != null && mBMRefresh.mCurrentState == BMBaseRefresh.STATE_REFRESHING) {
             mBMRefresh.onRefreshComplete();
+        }
+    }
+
+    public void addCustomLoadMore() {    // iCoastline 下拉加载更多
+        if (!mAddCustomload || mload != null) return;
+        mload = new LoadingLoadMore(getContext(), this);
+        getHostView().setOnLoadingListener(mload);
+        getHostView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(getHostView() instanceof HookBounceRecyclerView){
+                    ((HookBounceRecyclerView)getHostView()).setCustomFootView(mload);
+                }
+            }
+        }, 100);
+    }
+
+    @JSMethod
+    public void loadMoreEnd() {    // iCoastline 下拉加载更多
+        if (mload != null && mload.mCurrentState == LoadingLoadMore.STATE_REFRESHING) {
+            mload.onLoadComplete();
         }
     }
 
