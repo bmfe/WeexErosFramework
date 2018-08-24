@@ -1,3 +1,21 @@
+package com.benmu.framework.extend.hook.ui.view.refresh.loadmore;
+
+import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.benmu.framework.R;
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.view.refresh.wrapper.BounceRecyclerView;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class LoadingLoadMore extends BaseLoadMore {
     private ImageView iv_loading;
     private AnimationDrawable animation;
