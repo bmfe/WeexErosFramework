@@ -3,29 +3,32 @@ package com.benmu.framework.extend.hook.ui.view;
 import android.content.Context;
 import android.view.View;
 
-import com.taobao.weex.ui.view.refresh.wrapper.BounceRecyclerView;
+import com.taobao.weex.ui.component.WXScroller;
+import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
 import com.taobao.weex.utils.WXViewUtils;
 
 /**
- * Created by Carry on 2018/4/17.
+ * Created by Carry on 2018/4/20.
  */
 
-public class HookBounceRecyclerView extends BounceRecyclerView {
-    public HookBounceRecyclerView(Context context, int type, int columnCount, float columnGap,
-                                  int orientation) {
-        super(context, type, columnCount, columnGap, orientation);
-    }
-
-    public HookBounceRecyclerView(Context context, int type, int orientation) {
-        super(context, type, orientation);
+public class HookBounceScrollerView extends BounceScrollerView {
+    public HookBounceScrollerView(Context context, int orientation, WXScroller waScroller) {
+        super(context, orientation, waScroller);
     }
 
 
     //benmu.org
-    public void setCustomHeaderView(View view){
+    public void setCustomHeaderView(View view) {
         setRefreshEnable(true);
         swipeLayout.setRefreshHeight(WXViewUtils.dip2px(40));
         swipeLayout.getHeaderView().setRefreshView(view);
     }
     //benmu.org
+
+    public void setCustomFootView(View view) {    // iCoastline 下拉加载更多
+        setLoadmoreEnable(true);
+        swipeLayout.setLoadingHeight(WXViewUtils.dip2px(40));
+        swipeLayout.getFooterView().setRefreshView(view);
+    }
+
 }

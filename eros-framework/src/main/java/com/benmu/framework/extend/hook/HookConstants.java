@@ -9,6 +9,8 @@ public interface HookConstants {
         String SHOW_REFRESH = "showRefresh";
         String TINTCOLOR = "tintColor";
         String PAGINGENABLED = "pagingEnabled";
+		
+		String SHOW_LOADMORE = "showLoadMore"; 
 
     }
 
