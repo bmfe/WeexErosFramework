@@ -1,5 +1,6 @@
 package com.benmu.framework.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -70,6 +72,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         super.onResume();
     }
 
+
     private void init() {
         Intent data = getIntent();
         mWebViewParams = (WebViewParamBean) data.getSerializableExtra(Constant.WEBVIEW_PARAMS);
@@ -88,8 +91,7 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        settings.setJavaScriptEnabled(true);
-        mWeb.addJavascriptInterface(new JSMethod(this), "bmnative");
+        addWebJavascriptInterface();
         settings.setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= 21) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -100,6 +102,13 @@ public class GlobalWebViewActivity extends AbstractWeexActivity {
             mWeb.loadUrl(mUrl);
         }
         ModalManager.BmLoading.showLoading(this, "", true);
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    private void addWebJavascriptInterface() {
+        WebSettings settings = mWeb.getSettings();
+        settings.setJavaScriptEnabled(true);
+        mWeb.addJavascriptInterface(new JSMethod(this), "bmnative");
     }
 
     private String localPath(Uri uri) {

@@ -1,5 +1,6 @@
 package com.benmu.framework.extend.hook.ui.components;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -150,12 +151,12 @@ public class BMWXWebView implements IWebView {
 
     private void initWebView(WebView wv) {
         WebSettings settings = wv.getSettings();
-        settings.setJavaScriptEnabled(true);
         settings.setAppCacheEnabled(true);
         settings.setUseWideViewPort(true);
         settings.setDomStorageEnabled(true);
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
+        addWebJavascriptInterface(wv);
         wv.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -240,9 +241,14 @@ public class BMWXWebView implements IWebView {
             }
 
         });
-        wv.addJavascriptInterface(new GlobalWebViewActivity.JSMethod(mContext), "bmnative");
     }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    private void addWebJavascriptInterface(WebView mWeb) {
+        WebSettings settings = mWeb.getSettings();
+        settings.setJavaScriptEnabled(true);
+        mWeb.addJavascriptInterface(new GlobalWebViewActivity.JSMethod(mContext), "bmnative");
+    }
 
     private double mContentHeight;
     private WXWeb mWXWeb;

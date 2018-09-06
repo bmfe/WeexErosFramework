@@ -1,11 +1,14 @@
 package com.benmu.framework;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ViewConfiguration;
 
 import com.alibaba.android.bindingx.plugin.weex.BindingX;
 import com.alibaba.weex.plugin.loader.WeexPluginContainer;
@@ -43,6 +46,7 @@ import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXWeb;
 
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -215,9 +219,10 @@ public class BMWXEngine {
 
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
-
+        int virtualHeight = BaseCommonUtil.getNavigationBarHeight(context);
         insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEHEIGHT, String.valueOf(dm.heightPixels));
         insideEnv.put(Constant.CustomOptions.CUSTOM_DEVICEWIDTH, String.valueOf(dm.widthPixels));
+        insideEnv.put(Constant.CustomOptions.CUSTOM_VIRTUAL_BUTTONS_HEIGHT, String.valueOf(virtualHeight));
 
         if (Env != null && !Env.isEmpty()) {
             for (Map.Entry<String, String> entry : Env.entrySet()) {
