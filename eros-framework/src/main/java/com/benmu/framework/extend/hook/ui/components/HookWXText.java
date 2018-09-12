@@ -189,7 +189,6 @@ public class HookWXText extends WXText {
         }
     }
 
-
     private void registerBroadCast() {
         mReceiver = new DefaultBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -210,6 +209,10 @@ public class HookWXText extends WXText {
         }
     }
 
+    @Override
+    public void onActivityDestroy() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mReceiver);
+    }
 
     //benmu.org
 

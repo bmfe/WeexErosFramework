@@ -1,9 +1,11 @@
 package com.benmu.framework.event;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.benmu.framework.activity.MainActivity;
+import com.benmu.framework.adapter.router.RouterTracker;
 import com.benmu.framework.constant.Constant;
 import com.benmu.framework.constant.WXEventCenter;
 import com.benmu.framework.manager.ManagerFactory;
@@ -66,8 +68,10 @@ public class TabbarEvent extends EventGate {
     private void openPage(WeexEventBean weexEventBean) {
         Context context = weexEventBean.getContext();
         String index = JSON.parseObject(weexEventBean.getJsParams()).get("index").toString();
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).openPage(Integer.parseInt(index));
+        RouterTracker.clearActivitySurplus(1);
+        Activity activity = RouterTracker.peekActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).openPage(Integer.parseInt(index));
         }
     }
 
