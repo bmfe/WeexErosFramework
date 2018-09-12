@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.benmu.framework.R;
 import com.benmu.framework.model.BroeserImgModuleBean;
+import com.benmu.framework.view.ViewPagerFix;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -31,7 +32,7 @@ public class BrowseImgActivity extends Activity implements ViewPager.OnPageChang
 
 
     private ViewGroup mOvalViewGroup;
-    private ViewPager mViewPager;
+    private ViewPagerFix mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     public static final String BROWSE_IMG_BEAN = "browse_img_bean";
 
@@ -55,7 +56,7 @@ public class BrowseImgActivity extends Activity implements ViewPager.OnPageChang
 
     //View初始化
     private void initView(BroeserImgModuleBean imgModuleBean) {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager_browse_img);
+        mViewPager = (ViewPagerFix) findViewById(R.id.viewpager_browse_img);
         mOvalViewGroup = (ViewGroup) findViewById(R.id.rl_browse_prompt_oval);
         mViewPagerAdapter = new ViewPagerAdapter(imgModuleBean.getImages());
         mViewPager.setAdapter(mViewPagerAdapter);

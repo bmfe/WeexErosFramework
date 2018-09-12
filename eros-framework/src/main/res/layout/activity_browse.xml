@@ -4,7 +4,7 @@
                 android:layout_height="match_parent">
 
 
-    <android.support.v4.view.ViewPager
+    <com.benmu.framework.view.ViewPagerFix
             android:id="@+id/viewpager_browse_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
