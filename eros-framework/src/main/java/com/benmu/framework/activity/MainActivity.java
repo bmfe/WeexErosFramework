@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.benmu.framework.BMWXApplication;
@@ -70,6 +71,7 @@ public class MainActivity extends AbstractWeexActivity {
     }
 
     private void initTabView() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         viewStub_tabView = (ViewStub) findViewById(R.id.vs_tabView);
         viewStub_tabView.inflate();
         tableView = (TableView) findViewById(R.id.tabView);
