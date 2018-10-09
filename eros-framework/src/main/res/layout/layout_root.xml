@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
         >
 
-    <com.benmu.widget.view.BaseToolBar
+    <com.eros.widget.view.BaseToolBar
             android:layout_width="match_parent"
             android:layout_height="@dimen/navBarHeight"
             android:id="@+id/base_navBar"

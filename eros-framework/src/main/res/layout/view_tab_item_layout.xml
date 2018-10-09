@@ -30,7 +30,7 @@
             tools:text="首页" />
 
 
-        <com.benmu.framework.view.CircleTextView
+        <com.eros.framework.view.CircleTextView
             android:id="@+id/tb_circleTv"
             android:layout_width="17dp"
             android:layout_height="17dp"
@@ -42,7 +42,7 @@
             app:titleTextColor="@android:color/white"
             app:titleTextSize="12sp" />
 
-        <com.benmu.framework.view.CircleTextView
+        <com.eros.framework.view.CircleTextView
             android:id="@+id/tb_circleView"
             android:layout_width="8dp"
             android:layout_height="8dp"

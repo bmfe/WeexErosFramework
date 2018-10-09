@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f2f2f2"
-    tools:context="com.benmu.framework.activity.MainActivity">
+    tools:context="com.eros.framework.activity.MainActivity">
 
 
     <ViewStub
