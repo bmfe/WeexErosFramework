@@ -39,7 +39,7 @@ public class AndroidBug5497Workaround {
     private void possiblyResizeChildOfContent(Context context) {
         int usableHeightNow = computeUsableHeight();
         if (usableHeightNow != usableHeightPrevious) {
-            int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight() - getVirtualBarHeigh();
+            int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight() - getVirtualBarHeigh(context);
             int heightDifference = usableHeightSansKeyboard - usableHeightNow;
             if (heightDifference > (usableHeightSansKeyboard/4)) {
                 // keyboard probably just became visible
