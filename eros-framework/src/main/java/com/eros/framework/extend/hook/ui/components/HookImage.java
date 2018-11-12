@@ -48,8 +48,7 @@ import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.common.WXRuntimeException;
-import com.taobao.weex.dom.ImmutableDomObject;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.utils.WXViewToImageUtil;
 import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
@@ -59,6 +58,7 @@ import com.taobao.weex.utils.ImageDrawable;
 import com.taobao.weex.utils.ImgURIUtil;
 import com.taobao.weex.utils.SingleFunctionParser;
 import com.taobao.weex.utils.WXViewToImageUtil;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.utils.WXDomUtils;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
@@ -94,23 +94,20 @@ public class HookImage extends WXComponent<ImageView> {
             };
 
     public static class Ceator implements ComponentCreator {
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer
-                parent) throws IllegalAccessException, InvocationTargetException,
+        public WXComponent createInstance(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) throws IllegalAccessException, InvocationTargetException,
                 InstantiationException {
-            return new HookImage(instance, node, parent);
+            return new HookImage(instance, parent, basicComponentData);
         }
     }
 
 
     @Deprecated
-    public HookImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
-            instanceId, boolean isLazy) {
-        this(instance, dom, parent);
+    public HookImage(WXSDKInstance instance, WXVContainer parent, String instanceId, boolean isLazy, BasicComponentData basicComponentData) {
+        this(instance, parent, basicComponentData);
     }
 
-    public HookImage(WXSDKInstance instance, WXDomObject node,
-                     WXVContainer parent) {
-        super(instance, node, parent);
+    public HookImage(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) {
+        super(instance, parent, basicComponentData);
     }
 
     @Override
@@ -164,7 +161,7 @@ public class HookImage extends WXComponent<ImageView> {
     public void refreshData(WXComponent component) {
         super.refreshData(component);
         if (component instanceof HookImage) {
-            setSrc(component.getDomObject().getAttrs().getImageSrc());
+            setSrc(component.getAttrs().getImageSrc());
         }
     }
 
@@ -235,11 +232,8 @@ public class HookImage extends WXComponent<ImageView> {
         if (Constants.Scheme.LOCAL.equals(rewrited.getScheme())) {
             setLocalSrc(rewrited);
         } else {
-            int blur = 0;
-            if (getDomObject() != null) {
-                String blurStr = getDomObject().getStyles().getBlur();
-                blur = parseBlurRadius(blurStr);
-            }
+            String blurStr = getStyles().getBlur();
+            int blur = parseBlurRadius(blurStr);
             setRemoteSrc(rewrited, blur);
         }
     }
@@ -308,7 +302,7 @@ public class HookImage extends WXComponent<ImageView> {
         WXImageStrategy imageStrategy = new WXImageStrategy();
         imageStrategy.isClipping = true;
 
-        WXImageSharpen imageSharpen = getDomObject().getAttrs().getImageSharpen();
+        WXImageSharpen imageSharpen = getAttrs().getImageSharpen();
         imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
 
         imageStrategy.blurRadius = Math.max(0, blurRadius);
@@ -317,8 +311,7 @@ public class HookImage extends WXComponent<ImageView> {
         imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
             @Override
             public void onImageFinish(String url, ImageView imageView, boolean result, Map extra) {
-                if (getDomObject() != null && getDomObject().getEvents().contains(Constants.Event
-                        .ONLOAD)) {
+                if (getEvents().contains(Constants.Event.ONLOAD)) {
                     Map<String, Object> params = new HashMap<String, Object>();
                     Map<String, Object> size = new HashMap<>(2);
                     if (imageView != null && imageView instanceof Measurable) {
@@ -329,7 +322,7 @@ public class HookImage extends WXComponent<ImageView> {
                         size.put("naturalHeight", 0);
                     }
 
-                    if (getDomObject() != null && containsEvent(Constants.Event.ONLOAD)) {
+                    if (containsEvent(Constants.Event.ONLOAD)) {
                         params.put("success", result);
                         params.put("size", size);
                         fireEvent(Constants.Event.ONLOAD, params);
@@ -339,10 +332,10 @@ public class HookImage extends WXComponent<ImageView> {
         });
 
         String placeholder = null;
-        if (getDomObject().getAttrs().containsKey(Constants.Name.PLACEHOLDER)) {
-            placeholder = (String) getDomObject().getAttrs().get(Constants.Name.PLACEHOLDER);
-        } else if (getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)) {
-            placeholder = (String) getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
+        if (getAttrs().containsKey(Constants.Name.PLACEHOLDER)) {
+            placeholder = (String) getAttrs().get(Constants.Name.PLACEHOLDER);
+        } else if (getAttrs().containsKey(Constants.Name.PLACE_HOLDER)) {
+            placeholder = (String) getAttrs().get(Constants.Name.PLACE_HOLDER);
         }
         if (!TextUtils.isEmpty(placeholder)) {
             imageStrategy.placeHolder = getInstance().rewriteUri(Uri.parse(placeholder),
@@ -351,24 +344,28 @@ public class HookImage extends WXComponent<ImageView> {
 
         IWXImgLoaderAdapter imgLoaderAdapter = getInstance().getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(rewrited.toString(), getHostView(),
-                    getDomObject().getAttrs().getImageQuality(), imageStrategy);
+            imgLoaderAdapter.setImage(rewrited.toString(), getHostView(), getAttrs().getImageQuality(), imageStrategy);
         }
+    }
+
+    @Override
+    protected void onFinishLayout() {
+        super.onFinishLayout();
+        //校对borderRadius
+        collateBorderRadius();
     }
 
     @Override
     public void updateProperties(Map<String, Object> props) {
         super.updateProperties(props);
         HookWXImageView imageView;
-        ImmutableDomObject imageDom;
-        if ((imageDom = getDomObject()) != null &&
-                getHostView() instanceof HookWXImageView) {
+        if (getHostView() instanceof HookWXImageView) {
             imageView = (HookWXImageView) getHostView();
             BorderDrawable borderDrawable = WXViewUtils.getBorderDrawable(getHostView());
             float[] borderRadius;
             if (borderDrawable != null) {
-                RectF borderBox = new RectF(0, 0, WXDomUtils.getContentWidth(imageDom),
-                        WXDomUtils.getContentHeight(imageDom));
+                RectF borderBox = new RectF(0, 0, WXDomUtils.getContentWidth(this),
+                        WXDomUtils.getContentHeight(this));
                 borderRadius = borderDrawable.getBorderRadius(borderBox);
             } else {
                 borderRadius = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
@@ -387,22 +384,13 @@ public class HookImage extends WXComponent<ImageView> {
     }
 
 
-    @Override
-    protected void onFinishLayout() {
-        super.onFinishLayout();
-        //校对borderRadius
-        collateBorderRadius();
-    }
-
-
     private void collateBorderRadius() {
         if (getHostView() instanceof HookWXImageView) {
             HookWXImageView hookWXImageView = (HookWXImageView) getHostView();
             BorderDrawable borderDrawable = WXViewUtils.getBorderDrawable(hookWXImageView);
             if (borderDrawable != null) {
-                ImmutableDomObject imageDom = getDomObject();
-                RectF borderBox = new RectF(0, 0, WXDomUtils.getContentWidth(imageDom),
-                        WXDomUtils.getContentHeight(imageDom));
+                RectF borderBox = new RectF(0, 0, WXDomUtils.getContentWidth(this),
+                        WXDomUtils.getContentHeight(this));
                 float[] borderRadius = borderDrawable.getBorderRadius(borderBox);
                 hookWXImageView.collateBorderRadius(borderRadius);
             }

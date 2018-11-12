@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.eros.framework.utils.DateFormatUtil;
-import com.eros.framework.utils.TextUtil;
 import com.eros.widget.utils.ColorUtils;
 import com.eros.widget.view.calendar.CalendarDay;
 import com.eros.widget.view.calendar.MaterialCalendarView;
@@ -16,7 +15,7 @@ import com.eros.widget.view.calendar.OnDateSelectedListener;
 import com.eros.widget.view.calendar.OnRangeSelectedListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -52,12 +51,12 @@ public class BMCalendar extends WXComponent implements OnRangeSelectedListener,
     private static final String TYPE_MULTI = "multi";
     private static final String TYPE_RANGE = "range";
 
-    public BMCalendar(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
-        super(instance, dom, parent);
+    public BMCalendar(WXSDKInstance instance , WXVContainer parent, BasicComponentData basicComponentData) {
+        super(instance,  parent,basicComponentData);
     }
 
-    public BMCalendar(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, int type) {
-        super(instance, dom, parent, type);
+    public BMCalendar(WXSDKInstance instance, WXVContainer parent, int type, BasicComponentData basicComponentData) {
+        super(instance, parent, type,basicComponentData);
     }
 
 

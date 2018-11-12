@@ -155,6 +155,11 @@ public class HookWXImageView extends android.support.v7.widget.AppCompatImageVie
     }
 
     @Override
+    public WXGesture getGestureListener() {
+        return null;
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean result = super.onTouchEvent(event);
         if (wxGesture != null) {

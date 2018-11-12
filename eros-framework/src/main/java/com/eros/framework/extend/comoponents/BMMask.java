@@ -11,7 +11,7 @@ import com.eros.framework.extend.comoponents.view.BMMaskLayout;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.dom.WXAttr;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -57,9 +57,9 @@ public class BMMask extends WXVContainer<BMMaskLayout> implements View.OnClickLi
         return mCurrentPosition;
     }
 
-    public BMMask(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
-        super(instance, node, parent);
-        WXAttr attrs = getDomObject().getAttrs();
+    public BMMask(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) {
+        super(instance, parent,basicComponentData);
+        WXAttr attrs = getAttrs();
         Object o = attrs.get("position");
         if (o instanceof String) {
             mCurrentPosition = (String) o;

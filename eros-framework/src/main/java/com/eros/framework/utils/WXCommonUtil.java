@@ -166,7 +166,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.ui.component.WXComponent;
 
 import java.lang.reflect.Field;
@@ -284,10 +283,8 @@ public class WXCommonUtil {
 
     public static int[] getComponentWH(WXComponent component) {
         if (component == null) return new int[]{0, 0};
-        ImmutableDomObject domObject = component.getDomObject();
-        if (domObject == null) return new int[]{0, 0};
-        if (domObject.getLayoutWidth() > 0 && domObject.getLayoutHeight() > 0) {
-            return new int[]{(int) domObject.getLayoutWidth(), (int) domObject.getLayoutHeight()};
+        if (component.getLayoutWidth() > 0 && component.getLayoutHeight() > 0) {
+            return new int[]{(int) component.getLayoutWidth(), (int) component.getLayoutHeight()};
         }
         return new int[]{0, 0};
     }

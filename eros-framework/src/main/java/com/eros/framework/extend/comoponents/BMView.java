@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXFrameLayout;
@@ -17,8 +17,8 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 public class BMView extends WXVContainer<WXFrameLayout> {
     private WXFrameLayout layout;
 
-    public BMView(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
-        super(instance, dom, parent);
+    public BMView(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) {
+        super(instance, parent,basicComponentData);
 
     }
 

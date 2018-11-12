@@ -27,7 +27,6 @@ import com.eros.framework.extend.hook.ui.components.HookImage;
 import com.eros.framework.extend.hook.ui.components.HookInput;
 import com.eros.framework.extend.hook.ui.components.HookListComponent;
 import com.eros.framework.extend.hook.ui.components.HookTextarea;
-import com.eros.framework.extend.hook.ui.components.HookWXText;
 import com.eros.framework.manager.ManagerFactory;
 import com.eros.framework.manager.impl.AxiosManager;
 import com.eros.framework.manager.impl.CustomerEnvOptionManager;
@@ -39,8 +38,8 @@ import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
-import com.taobao.weex.dom.RichTextDomObject;
-import com.taobao.weex.dom.WXTextDomObject;
+//import com.taobao.weex.dom.RichTextDomObject;
+//import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXWeb;
@@ -76,14 +75,14 @@ public class BMWXEngine {
 
     private static void initHook() {
         try {
-            WXSDKEngine.registerComponent(
-                    new SimpleComponentHolder(
-                            HookWXText.class,
-                            new HookWXText.Creator()
-                    ),
-                    false,
-                    WXBasicComponentType.TEXT
-            );
+//            WXSDKEngine.registerComponent(
+//                    new SimpleComponentHolder(
+//                            HookWXText.class,
+//                            new HookWXText.Creator()
+//                    ),
+//                    false,
+//                    WXBasicComponentType.TEXT
+//            );
             WXSDKEngine.registerComponent(WXBasicComponentType.INPUT, HookInput.class, false);
             WXSDKEngine.registerComponent(WXBasicComponentType.TEXTAREA, HookTextarea.class, false);
             WXSDKEngine.registerComponent(
@@ -167,9 +166,9 @@ public class BMWXEngine {
     }
 
     private static void registerCustomDomObject() throws WXException {
-        WXSDKEngine.registerDomObject("bmtext", WXTextDomObject.class);
-        WXSDKEngine.registerDomObject("bmspan", WXTextDomObject.class);
-        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
+//        WXSDKEngine.registerDomObject("bmtext", WXTextDomObject.class);
+//        WXSDKEngine.registerDomObject("bmspan", WXTextDomObject.class);
+//        WXSDKEngine.registerDomObject("bmrichtext", RichTextDomObject.class);
     }
 
 

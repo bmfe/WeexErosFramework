@@ -33,6 +33,11 @@ public class BMMaskLayout extends FrameLayout implements WXGestureObservable {
     }
 
     @Override
+    public WXGesture getGestureListener() {
+        return null;
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean result = super.onTouchEvent(event);
         if (wxGesture != null) {

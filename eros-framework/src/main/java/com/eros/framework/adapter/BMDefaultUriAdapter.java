@@ -49,6 +49,12 @@ public class BMDefaultUriAdapter implements URIAdapter {
         return uri;
     }
 
+    @NonNull
+    @Override
+    public Uri rewrite(String bundleURL, String type, Uri uri) {
+        return null;
+    }
+
 
     private Uri.Builder buildRelativeURI(Uri.Builder resultBuilder, Uri base, Uri uri, String
             type) {

@@ -12,7 +12,7 @@ import com.eros.framework.extend.hook.ui.view.refresh.loadmore.LoadingLoadMore;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.Constants;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -31,15 +31,15 @@ public class HookListComponent extends WXListComponent {
     private boolean mAddCustomload;
     private BaseLoadMore mload;
 
-    public HookListComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
-            instanceId, boolean isLazy) {
-        super(instance, dom, parent, instanceId, isLazy);
+    public HookListComponent(WXSDKInstance instance, WXVContainer parent, String
+            instanceId, boolean isLazy, BasicComponentData basicComponentData) {
+        super(instance, parent, instanceId, isLazy,basicComponentData);
         Log.e(TAG, TAG + "init");
     }
 
-    public HookListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent,
-                             boolean lazy) {
-        super(instance, node, parent, lazy);
+    public HookListComponent(WXSDKInstance instance, WXVContainer parent,
+                             boolean lazy, BasicComponentData basicComponentData) {
+        super(instance, parent, lazy,basicComponentData);
         Log.e(TAG, TAG + "init");
     }
 
@@ -59,7 +59,7 @@ public class HookListComponent extends WXListComponent {
     protected BounceRecyclerView generateListView(Context context, int orientation) {
         BounceRecyclerView bounceRecyclerView = new HookBounceRecyclerView(context,mLayoutType,mColumnCount,mColumnGap,orientation);
         if(bounceRecyclerView.getSwipeLayout()  != null){
-            if(WXUtils.getBoolean(getDomObject().getAttrs().get(Constants.Name.NEST_SCROLLING_ENABLED), false)) {
+            if(WXUtils.getBoolean(getAttrs().get(Constants.Name.NEST_SCROLLING_ENABLED), false)) {
                 bounceRecyclerView.getSwipeLayout().setNestedScrollingEnabled(true);
             }
         }

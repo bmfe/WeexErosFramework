@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.eros.framework.extend.hook.HookConstants;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXInput;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -24,14 +24,14 @@ import java.lang.reflect.Field;
 public class HookInput extends WXInput {
     private String TAG = getClass().getName();
 
-    public HookInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
-            instanceId, boolean isLazy) {
-        super(instance, dom, parent, instanceId, isLazy);
+    public HookInput(WXSDKInstance instance, WXVContainer parent, String
+            instanceId, boolean isLazy, BasicComponentData basicComponentData) {
+        super(instance,   parent, instanceId, isLazy,basicComponentData);
         Log.e(TAG, TAG + "init");
     }
 
-    public HookInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
-        super(instance, dom, parent, isLazy);
+    public HookInput(WXSDKInstance instance, WXVContainer parent, boolean isLazy, BasicComponentData basicComponentData) {
+        super(instance,   parent, isLazy,basicComponentData);
         Log.e(TAG, TAG + "init");
     }
 

@@ -1,40 +1,82 @@
 package com.eros.framework.extend.comoponents;
 
+import static com.taobao.weex.dom.WXStyle.UNSET;
+import static com.taobao.weex.utils.WXUtils.isUndefined;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.os.Build;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
 import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.AlignmentSpan;
+import android.text.style.ForegroundColorSpan;
 
-import com.alibaba.fastjson.JSONObject;
 import com.eros.framework.extend.comoponents.view.BMWXTextView;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.annotation.Component;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.Constants;
+import com.taobao.weex.dom.TextDecorationSpan;
 import com.taobao.weex.dom.WXAttr;
-import com.taobao.weex.dom.WXDomHandler;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.dom.WXDomTask;
+import com.taobao.weex.dom.WXCustomStyleSpan;
+import com.taobao.weex.dom.WXLineHeightSpan;
 import com.taobao.weex.dom.WXStyle;
+import com.taobao.weex.layout.ContentBoxMeasurement;
+import com.taobao.weex.layout.MeasureMode;
+import com.taobao.weex.layout.MeasureSize;
+import com.taobao.weex.layout.measurefunc.TextContentBoxMeasurement;
 import com.taobao.weex.ui.ComponentCreator;
+import com.taobao.weex.ui.action.BasicComponentData;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.ui.flat.FlatComponent;
+import com.taobao.weex.ui.flat.widget.TextWidget;
+import com.taobao.weex.ui.view.WXTextView;
+import com.taobao.weex.utils.FontDO;
+import com.taobao.weex.utils.TypefaceUtil;
+import com.taobao.weex.utils.WXDomUtils;
+import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXResourceUtils;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+
 
 /**
  * Created by Carry on 17/3/27.
  */
 public class BMWXText extends WXComponent<BMWXTextView> {
-    public BMWXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
-        super(instance, dom, parent);
+    public BMWXText(WXSDKInstance instance, WXVContainer parent, BasicComponentData basicComponentData) {
+        super(instance, parent, basicComponentData);
         registerBroadCast();
         initFontSize();
     }
@@ -51,17 +93,17 @@ public class BMWXText extends WXComponent<BMWXTextView> {
 
     public static class Creator implements ComponentCreator {
 
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer
-                parent) throws IllegalAccessException, InvocationTargetException,
+        public WXComponent createInstance(WXSDKInstance instance, WXVContainer
+                parent, BasicComponentData basicComponentData) throws IllegalAccessException, InvocationTargetException,
                 InstantiationException {
-            return new WXText(instance, node, parent);
+            return new WXText(instance, parent, basicComponentData);
         }
     }
 
     @Deprecated
-    public BMWXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String
-            instanceId, boolean isLazy) {
-        this(instance, dom, parent);
+    public BMWXText(WXSDKInstance instance, WXVContainer parent, String
+            instanceId, boolean isLazy, BasicComponentData basicComponentData) {
+        this(instance, parent, basicComponentData);
     }
 
 
@@ -94,7 +136,7 @@ public class BMWXText extends WXComponent<BMWXTextView> {
     public void refreshData(WXComponent component) {
         super.refreshData(component);
         if (component instanceof WXText) {
-            updateExtra(component.getDomObject().getExtra());
+            updateExtra(component.getExtra());
         }
     }
 
@@ -119,7 +161,7 @@ public class BMWXText extends WXComponent<BMWXTextView> {
     }
 
     /**
-     * Flush view no matter what height and width the {@link WXDomObject} specifies.
+     * Flush view no matter what height and width the  specifies.
      *
      * @param extra must be a {@link Layout} object, otherwise, nothing will happen.
      */
@@ -164,14 +206,11 @@ public class BMWXText extends WXComponent<BMWXTextView> {
 
         WXStyle styles = null;
         WXAttr attrs = null;
-        if (getDomObject() != null) {
-            styles = getDomObject().getStyles();
-            attrs = getDomObject().getAttrs();
-            if ((styles != null && "iconfont".equals(styles.get("fontFamily"))) || (attrs != null
-                    && attrs.get("changeFont") != null && !Boolean.valueOf((String) attrs.get
-                    ("changeFont")))) {
-                return;
-            }
+        styles = getStyles();
+        attrs = getAttrs();
+        if ("iconfont".equals(styles.get("fontFamily")) || attrs.get("changeFont") != null && !Boolean.valueOf((String) attrs.get
+                ("changeFont"))) {
+            return;
         }
 
         float scale = 0;
@@ -196,26 +235,24 @@ public class BMWXText extends WXComponent<BMWXTextView> {
             float change = getEnlarge(mChangeFontSize);
             scale = change / current * mCurrentScale;
         }
-        if (getDomObject() != null && getDomObject().getStyles() != null) {
-            WXStyle wxStyle = getDomObject().getStyles();
-            Object object = wxStyle.get("fontSize");
-            if (object instanceof Integer) {
-                int fontSize = (int) object;
-                int changeFontSize = (int) (fontSize * (scale));
-                wxStyle.put("fontSize", changeFontSize);
-
-            }
-            //设置lineHeight
-            Object lineHeight = wxStyle.get("lineHeight");
-            if (lineHeight instanceof Integer) {
-                int target = (int) lineHeight;
-                wxStyle.put("lineHeight", (int) (target * scale));
-            }
-
-
-            updateStyle(wxStyle);
+        WXStyle wxStyle = getStyles();
+        Object object = wxStyle.get("fontSize");
+        if (object instanceof Integer) {
+            int fontSize = (int) object;
+            int changeFontSize = (int) (fontSize * (scale));
+            wxStyle.put("fontSize", changeFontSize);
 
         }
+        //设置lineHeight
+        Object lineHeight = wxStyle.get("lineHeight");
+        if (lineHeight instanceof Integer) {
+            int target = (int) lineHeight;
+            wxStyle.put("lineHeight", (int) (target * scale));
+        }
+
+
+        updateStyle(wxStyle);
+
         mCurrentFontSize = mChangeFontSize;
 
     }
@@ -266,19 +303,27 @@ public class BMWXText extends WXComponent<BMWXTextView> {
     }
 
 
-    public void updateStyle(Map<String,Object> styles){
-        Message message = Message.obtain();
-        WXDomTask task = new WXDomTask();
-        task.instanceId = getInstanceId();
-        task.args = new ArrayList<>();
+    public void updateStyle(Map<String, Object> styles) {
+//        Message message = Message.obtain();
+//        WXDomTask task = new WXDomTask();
+//        task.instanceId = getInstanceId();
+//        task.args = new ArrayList<>();
+//
+//        JSONObject styleJson = new JSONObject(styles);
+//        task.args.add(getRef());
+//        task.args.add(styleJson);
+//        task.args.add(false);//flag pesudo
+//        message.obj = task;
+//        message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+//        WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
 
-        JSONObject styleJson = new JSONObject(styles);
-        task.args.add(getRef());
-        task.args.add(styleJson);
-        task.args.add(false);//flag pesudo
-        message.obj = task;
-        message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
-        WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
+//        WXBridgeManager.getInstance().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                WXBridgeManager.getInstance().setDefaultRootSize(getInstanceId(), realWidth, realHeight, isWidthWrapContent,
+//                        isHeightWrapContent);
+//            }
+//        });
     }
 
 }

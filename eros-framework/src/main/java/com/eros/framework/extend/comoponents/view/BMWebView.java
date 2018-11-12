@@ -70,6 +70,11 @@ public class BMWebView implements IWebView {
         }
     }
 
+    @Override
+    public void loadDataWithBaseURL(String source) {
+
+    }
+
     public void reload() {
         if (this.getWebView() != null) {
             this.getWebView().reload();
@@ -88,6 +93,11 @@ public class BMWebView implements IWebView {
         }
     }
 
+    @Override
+    public void postMessage(Object msg) {
+
+    }
+
     public void setShowLoading(boolean shown) {
         this.mShowLoading = shown;
     }
@@ -98,6 +108,11 @@ public class BMWebView implements IWebView {
 
     public void setOnPageListener(OnPageListener listener) {
         this.mOnPageListener = listener;
+    }
+
+    @Override
+    public void setOnMessageListener(OnMessageListener listener) {
+
     }
 
     private void showProgressBar(boolean shown) {

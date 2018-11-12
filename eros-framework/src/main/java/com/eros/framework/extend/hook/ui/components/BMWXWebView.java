@@ -91,6 +91,11 @@ public class BMWXWebView implements IWebView {
     }
 
     @Override
+    public void loadDataWithBaseURL(String source) {
+
+    }
+
+    @Override
     public void reload() {
         if (getWebView() == null)
             return;
@@ -109,6 +114,11 @@ public class BMWXWebView implements IWebView {
         if (getWebView() == null)
             return;
         getWebView().goForward();
+    }
+
+    @Override
+    public void postMessage(Object msg) {
+
     }
 
     /*@Override
@@ -131,6 +141,11 @@ public class BMWXWebView implements IWebView {
     @Override
     public void setOnPageListener(OnPageListener listener) {
         mOnPageListener = listener;
+    }
+
+    @Override
+    public void setOnMessageListener(OnMessageListener listener) {
+
     }
 
     private void showProgressBar(boolean shown) {
